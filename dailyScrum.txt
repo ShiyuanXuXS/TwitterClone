@@ -1,0 +1,30 @@
+2023-11-20
+
+Shiyuan
+1.  Done / not done since last scrum:
+- created a ER diagram
+- created project folder and repo on git
+- created entities
+- generated database on Azure
+2. To do until next Scrum:
+- 
+
+3. Need assistance / figure things out
+-
+
+Xiaoxing
+1.  Done / not done since last scrum:
+-
+2. To do until next Scrum:
+-
+3. Need assistance / figure things out
+-
+
+Meredith
+1. Done since last scrum
+- 
+2. Plan until next Scrum
+- 
+- 
+3. Need assistance / figure things out
+- 
