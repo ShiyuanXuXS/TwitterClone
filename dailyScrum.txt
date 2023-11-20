@@ -26,7 +26,7 @@ Meredith
 1. Done since last scrum
 - finish description, usercase and diagram part in proposal
 2. Plan until next Scrum
-- 
-- 
+- Set up Azure blob storage
+- Begin regular user registration and login
 3. Need assistance / figure things out
 - 
