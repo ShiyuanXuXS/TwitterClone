@@ -18,7 +18,7 @@ Xiaoxing
 - create the trello and fill the user features in list
 - finish technology and mockup part of proposal
 2. To do until next Scrum:
--
+- main page after login
 3. Need assistance / figure things out
 -
 
