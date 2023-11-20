@@ -190,8 +190,11 @@ namespace TwitterClone.Data.Migrations
 
             modelBuilder.Entity("TwitterClone.Models.Follow", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AuthorId")
                         .HasColumnType("nvarchar(450)");
@@ -199,27 +202,40 @@ namespace TwitterClone.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("UserId", "AuthorId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Follows");
                 });
 
             modelBuilder.Entity("TwitterClone.Models.Like", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("TweetId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("UserId", "TweetId");
+                    b.Property<int>("TweetId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("TweetId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Likes");
                 });
@@ -269,7 +285,6 @@ namespace TwitterClone.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Body")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -278,14 +293,13 @@ namespace TwitterClone.Data.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ParentTweetId")
+                    b.Property<int?>("ParentTweetId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Suspended")
                         .HasColumnType("bit");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -306,18 +320,16 @@ namespace TwitterClone.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Avatar")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -445,15 +457,11 @@ namespace TwitterClone.Data.Migrations
                 {
                     b.HasOne("TwitterClone.Models.User", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AuthorId");
 
                     b.HasOne("TwitterClone.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Author");
 
@@ -470,9 +478,7 @@ namespace TwitterClone.Data.Migrations
 
                     b.HasOne("TwitterClone.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Tweet");
 
@@ -502,9 +508,7 @@ namespace TwitterClone.Data.Migrations
 
                     b.HasOne("TwitterClone.Models.Tweet", "ParentTweet")
                         .WithMany()
-                        .HasForeignKey("ParentTweetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ParentTweetId");
 
                     b.Navigation("Author");
 

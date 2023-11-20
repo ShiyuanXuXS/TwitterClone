@@ -8,8 +8,8 @@ namespace TwitterClone.Models
 {
     public class User:IdentityUser
     {
-        public string Avatar{get;set;}
-        public DateTime DateOfBirth{get;set;}
-        public string Description{get;set;}
+        public string? Avatar{get;set;}
+        public DateTime? DateOfBirth{get;set;}
+        public string? Description{get;set;}
     }
 }

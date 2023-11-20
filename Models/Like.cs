@@ -8,18 +8,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TwitterClone.Models
 {
-    [PrimaryKey(nameof(UserId), nameof(TweetId))]
+    // [PrimaryKey(nameof(UserId), nameof(TweetId))]
     public class Like
     {
         // [Key, Column(Order = 1)]
-        public string UserId{get;set;}
+        // public string UserId{get;set;}
 
-        // [Key, Column(Order = 2)]
-        public int TweetId { get; set; }
+        // // [Key, Column(Order = 2)]
+        // public int TweetId { get; set; }
+        public int Id{get;set;}
         public DateTime CreatedAt{get;set;}
-
-
-        public User User{get;set;}
+        public User? User{get;set;}
         public Tweet Tweet{get;set;}
 
         

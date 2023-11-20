@@ -8,13 +8,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TwitterClone.Models
 {
-    [PrimaryKey(nameof(UserId), nameof(AuthorId))]
+    // [PrimaryKey(nameof(UserId), nameof(AuthorId))]
     public class Follow
     {
-        // [Key, Column(Order = 1)]
-        public string UserId{get;set;}
-        // [Key, Column(Order = 2)]
-        public string AuthorId{get;set;}
+        
+        // public string UserId{get;set;}
+        
+        // public string AuthorId{get;set;}
+
+        public int Id{get;set;}
         public DateTime CreatedAt{get;set;}
         
 
