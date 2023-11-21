@@ -30,16 +30,20 @@ body {
   margin-bottom: 60px;
 }
 
+
+
+#signupLogo {
+  font-size: 6rem;
+}
+
 @media (min-width: 992px) {
   #signupLogo {
     font-size: 30rem;
   }
+}
 
-  .display-1, .display-6 {
-  
-      font-weight: 700;
-
-  }
+.display-1, .display-6 {
+  font-weight: 700;
 }
 
 .brand-color {
