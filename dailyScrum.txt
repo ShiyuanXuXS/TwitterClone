@@ -7,24 +7,26 @@ Shiyuan
 - created entities
 - generated database on Azure
 2. To do until next Scrum:
-- 
+- Tweets list page
 
 3. Need assistance / figure things out
 -
 
 Xiaoxing
 1.  Done / not done since last scrum:
--
+- create database connection on Aure
+- create the trello and fill the user features in list
+- finish technology and mockup part of proposal
 2. To do until next Scrum:
--
+- main page after login
 3. Need assistance / figure things out
 -
 
 Meredith
 1. Done since last scrum
-- 
+- finish description, usercase and diagram part in proposal
 2. Plan until next Scrum
-- 
-- 
+- Set up Azure blob storage
+- Begin regular user registration and login
 3. Need assistance / figure things out
 - 
