@@ -1,4 +1,9 @@
-/* html {
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800&display=swap');
+
+
+body {
+
+  font-family: 'Libre Franklin' !important;
   font-size: 14px;
 }
 
@@ -23,4 +28,37 @@ html {
 
 body {
   margin-bottom: 60px;
-} */
+}
+
+
+
+#signupLogo {
+  font-size: 6rem;
+}
+
+@media (min-width: 992px) {
+  #signupLogo {
+    font-size: 30rem;
+  }
+}
+
+.display-1,
+.display-6 {
+  font-weight: 700;
+}
+
+.brand-color {
+  color: #1DA1F2;
+}
+
+.bg-brand-color {
+  background-color: #1DA1F2;
+}
+
+.bg-brand-color:hover {
+  background-color: #1485ca;
+}
+
+.border-tertiary-gray {
+  border-color: silver;
+}

@@ -7,10 +7,10 @@ Shiyuan
 - created entities
 - generated database on Azure
 2. To do until next Scrum:
-- Tweets list page
-
+- Tweets list page for testing
+- AddTweet page
 3. Need assistance / figure things out
--
+- research rich text editors
 
 Xiaoxing
 1.  Done / not done since last scrum:
@@ -30,3 +30,32 @@ Meredith
 - Begin regular user registration and login
 3. Need assistance / figure things out
 - 
+
+2023-11-21
+
+Shiyuan
+1.  Done / not done since last scrum:
+- created tweet list page for testing
+2. To do until next Scrum:
+- continue tweet list page
+- add new tweet page
+3. Need assistance / figure things out
+- reasearch ck editor
+
+Xiaoxing
+1.  Done / not done since last scrum:
+- side bar front end
+2. To do until next Scrum:
+- reasearch shared elements (user controls?)
+- continue search bar
+3. Need assistance / figure things out
+- CSS (maybe)
+
+Meredith
+1. Done since last scrum
+- created storage account, configured connection in app
+- started front end for landing page, registration, login
+2. Plan until next Scrum
+- registration and login/logout (front and back)
+3. Need assistance / figure things out
+- Email confirmation (maybe)

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TwitterClone.Data;
 
@@ -11,9 +12,11 @@ using TwitterClone.Data;
 namespace TwitterClone.Data.Migrations
 {
     [DbContext(typeof(TwitterCloneDbContext))]
-    partial class TwitterCloneDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231121023231_NickNameAddedToUser")]
+    partial class NickNameAddedToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
