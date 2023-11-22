@@ -59,3 +59,30 @@ Meredith
 - registration and login/logout (front and back)
 3. Need assistance / figure things out
 - Email confirmation (maybe)
+
+2023-11-22
+
+Shiyuan
+1.  Done / not done since last scrum:
+- create post tweet page, can post a tweet
+- create tweet list page
+2. To do until next Scrum:
+- make tweet list reusable
+3. Need assistance / figure things out
+- 
+
+Xiaoxing
+1.  Done / not done since last scrum:
+- search box(reusable)/ what' happening/ Who to follow front-end
+2. To do until next Scrum:
+- search box/ what' happening/ Who to follow front-end back-end
+3. Need assistance / figure things out
+- 
+
+Meredith
+1. Done since last scrum
+- progress on login/registration
+2. Plan until next Scrum
+- continue working on login/registration
+3. Need assistance / figure things out
+-
