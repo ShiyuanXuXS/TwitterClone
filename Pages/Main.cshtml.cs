@@ -3,14 +3,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace TwitterClone.Pages;
 
-public class PrivacyModel : PageModel
+public class MainModel : PageModel
 {
-    private readonly ILogger<PrivacyModel> _logger;
+    private readonly ILogger<MainModel> _logger;
 
-    public PrivacyModel(ILogger<PrivacyModel> logger)
+    public MainModel(ILogger<MainModel> logger)
     {
         _logger = logger;
     }
+
 
     public void OnGet()
     {
