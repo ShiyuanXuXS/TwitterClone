@@ -6,6 +6,45 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<div>
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="Body" class="control-label">Content</label>
+                <input asp-for="Body" class="form-control" id="bodyValue" type="hidden"/>
+            </div>
+            <div class="text-center">
+                <div id="bodyEditor"></div>
+                <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
+                <script>
+                    ClassicEditor
+                        .create( document.querySelector( '#bodyEditor' ) ,{
+                            cloudServices: {
+                                tokenUrl: '/api/User/GetCKEditorToken',
+                                uploadUrl:'https://102094.cke-cs.com/easyimage/upload/'
+                            }
+                        })
+                        .then(editor => {
+                            editor.model.document.on('change:data', () => {
+                                document.getElementById('bodyValue').value = editor.getData();
+                            });
+                        })
+                        .catch( error => {
+                            console.error( error );
+                        } );
+                </script>
+            </div> 
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
     
+</div>
+<div>
+    <a asp-page="MyTweets">Back to List</a>
 </div>

@@ -5,42 +5,50 @@
 }
 
 <h1>@ViewData["Title"]</h1>
+<script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
 
 <div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Tweets[0].Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Tweets[0].Body)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Tweets[0].CreatedAt)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in Model.Tweets) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Body)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedAt)
-                </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-        </tbody>
-</table>
+    <div class="row">
+        <div class="col-2 rounded rounded-pill bg-primary mb-5">
+            <div class="text-center">
+                <a href="AddTweet" class="btn fs-5 text-white">
+                    <strong>Tweet</strong>
+                </a>
+            </div>
+        </div>
+    </div>
+    @foreach (var item in Model.Tweets) {
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5>
+                
+                <div id="readonlyEditor_@item.Id"></div>
+                
+                <p class="card-text"><small class="text-muted">@Html.DisplayFor(modelItem => item.CreatedAt)</small></p>
+                <div class="btn-group" role="group" aria-label="">
+                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-secondary mx-2">Edit</a>
+                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            ClassicEditor
+                .create(document.querySelector('#readonlyEditor_@item.Id'), {
+                    isReadOnly: true,
+                    toolbar: []
+                })
+                .then(editor => {
+                    editor.setData(`@Html.Raw(item.Body)`);
+                    editor.enableReadOnlyMode( '#readonlyEditor_@item.Id');
+                    @* editor.editing.view.change(writer => {writer.setAttribute('contenteditable', false);  }); *@
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        </script>
+    </div>
+}
+
 </div>
