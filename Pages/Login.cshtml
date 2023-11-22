@@ -3,3 +3,56 @@
 @{
 
 }
+<div class="container">
+    <div class="row my-5"></div>
+
+    <div class="row">
+        <div class="col-2 offset-5 text-center">
+            <div class="fw-bold display-2">
+                &#120144;
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-11 col-lg-6 offset-lg-3 fs-5">
+            <div class="row my-5"></div>
+
+            <div class="col-8 offset-2">
+                <div class="row my-5">
+                    <div class="display-6">Sign in to Y</div>
+                </div>
+                <div class="row my-3">
+                    <form method="post" class="">
+                        <div class="row my-4">
+                            <div class="form-floating p-0 mb-2">
+                                <input type="text" class="form-control" id="floatUsername" asp-for="Input.UserName"
+                                    placeholder="Username">
+                                <label for="floatUsername" asp-for="Input.UserName">Username</label>
+                                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                        <div class="row my-4 ">
+                            <div class="form-floating p-0 mb-2">
+                                <input type="password" class="form-control" id="floatPassword" asp-for="Input.Password" placeholder="Password">
+                                <label for="floatPassword" asp-for="Input.Password">Password</label>
+                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                        <div class="row my-4">
+                            <input class="col btn btn-link rounded-pill fw-bold fs-5 bg-dark text-white py-2 mb-2"
+                                type="submit" value="Sign in">
+                        </div>
+                        <div class="row my-4">
+                            <a class="col btn btn-link rounded-pill border-tertiary-gray fw-bold text-dark fs-5 py-2"
+                                asp-page="">Forgot password?</a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

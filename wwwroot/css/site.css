@@ -63,6 +63,6 @@ body {
 
 
 /* remove the underline from the button link */
-.btn-link.no-underline {
+.btn-link, .no-underline {
   text-decoration: none;
 }
