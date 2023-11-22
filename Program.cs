@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TwitterClone.Data;
 using TwitterClone.Models;
+using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -15,6 +16,13 @@ builder.Services.AddDbContext<TwitterCloneDbContext>(options =>
     
 builder.Services.AddIdentity<User,IdentityRole>(options=>options.SignIn.RequireConfirmedAccount=false)
 .AddEntityFrameworkStores<TwitterCloneDbContext>();
+
+//blob storage config
+var blobStorageConn = builder.Configuration.GetConnectionString("BlobStorageConnection");
+builder.Services.AddAzureClients(azureBuilder =>
+{
+    azureBuilder.AddBlobServiceClient(blobStorageConn);
+});
 
 builder.Services.Configure<IdentityOptions>(options=>{
     //Password settings
