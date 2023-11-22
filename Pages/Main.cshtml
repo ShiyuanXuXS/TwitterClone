@@ -1,0 +1,62 @@
+﻿@page
+@model MainModel
+@{
+    ViewData["Title"] = "Main Page";
+}
+<div class="col-7"> Twitte part</div>
+<div class="col-1"></div>
+<div class="col-4">
+    <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary">
+        <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
+            <li class="mb-3">
+                @await Html.PartialAsync("_PartialSearch", new MidtermTodos.Pages._PartialSearchModel())
+            </li>
+            <li class="mb-3">
+                <div class="bg-light rounded p-2 px-3">
+                    <p class="fs-5 mb-2"><strong>Subscribe to Premium</strong></p>
+                    <p class="fs-6 mb-2">Subscribe to unlock new features and, if eligible, receive a share of ads
+                        revenue.
+                    </p>
+                    <button class="btn btn-dark btn-sm rounded rounded-pill"><strong>Subscribe</strong></button>
+                </div>
+            </li>
+            <li class="mb-3">
+                <div class="bg-light rounded p-2 px-3">
+                    <p class="fs-5 mb-4"><strong>What's happening</strong></p>
+                    <ul class="nav">
+                        <li class="mb-2">
+                            <a href="#" class="text-dark text-decoration-none">
+                                <strong>COVID-19 . LIVE</strong>
+                            </a>
+                            <p class="fs-6 mb-0">COVID-19 in the US</p>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="text-dark text-decoration-none">
+                                <strong>Trending in United States</strong>
+                            </a>
+                            <p class="fs-6 mb-0">Trending with: #COVID19</p>
+                        </li>
+
+                        <li class="mt-2">
+                            <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
+                                more</button>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-3">
+                <div class="bg-light rounded p-2 px-3">
+                    <p class="fs-5 mb-2"><strong>Who to follow</strong></p>
+                    <p class="fs-6 mb-2">Find people you know by uploading your contacts.</p>
+                    <button class="btn btn-dark btn-sm rounded rounded-pill"><strong>Find people you know</strong>
+                    </button>
+                </div>
+            </li>
+            <li class="mb-3 fs-6 p-2 text-center">
+
+                &copy; 2023 - Y - ShiYuan Xu, Meredith White, Xiaoxing Pan, All rights reserved.
+            </li>
+        </ul>
+    </div>
+
+</div>

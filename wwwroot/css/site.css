@@ -2,7 +2,6 @@
 
 
 body {
-
   font-family: 'Libre Franklin' !important;
   font-size: 14px;
 }
@@ -29,8 +28,6 @@ html {
 body {
   margin-bottom: 60px;
 }
-
-
 
 #signupLogo {
   font-size: 6rem;
@@ -61,4 +58,11 @@ body {
 
 .border-tertiary-gray {
   border-color: silver;
+}
+
+
+
+/* remove the underline from the button link */
+.btn-link.no-underline {
+  text-decoration: none;
 }
