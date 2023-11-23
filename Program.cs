@@ -13,9 +13,10 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddJsonFile("appsettings.json");
 builder.Services.AddDbContext<TwitterCloneDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-    
-builder.Services.AddIdentity<User,IdentityRole>(options=>options.SignIn.RequireConfirmedAccount=false)
-.AddEntityFrameworkStores<TwitterCloneDbContext>();
+
+builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+.AddEntityFrameworkStores<TwitterCloneDbContext>()
+.AddDefaultTokenProviders();
 
 //blob storage config
 var blobStorageConn = builder.Configuration.GetConnectionString("BlobStorageConnection");
@@ -24,32 +25,34 @@ builder.Services.AddAzureClients(azureBuilder =>
     azureBuilder.AddBlobServiceClient(blobStorageConn);
 });
 
-builder.Services.Configure<IdentityOptions>(options=>{
+builder.Services.Configure<IdentityOptions>(options =>
+{
     //Password settings
-    options.Password.RequireDigit=true;
-    options.Password.RequireLowercase=true;
-    options.Password.RequireNonAlphanumeric=false;
-    options.Password.RequireUppercase=true;
-    options.Password.RequiredLength=8;
-    options.Password.RequiredUniqueChars=5;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequiredUniqueChars = 5;
     //Lockout settings
-    options.Lockout.DefaultLockoutTimeSpan=TimeSpan.FromMinutes(5);
-    options.Lockout.MaxFailedAccessAttempts=5;
-    options.Lockout.AllowedForNewUsers=true;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
     //User settings
-    options.User.AllowedUserNameCharacters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-    options.User.RequireUniqueEmail=true;
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = true;
     //allow users with EmailConfirmed value 0/false to log in
-    options.SignIn.RequireConfirmedAccount=true;
+    options.SignIn.RequireConfirmedAccount = false;
 });
 
-builder.Services.ConfigureApplicationCookie(options=>{
+builder.Services.ConfigureApplicationCookie(options =>
+{
     //Cookie settings
-    options.Cookie.HttpOnly=true;
-    options.ExpireTimeSpan=TimeSpan.FromMinutes(25);
-    options.LoginPath="/Account/Login";
-    options.AccessDeniedPath="/AccessDenied";
-    options.SlidingExpiration=true;
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(25);
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/AccessDenied";
+    options.SlidingExpiration = true;
 });
 
 
@@ -74,44 +77,47 @@ app.UseStaticFiles();
 app.UseAuthentication();
 using (var scope = app.Services.CreateScope())
 {
-    void SeedUsersAndRoles(UserManager<User> userManager,RoleManager<IdentityRole> roleManager){
-    string[] roleNameList=new string[] {"User","Admin"};
-    foreach (string roleName in roleNameList)
+    void SeedUsersAndRoles(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
     {
-        if (!roleManager.RoleExistsAsync(roleName).Result)
+        string[] roleNameList = new string[] { "User", "Admin" };
+        foreach (string roleName in roleNameList)
         {
-            IdentityRole role=new IdentityRole();
-            role.Name=roleName;
-            IdentityResult result=roleManager.CreateAsync(role).Result;
-            foreach (IdentityError error in result.Errors)
+            if (!roleManager.RoleExistsAsync(roleName).Result)
             {
-                //TODO: Log it
+                IdentityRole role = new IdentityRole();
+                role.Name = roleName;
+                IdentityResult result = roleManager.CreateAsync(role).Result;
+                foreach (IdentityError error in result.Errors)
+                {
+                    //TODO: Log it
+                }
             }
         }
-    }
-    //For testing only. Do not do it on a production system
-    //Create an Administrator
-    string adminEmail="admin@admin.com";
-    string adminPass="Admin123!";
-    if (userManager.FindByNameAsync(adminEmail).Result==null)
-    {
-        User user=new User();
-        user.UserName=adminEmail;
-        user.Email=adminEmail;
-        user.EmailConfirmed=true;
-        IdentityResult result=userManager.CreateAsync(user,adminPass).Result;
-        if (result.Succeeded)
+        //For testing only. Do not do it on a production system
+        //Create an Administrator
+        string adminEmail = "admin@admin.com";
+        string adminPass = "Admin123!";
+        if (userManager.FindByNameAsync(adminEmail).Result == null)
         {
-            //Fixme: error my be returned by this call - log it
-            var result2=userManager.AddToRoleAsync(user,"Admin").Result;
-            if (!result2.Succeeded)
+            User user = new User();
+            user.UserName = adminEmail;
+            user.Email = adminEmail;
+            user.EmailConfirmed = true;
+            IdentityResult result = userManager.CreateAsync(user, adminPass).Result;
+            if (result.Succeeded)
             {
-                //fixme: log the error
+                //Fixme: error my be returned by this call - log it
+                var result2 = userManager.AddToRoleAsync(user, "Admin").Result;
+                if (!result2.Succeeded)
+                {
+                    //fixme: log the error
+                }
             }
-        }else{
-            //fixme: log the error 
+            else
+            {
+                //fixme: log the error 
+            }
         }
-    }
     }
 
     var services = scope.ServiceProvider;

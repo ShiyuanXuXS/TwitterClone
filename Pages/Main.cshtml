@@ -1,7 +1,12 @@
 ﻿@page
+@using Microsoft.AspNetCore.Identity
+@using TwitterClone.Models
+@using TwitterClone.Data
 @model MainModel
+
 @{
     ViewData["Title"] = "Main Page";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 <div class="col-7"> Twitte part</div>
 <div class="col-1"></div>
@@ -9,34 +14,28 @@
     <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary">
         <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
             <li class="mb-3">
-                @await Html.PartialAsync("_PartialSearch", new MidtermTodos.Pages._PartialSearchModel())
+                @await Html.PartialAsync("_PartialSearch", new
+                         MidtermTodos.Pages._PartialSearchModel())
             </li>
             <li class="mb-3">
                 <div class="bg-light rounded p-2 px-3">
-                    <p class="fs-5 mb-2"><strong>Subscribe to Premium</strong></p>
+                    <p class="fs-5 mb-2 fw-bold">Subscribe to Premium</p>
                     <p class="fs-6 mb-2">Subscribe to unlock new features and, if eligible, receive a share of ads
                         revenue.
                     </p>
-                    <button class="btn btn-dark btn-sm rounded rounded-pill"><strong>Subscribe</strong></button>
+                    <button class="btn btn-dark btn-sm rounded rounded-pill fw-bold">Subscribe</button>
                 </div>
             </li>
             <li class="mb-3">
                 <div class="bg-light rounded p-2 px-3">
-                    <p class="fs-5 mb-4"><strong>What's happening</strong></p>
-                    <ul class="nav">
+                    <p class="fs-5 mb-4 fw-bold">What's happening</p>
+                    <ul class="nav flex-column">
                         <li class="mb-2">
-                            <a href="#" class="text-dark text-decoration-none">
-                                <strong>COVID-19 . LIVE</strong>
+                            <a asp-page="#" class="text-dark text-decoration-none fs-6">
+                                <strong>Hot tags</strong>
                             </a>
-                            <p class="fs-6 mb-0">COVID-19 in the US</p>
+                            <p class="fs-6 mb-0 fw-lighter"><span class="fw-lighter">No.</span> Posts</p>
                         </li>
-                        <li class="mb-2">
-                            <a href="#" class="text-dark text-decoration-none">
-                                <strong>Trending in United States</strong>
-                            </a>
-                            <p class="fs-6 mb-0">Trending with: #COVID19</p>
-                        </li>
-
                         <li class="mt-2">
                             <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
                                 more</button>
@@ -45,12 +44,7 @@
                 </div>
             </li>
             <li class="mb-3">
-                <div class="bg-light rounded p-2 px-3">
-                    <p class="fs-5 mb-2"><strong>Who to follow</strong></p>
-                    <p class="fs-6 mb-2">Find people you know by uploading your contacts.</p>
-                    <button class="btn btn-dark btn-sm rounded rounded-pill"><strong>Find people you know</strong>
-                    </button>
-                </div>
+                <partial name="_PartialFollowSuggestion" model="Model" />
             </li>
             <li class="mb-3 fs-6 p-2 text-center">
 
