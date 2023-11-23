@@ -2,51 +2,100 @@
 @model TwitterClone.Pages.SignupModel
 @{
     ViewData["Title"] = "Sign up";
+    Layout = "~/Pages/Shared/_LayoutFooterOnly.cshtml";
 }
 
-<h1>@ViewData["Title"]</h1>
 
+<div class="container">
+    <div class="row my-5"></div>
 
-
-<form method="post">
-
-    <div asp-validation-summary="All" class="text-danger"></div>
-        <div class="form-group">
-        <label asp-for="Input.NickName"></label>
-        <input asp-for="Input.NickName" class="form-control" />
-        <span asp-validation-for="Input.NickName" class="text-danger"></span>
+    <div class="row">
+        <div class="col-2 offset-5 text-center">
+            <div class="fw-bold display-2">
+                &#120144;
+            </div>
+        </div>
     </div>
+    <div class="row">
+        <div class="col-11 col-lg-6 offset-lg-3 fs-5">
+            <div class="row my-5"></div>
 
-    <div class="form-group">
-        <label asp-for="Input.DOB"></label>
-        <input asp-for="Input.DOB" class="form-control" />
-        <span asp-validation-for="Input.DOB" class="text-danger"></span>
-    </div>
+            <div class="col-10 offset-1">
+                <div class="row my-5">
+                    <div class="display-6">Create account</div>
+                </div>
+                <div class="row my-3">
+                    <form method="post">
 
-    <div class="form-group">
-        <label asp-for="Input.UserName"></label>
-        <input asp-for="Input.UserName" class="form-control" />
-        <span asp-validation-for="Input.UserName" class="text-danger"></span>
-    </div>
+                        <div asp-validation-summary="All" class="text-danger"></div>
 
-    <div class="form-group">
-        <label asp-for="Input.Email"></label>
-        <input asp-for="Input.Email" class="form-control" />
-        <span asp-validation-for="Input.Email" class="text-danger"></span>
-    </div>
+                        <div class="row my-4">
+                            <div class="form-floating p-0 mb-2">
+                                <input asp-for="Input.NickName" class="form-control fs-5" id="floatName"
+                                    placeholder="Name" />
+                                <label type="text" asp-for="Input.NickName" for="floatName">Name</label>
+                                <span asp-validation-for="Input.NickName" class="text-danger"></span>
+                            </div>
+                        </div>
 
-    <div class="form-group">
-        <label asp-for="Input.Password"></label>
-        <input asp-for="Input.Password" class="form-control" />
-        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        <div class="row my-4">
+                            <div class="form-group p-0 mb-2">
+                                <label asp-for="Input.DOB"></label>
+                                <input asp-for="Input.DOB" class="form-control fs-5" />
+                                <span asp-validation-for="Input.DOB" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="form-floating p-0 mb-2">
+                                <input type="text" asp-for="Input.UserName" class="form-control fs-5" id="floatUsername"
+                                    placeholder="Username" />
+                                <label for="floatUsername" asp-for="Input.UserName">Username</label>
+                                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="form-floating p-0 mb-2">
+                                <input asp-for="Input.Email" class="form-control fs-5" id="floatEmail"
+                                    placeholder="Email address" />
+                                <label asp-for="Input.Email" for="floatEmail"></label>
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="form-floating p-0 mb-2">
+                                <input asp-for="Input.Password" class="form-control fs-5" id="floatPassword"
+                                    placeholder="Password" />
+                                <label asp-for="Input.Password" for="floatPassword"></label>
+                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="form-floating p-0 mb-2">
+                                <input asp-for="Input.ConfirmPassword" class="form-control fs-5"
+                                    id="floatConfirmPassword" placeholder="Re-enter password" />
+                                <label asp-for="Input.ConfirmPassword" for="floatConfirmPassword"></label>
+                                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row my-4">
+
+                            <button type="submit" class="btn btn-link fw-bold fs-5 bg-brand-color text-white rounded-pill py-2">Sign up</button>
+
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
     </div>
-    <div class="form-group">
-        <label asp-for="Input.ConfirmPassword"></label>
-        <input asp-for="Input.ConfirmPassword" class="form-control" />
-        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Sign up</button>
-</form>
+</div>
 
 
 @section Scripts {

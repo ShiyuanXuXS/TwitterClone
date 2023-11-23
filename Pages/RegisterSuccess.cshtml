@@ -1,0 +1,41 @@
+﻿@page
+@model TwitterClone.Pages.RegisterSuccessModel
+@{
+    ViewData["Title"] = "Success";
+    Layout = "~/Pages/Shared/_LayoutFooterOnly.cshtml";
+}
+@{
+    <div class="container">
+        <div class="row my-5"></div>
+
+        <div class="row">
+            <div class="col-2 offset-5 text-center">
+                <div class="fw-bold display-2">
+                    &#120144;
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-11 col-lg-6 offset-lg-3 fs-5">
+                <div class="row my-5"></div>
+
+                <div class="col-10 offset-1">
+                    <div class="row my-5">
+                        <div class="display-6">Success</div>
+                    </div>
+                    <div class="row my-5 fs-5">
+                        <div>Your account was successfully created. You may now proceed to login.</div>
+                    </div>
+                    <div class="row my-5">
+                        <a class="col btn btn-link rounded-pill fw-bold fs-5 bg-brand-color text-white py-2"
+                        asp-page="/Login">Sign in</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+        </div>
+    </div>
+
+}

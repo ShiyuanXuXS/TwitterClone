@@ -75,7 +75,11 @@ namespace TwitterClone.Pages
                     if (result2.Succeeded)
                     {
                         logger.LogInformation($"User {Input.Email} create a new account with password");
-                        return RedirectToPage("Index"); //FIXME
+
+
+                        return RedirectToPage("RegisterSuccess"); //TODO email verification
+
+
                     }
                     else
                     {
