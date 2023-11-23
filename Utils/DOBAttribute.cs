@@ -16,14 +16,15 @@ namespace TwitterClone.Utils
             if (value is DateTime date)
             {
                 DateTime latest = DateTime.Today.AddYears(-16);
+                DateTime oldest = DateTime.Today.AddYears(-120);
 
-                if (date <= latest)
+                if (date <= latest & date >= oldest)
                 {
                     return ValidationResult.Success;
                 }
             }
 
-            return new ValidationResult($"You must be at least 16 years old to register.");
+            return new ValidationResult($"You must enter your real date of birth and be at least 16 years old.");
         }
 
     }
