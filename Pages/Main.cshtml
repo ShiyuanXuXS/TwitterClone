@@ -3,12 +3,14 @@
 @using TwitterClone.Models
 @using TwitterClone.Data
 
-
 @{
     ViewData["Title"] = "Main Page";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
-<div class="col-7"> Twitte part</div>
+<div class="col-7"> 
+    @await Component.InvokeAsync("WhoToFollowFullList")
+
+</div>
 <div class="col-1"></div>
 <div class="col-4">
     <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary">

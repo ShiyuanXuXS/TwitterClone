@@ -1,20 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using TwitterClone.Data;
 using TwitterClone.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
 
 
 namespace TwitterClone.Pages.ViewComponents
 {
-    public class WhoToFollowViewComponent : ViewComponent
+    public class WhoToFollowFullListViewComponent : ViewComponent
     {
-
         private readonly UserManager<User> _userManager;
         private readonly ILogger<MainModel> _logger;
         private readonly TwitterCloneDbContext _context;
@@ -28,9 +22,7 @@ namespace TwitterClone.Pages.ViewComponents
         [BindProperty]
         public User? CurrentUser { get; set; }
 
-
-
-        public WhoToFollowViewComponent(UserManager<User> userManager, ILogger<MainModel> logger, TwitterCloneDbContext context, IHttpContextAccessor httpContextAccessor)
+        public WhoToFollowFullListViewComponent(UserManager<User> userManager, ILogger<MainModel> logger, TwitterCloneDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _logger = logger;
@@ -75,5 +67,6 @@ namespace TwitterClone.Pages.ViewComponents
             }
             return View(FollowSuggestion);
         }
+
     }
 }
