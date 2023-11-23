@@ -24,7 +24,9 @@ namespace TwitterClone.Pages.UserPortal
 
         public async Task OnGetAsync()
         {
-            Tweets = await _context.Tweets.ToListAsync();
+            User user=_context.Users.Where(u=>u.UserName=="AAA222").FirstOrDefault();
+            //Todo get logged user
+            Tweets = await _context.Tweets.Where(t=>t.Author.UserName==user.UserName).ToListAsync();
         }
     }
 }
