@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,7 @@ namespace TwitterClone.Pages.UserPortal
             _logger = logger;
             _context=context;
         }
-        [BindProperty]
-        public string Title{get;set;}
-        [BindProperty]
+        [BindProperty,Required,MinLength(10),MaxLength(20000)]
         public string Body{get;set;}
 
         public IActionResult OnGet()
@@ -30,14 +29,25 @@ namespace TwitterClone.Pages.UserPortal
             return Page();
         }
         public async Task<IActionResult> OnPostAsync(){
-            if (Body==null ||Body.Trim()=="") return Page();
+            // if (Body==null ||Body.Trim()=="") return Page();
+            if (!ModelState.IsValid){
+                return Page();
+            }
             Tweet tweet=new Tweet{
-                Title=Title==null? "":Title,
                 Body=Body,
-                CreatedAt=DateTime.Now
+                CreatedAt=DateTime.Now,
+                // Todo: add Author here
+            
             };
-            _context.Tweets.Add(tweet);
-            await _context.SaveChangesAsync();
+            try{
+                _context.Tweets.Add(tweet);
+                await _context.SaveChangesAsync();
+            }catch(Exception e){
+                ModelState.AddModelError(string.Empty,"Internal error posting the tweet");
+                _logger.LogError(e.Message);
+                return Page();
+            }
+           
 
             return RedirectToPage("MyTweets");
         }

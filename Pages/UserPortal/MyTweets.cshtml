@@ -5,7 +5,7 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-<script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
+@* <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script> *@
 
 <div>
     <div class="row">
@@ -18,10 +18,9 @@
         </div>
     </div>
     @foreach (var item in Model.Tweets) {
-    <div class="col-md-6 mb-4">
+    @* <div class="col-md-6 mb-4">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5>
                 
                 <div id="readonlyEditor_@item.Id"></div>
                 
@@ -42,13 +41,14 @@
                 .then(editor => {
                     editor.setData(`@Html.Raw(item.Body)`);
                     editor.enableReadOnlyMode( '#readonlyEditor_@item.Id');
-                    @* editor.editing.view.change(writer => {writer.setAttribute('contenteditable', false);  }); *@
                 })
                 .catch(error => {
                     console.error(error);
                 });
         </script>
-    </div>
+    </div> *@
+    
+    @Html.Partial("_TweetCard", item)
 }
 
 </div>
