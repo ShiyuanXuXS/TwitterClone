@@ -40,7 +40,7 @@ builder.Services.Configure<IdentityOptions>(options=>{
     options.User.AllowedUserNameCharacters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail=true;
     //allow users with EmailConfirmed value 0/false to log in
-    options.SignIn.RequireConfirmedAccount=false;
+    options.SignIn.RequireConfirmedAccount=true;
 });
 
 builder.Services.ConfigureApplicationCookie(options=>{

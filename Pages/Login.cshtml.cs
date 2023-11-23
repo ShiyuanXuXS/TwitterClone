@@ -49,8 +49,9 @@ namespace TwitterClone.Pages
                 }
                 else
                 { // user does not exist, password invalid, account locked out
-                    ModelState.AddModelError(string.Empty, "Login failed (user does not exist, password invalid, or account locked out)");
+                    ModelState.AddModelError(string.Empty, "Login failed");
                 }
+
             }
             return Page();
         }

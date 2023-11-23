@@ -1,7 +1,8 @@
 ﻿@page
 @model TwitterClone.Pages.LoginModel
 @{
-
+    ViewData["Title"] = "Sign in";
+    Layout = "~/Pages/Shared/_LayoutFooterOnly.cshtml";
 }
 <div class="container">
     <div class="row my-5"></div>
@@ -23,6 +24,8 @@
                 </div>
                 <div class="row my-3">
                     <form method="post" class="">
+                                                <div asp-validation-summary="All" class="text-danger"></div>
+
                         <div class="row my-4">
                             <div class="form-floating p-0 mb-2">
                                 <input type="text" class="form-control" id="floatUsername" asp-for="Input.UserName"
@@ -34,7 +37,8 @@
                         </div>
                         <div class="row my-4 ">
                             <div class="form-floating p-0 mb-2">
-                                <input type="password" class="form-control" id="floatPassword" asp-for="Input.Password" placeholder="Password">
+                                <input type="password" class="form-control" id="floatPassword" asp-for="Input.Password"
+                                    placeholder="Password">
                                 <label for="floatPassword" asp-for="Input.Password">Password</label>
                                 <span asp-validation-for="Input.Password" class="text-danger"></span>
 
