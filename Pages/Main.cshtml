@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Identity
 @using TwitterClone.Models
 @using TwitterClone.Data
-@model MainModel
+
 
 @{
     ViewData["Title"] = "Main Page";
@@ -44,7 +44,8 @@
                 </div>
             </li>
             <li class="mb-3">
-                <partial name="_PartialFollowSuggestion" model="Model" />
+                @* <partial name="_PartialFollowSuggestion" model="Model" /> *@
+                @await Component.InvokeAsync("WhoToFollow")
             </li>
             <li class="mb-3 fs-6 p-2 text-center">
 

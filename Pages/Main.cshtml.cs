@@ -13,8 +13,6 @@ public class MainModel : PageModel
     private readonly TwitterCloneDbContext _context;
     private readonly UserManager<User> _userManager;
 
-    public List<User> Users { get; set; } = null!;
-
 
     public MainModel(ILogger<MainModel> logger, TwitterCloneDbContext context, UserManager<User> userManager)
     {
@@ -24,11 +22,5 @@ public class MainModel : PageModel
     }
 
 
-    public async Task<IActionResult> OnGetAsync()
-    {
-        // Get all users using UserManager
-        Users = await _userManager.Users.ToListAsync();
-        return Page();
-    }
 }
 
