@@ -86,3 +86,38 @@ Meredith
 - continue working on login/registration
 3. Need assistance / figure things out
 -
+
+2023-11-23
+
+Shiyuan
+1.  Done / not done since last scrum:
+- create partial view for tweetcard
+- modify tweet post page
+2. To do until next Scrum:
+- add functions(like/retweet/reply/follow) to tweetlist
+3. Need assistance / figure things out
+- 
+
+Xiaoxing
+1.  Done / not done since last scrum:
+- change whotofollow sidebar partial view to view component,
+- whotofollow sidebar front-end
+2. To do until next Scrum:
+- whotofollow full list view component & front-end 
+- figure out how to rendre content using javascript
+3. Need assistance / figure things out
+- 
+
+Meredith
+1. Done since last scrum
+- registration/login mostly complete except birthday validation and email confirmation
+- create individual layout for registration/login pages
+- create 404 page for exception handling
+- attempt to work on email server
+2. Plan until next Scrum
+- birthday validation when registeration
+- error handling and routing for 404 and accessdenied 
+- create accessdenied page
+- start the avatar img upload process, set default value when registration
+3. Need assistance / figure things out
+-
