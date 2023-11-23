@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using TwitterClone.Models;
 using System.ComponentModel.DataAnnotations;
-
+using TwitterClone.Utils;
 
 namespace TwitterClone.Pages
 {
@@ -38,6 +38,7 @@ namespace TwitterClone.Pages
             [Required]
             [Display(Name = "Date of birth")]
             [DataType(DataType.Date)]
+            [DOB]
             //TODO validate date range
             public DateTime DOB { get; set; }
 

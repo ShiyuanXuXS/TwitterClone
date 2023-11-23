@@ -1,0 +1,24 @@
+﻿@page
+@model TwitterClone.Pages.NotFoundModel
+@{
+    ViewData["Title"] = "404 - Not Found";
+    //Layout = "~/Pages/Shared/_LayoutFooterOnly.cshtml";
+}
+<div class="container">
+    <div class="row my-5"></div>
+
+    <div class="row">
+        <div class="col-11 col-lg-6 offset-lg-3 fs-5">
+            <div class="row my-5"></div>
+
+        
+          
+                <div class="row my-3">
+                    Hmm... this page doesn't exist. Try searching for something else.
+                </div>
+                        <a class="btn btn-link rounded-pill bg-brand-color text-white fw-bold fs-5 py-2" asp-page="Search">Search</a> //TODO add search page or redirect elsewhere
+
+         
+        </div>
+
+    </div>
