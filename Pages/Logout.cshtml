@@ -1,4 +1,50 @@
 ﻿@page
 @model TwitterClone.Pages.LogoutModel
+
 @{
+    ViewData["Title"] = "Log out";
+    Layout = "~/Pages/Shared/_LayoutFooterOnly.cshtml";
 }
+<div class="container">
+    <div class="row my-5"></div>
+
+    <div class="row">
+        <div class="col-2 offset-5 text-center">
+            <div class="fw-bold display-2">
+                &#120144;
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-11 col-lg-6 offset-lg-3 fs-5">
+            <div class="row my-5"></div>
+
+            <div class="col-8 offset-2">
+                <div class="row my-5">
+                    <div class="display-6">Log out of Y?</div>
+                </div>
+                <div class="row my-3">
+                    <form method="post" class="">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <div class="row my-4">
+                            <div class="">
+                                You can always log back in at any time.
+                            </div>
+                        </div>
+
+                        <div class="row my-4">
+                            <input class="col btn btn-link rounded-pill fw-bold fs-5 bg-dark text-white py-2 mb-2"
+                                type="submit" value="Log out">
+                        </div>
+                    <div class="row my-4">
+                        <a class="col btn btn-link rounded-pill border-tertiary-gray fw-bold text-dark fs-5 py-2 mb-2"
+                            asp-page="Index">Cancel</a> 
+                            @* //TODO GO BACK *@
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

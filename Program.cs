@@ -51,7 +51,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     //Cookie settings
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(25);
-    options.LoginPath = "/Account/Login";
+    options.LoginPath = "/Login";
     options.AccessDeniedPath = "/AccessDenied";
     options.SlidingExpiration = true;
 });
@@ -130,6 +130,7 @@ using (var scope = app.Services.CreateScope())
 
 
 app.UseRouting();
+app.UseStatusCodePagesWithRedirects("NotFound");
 
 app.UseAuthorization();
 app.MapControllers();
