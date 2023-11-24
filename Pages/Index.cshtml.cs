@@ -23,7 +23,7 @@ public class IndexModel : PageModel
     {
         if (signInManager.IsSignedIn(User))
         {
-            return RedirectToPage("Main");
+            return RedirectToPage("Home");
         }
         else
         {

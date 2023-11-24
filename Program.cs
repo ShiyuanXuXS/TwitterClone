@@ -6,7 +6,9 @@ using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(/*options => {
+    options.Conventions.AuthorizePage("main");
+} */);
 builder.Services.AddHttpClient();
 
 builder.Configuration.AddEnvironmentVariables();
@@ -52,6 +54,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(25);
     options.LoginPath = "/Login";
+    options.LogoutPath = "/Logout";
     options.AccessDeniedPath = "/AccessDenied";
     options.SlidingExpiration = true;
 });
@@ -75,7 +78,6 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseAuthentication();
 using (var scope = app.Services.CreateScope())
 {
     void SeedUsersAndRoles(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
@@ -132,7 +134,9 @@ using (var scope = app.Services.CreateScope())
 app.UseRouting();
 app.UseStatusCodePagesWithRedirects("NotFound");
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 app.MapRazorPages();
 
