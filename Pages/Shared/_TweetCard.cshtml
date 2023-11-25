@@ -3,7 +3,7 @@
 
 @{
     @* var isCurrentUserAuthor = Model.Author.UserName == User.Identity.Name; *@
-    var isCurrentUserAuthor = Model.Author.UserName == "AAA111";
+    var isCurrentUserAuthor = Model.Author.UserName == "AAA222";
 }
 
 <div class="col-md-6 mb-4">
@@ -22,8 +22,8 @@
                     <h6 class="mb-0">@Model.Author.NickName</h6>
                     <p class="text-muted">@Model.Author.UserName</p>
                 </div>
-                <button type="button" class="btn btn-light ms-auto">
-                    <i class="bi bi-person-plus-fill"></i> 
+                <button type="button" class="followButton btn btn-light ms-auto" data-user-id="@Model.Author.Id">
+                    <i id="followIcon-@Model.Author.Id" class="bi bi-person-plus-fill"></i> 
                 </button>
             </div>
                 <div id="readonlyEditor_@Model.Id"></div>
@@ -36,15 +36,56 @@
                     <button type="button" class="btn btn-light mx-2 rounded">
                         <i class="bi bi-arrow-repeat"></i><!-- Repost -->
                     </button>
-                    <button type="button" class="btn btn-light mx-2 rounded">
-                        <i class="bi bi-heart"></i> <!-- Like -->
+                    <!-- Like Button -->
+                    <button id="likeButton-@Model.Id" type="button" class="likeButton btn btn-light mx-2 rounded" tweetId="@Model.Id">
+                         <!--<i id="likeIcon-@Model.Id" class="bi bi-heart-fill" fill="red"></i> -->
+                        <svg id="likeIcon-@Model.Id" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                        </svg>
                     </button>
+                    <script>
+                        var likeButton = document.getElementById(`likeButton-@Model.Id`);
+                        var likeIcon=document.getElementById(`likeIcon-@Model.Id`);
+                        //set color of like icon 
+                        fetch(`/api/Like/getLikeStatus?tweetId=@Model.Id`)
+                        .then(response=>response.json())
+                        .then(data => {
+                            var likeIcon=document.getElementById(`likeIcon-@Model.Id`);
+                            if (data.liked) {
+                                console.log("red");
+                                likeIcon.setAttribute('fill', 'red');
+                            }else{
+                                likeIcon.setAttribute('fill', 'gray');
+                                console.log("gray");
+                            }
+                        })
+                        .catch(error => {
+                            console.error( error);
+                        });
+                        //add click event handler on like button
+                        likeButton.addEventListener('click',()=>{
+                            fetch('/api/Like/setLike?tweetId=@Model.Id',{
+                                method:'post'
+                            })
+                            .then(response=>response.json())
+                            .then(data=>{
+                                var likeIcon=document.getElementById(`likeIcon-@Model.Id`);
+                                if (data.liked) {
+                                    likeIcon.setAttribute('fill', 'red');
+                                }else{
+                                    likeIcon.setAttribute('fill', 'gray');
+                                }
+                            })
+                        })
+
+                    </script>
+                                
                     @if (isCurrentUserAuthor)
                     {
-                        <a asp-page="./Edit" asp-route-id="@Model.Id" class="btn btn-light mx-2 rounded">
+                        <a href="/UserPortal/AddEditTweet?id=@Model.Id" class="btn btn-light mx-2 rounded">
                             <i class="bi bi-pencil"></i> <!--Edit-->
                         </a>
-                        <a asp-page="./Delete" asp-route-id="@Model.Id" class="btn btn-danger mx-2 rounded">
+                        <a href="/UserPortal/DeleteTweet?id=@Model.Id" class="btn btn-danger mx-2 rounded">
                             <i class="bi bi-trash"></i> <!--Delete-->
                         </a>
                     }

@@ -1,0 +1,48 @@
+@page
+@model TwitterClone.Pages.UserPortal.DeleteTweet
+@{
+    ViewData["Title"] = "DeleteTweet";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+
+<div class="col-md-6 mb-4">
+        <div class="card tweetCard border-0" >
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-2">
+            </div>
+                <div id="readonlyEditor_@Model.Tweet.Id"></div>
+                
+                <p class="card-text"><small class="text-muted">@Html.DisplayFor(modelItem => Model.Tweet.CreatedAt)</small></p>
+                
+                
+            </div>
+        </div>
+        
+        <script>
+            ClassicEditor
+                .create(document.querySelector('#readonlyEditor_@Model.Tweet.Id'), {
+                    isReadOnly: true,
+                    toolbar: []
+                })
+                .then(editor => {
+                    editor.setData(`@Html.Raw(Model.Tweet.Body)`);
+                    editor.enableReadOnlyMode( '#readonlyEditor_@Model.Tweet.Id');
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        </script>
+</div>
+    <form method="post">
+        <input type="hidden" asp-for="Tweet.Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-page="./MyTweets">Back to List</a>
+    </form>
+</div>
+
+
+
+

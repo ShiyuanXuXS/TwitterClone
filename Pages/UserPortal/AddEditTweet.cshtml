@@ -1,7 +1,7 @@
 @page
-@model TwitterClone.Pages.UserPortal.AddTweet
+@model TwitterClone.Pages.UserPortal.AddEditTweet
 @{
-    ViewData["Title"] = "AddTweet";
+    ViewData["Title"] = "AddEditTweet";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -10,6 +10,11 @@
     <div class="col-md-6">
         <form method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
+            @if (Model.IsEditMode)
+            {
+                <input type="hidden" asp-for="IsEditMode" />
+                <input type="hidden" asp-for="TweetId" />
+            }
             <div class="form-group">
                 <label asp-for="Body" class="control-label">What's new?</label>
                 <input asp-for="Body" class="form-control" id="bodyValue" type="hidden"/>
@@ -21,11 +26,12 @@
                     ClassicEditor
                         .create( document.querySelector( '#bodyEditor' ) ,{
                             cloudServices: {
-                                tokenUrl: '/api/User/GetCKEditorToken',
+                                tokenUrl: '/api/CKEditor/GetCKEditorToken',
                                 uploadUrl:'https://102094.cke-cs.com/easyimage/upload/'
                             }
                         })
                         .then(editor => {
+                            editor.setData(`@Html.Raw(Model.Body)`);
                             editor.model.document.on('change:data', () => {
                                 document.getElementById('bodyValue').value = editor.getData();
                             });

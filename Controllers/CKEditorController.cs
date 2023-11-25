@@ -8,11 +8,11 @@ namespace TwitterClone.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController: ControllerBase
+    public class CKEditorController: ControllerBase
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
-        public UserController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public CKEditorController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;

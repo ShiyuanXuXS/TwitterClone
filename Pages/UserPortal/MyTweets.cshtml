@@ -3,52 +3,47 @@
 @{
     ViewData["Title"] = "MyTweets";
 }
+@if (TempData["Message"] != null)
+{
+    <div id="flash-message" class="alert alert-success" role="alert">
+        @TempData["Message"]
+    </div>
+}
 
-<h1>@ViewData["Title"]</h1>
-@* <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script> *@
+<h2>@ViewData["Title"]</h2>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div>
     <div class="row">
         <div class="col-2 rounded rounded-pill bg-primary mb-5">
             <div class="text-center">
-                <a href="AddTweet" class="btn fs-5 text-white">
+                <a href="AddEditTweet" class="btn fs-5 text-white">
                     <strong>Tweet</strong>
                 </a>
             </div>
         </div>
     </div>
     @foreach (var item in Model.Tweets) {
-    @* <div class="col-md-6 mb-4">
-        <div class="card">
-            <div class="card-body">
-                
-                <div id="readonlyEditor_@item.Id"></div>
-                
-                <p class="card-text"><small class="text-muted">@Html.DisplayFor(modelItem => item.CreatedAt)</small></p>
-                <div class="btn-group" role="group" aria-label="">
-                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-secondary mx-2">Edit</a>
-                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                </div>
-            </div>
-        </div>
-        
-        <script>
-            ClassicEditor
-                .create(document.querySelector('#readonlyEditor_@item.Id'), {
-                    isReadOnly: true,
-                    toolbar: []
-                })
-                .then(editor => {
-                    editor.setData(`@Html.Raw(item.Body)`);
-                    editor.enableReadOnlyMode( '#readonlyEditor_@item.Id');
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        </script>
-    </div> *@
+    
     
     @Html.Partial("_TweetCard", item)
 }
 
 </div>
+
+
+
+<!-- flash-message -->
+@section Scripts {
+    <script>
+        var displayTime = 3000; 
+        document.addEventListener("DOMContentLoaded", function () {
+            var messageElement = document.getElementById("flash-message");
+            if (messageElement) {
+                setTimeout(function () {
+                    messageElement.style.display = 'none';
+                }, displayTime);
+            }
+        });
+    </script>
+}
