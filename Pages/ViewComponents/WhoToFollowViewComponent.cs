@@ -16,7 +16,7 @@ namespace TwitterClone.Pages.ViewComponents
     {
 
         private readonly UserManager<User> _userManager;
-        private readonly ILogger<MainModel> _logger;
+        private readonly ILogger<HomeModel> _logger;
         private readonly TwitterCloneDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -30,7 +30,7 @@ namespace TwitterClone.Pages.ViewComponents
 
 
 
-        public WhoToFollowViewComponent(UserManager<User> userManager, ILogger<MainModel> logger, TwitterCloneDbContext context, IHttpContextAccessor httpContextAccessor)
+        public WhoToFollowViewComponent(UserManager<User> userManager, ILogger<HomeModel> logger, TwitterCloneDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _logger = logger;

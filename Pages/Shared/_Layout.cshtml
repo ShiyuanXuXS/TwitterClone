@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject SignInManager<User> signInManager;
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -8,8 +10,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TwitterClone.styles.css" asp-append-version="true" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    @* <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> *@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
@@ -18,18 +20,19 @@
 <body>
     <div class="container max-w-3xl px-4 sm:px-6 md:max-w-5xl">
         <div class="row fs-5">
+                            @if (signInManager.IsSignedIn(User)) {
             <div class="col-3 sidebar">
                 <header class="">
-                    <div class="d-flex flex-column flex-shrink-0 p-3 ps-0 bg-body-tertiary" style="width: 230px;">
+                    <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 300px;">
                         <div class="mb-4">
-                            <a asp-page="/Main"
+                            <a asp-page="Home"
                                 class="d-block align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
                                 <img src="~/images/logo.png" alt="logo" height="40px" width="40px" />
                             </a>
 
                             <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
                                 <li class="nav-item mb-2">
-                                    <a asp-page="/Main" class="nav-link p-2 text-dark fs-5" aria-current="page">
+                                    <a asp-page="Home" class="nav-link p-2 text-dark fs-5" aria-current="page">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
                                             fill="currentColor" class="bi bi-house-heart-fill me-3" viewBox="0 0 16 16">
                                             <path d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354
@@ -125,7 +128,8 @@
                         </div>
                 </header>
             </div>
-
+   }
+                         
             <div class="col-9">
                 <main role="main" class="pb-3 row">
                     @RenderBody()
@@ -134,7 +138,6 @@
 
             <div class="col-2">
             </div>
-
         </div>
     </div>
 

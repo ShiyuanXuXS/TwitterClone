@@ -10,7 +10,7 @@ namespace TwitterClone.Pages.ViewComponents
     public class WhoToFollowFullListViewComponent : ViewComponent
     {
         private readonly UserManager<User> _userManager;
-        private readonly ILogger<MainModel> _logger;
+        private readonly ILogger<HomeModel> _logger;
         private readonly TwitterCloneDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -22,7 +22,7 @@ namespace TwitterClone.Pages.ViewComponents
         [BindProperty]
         public User? CurrentUser { get; set; }
 
-        public WhoToFollowFullListViewComponent(UserManager<User> userManager, ILogger<MainModel> logger, TwitterCloneDbContext context, IHttpContextAccessor httpContextAccessor)
+        public WhoToFollowFullListViewComponent(UserManager<User> userManager, ILogger<HomeModel> logger, TwitterCloneDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _logger = logger;

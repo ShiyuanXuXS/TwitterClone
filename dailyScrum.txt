@@ -121,3 +121,37 @@ Meredith
 - start the avatar img upload process, set default value when registration
 3. Need assistance / figure things out
 -
+
+2023-11-24
+
+Shiyuan
+1.  Done / not done since last scrum:
+- continue working on tweet card page
+2. To do until next Scrum:
+- working on tweet card page and all functions
+3. Need assistance / figure things out
+- 
+
+Xiaoxing
+1.  Done / not done since last scrum:
+- Whotofollow full list view component & front-end/back-end
+- follow controller to handle follow/unfollow
+2. To do until next Scrum:
+-  searchbox, search result page
+3. Need assistance / figure things out
+- 
+
+Meredith
+1. Done since last scrum
+- birthday validation when registeration
+- error handling and routing for 404 and accessdenied
+- create accessdenied page
+- logout page
+- conditionnallly rendre content to page when user sign in/out
+2. Plan until next Scrum
+- start the avatar img upload process, set default value when registration
+- debug authorization issues 
+- add logout button and function
+- start up profile page and add avatar/description
+3. Need assistance / figure things out
+- authorization of main page, it should redirect to login or index if user is not signed in 
