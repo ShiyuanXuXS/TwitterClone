@@ -10,8 +10,7 @@
     <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary">
         <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
             <li class="mb-3">
-                @await Html.PartialAsync("_PartialSearch", new
-                         MidtermTodos.Pages._PartialSearchModel())
+                <partial name="_PartialSearch" />
             </li>
             <li class="mb-3">
                 <div class="bg-light rounded p-2 px-3">

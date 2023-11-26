@@ -1,12 +1,12 @@
-﻿@page
+@page
 @model TwitterClone.Pages.HomeModel
 
 @{
     ViewData["Title"] = "Home / Y";
     Layout = "~/Pages/Shared/_Layout.cshtml";
-    //Layout = null;
 }
-<div class="col-8"> 
+
+<div class="col-8">
     @* @await Component.InvokeAsync("WhoToFollowFullList") *@
 
 </div>
@@ -14,8 +14,7 @@
     <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary">
         <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
             <li class="mb-3">
-                @await Html.PartialAsync("_PartialSearch", new
-                         MidtermTodos.Pages._PartialSearchModel())
+                <partial name="_PartialSearch" />
             </li>
             <li class="mb-3">
                 <div class="bg-light rounded p-2 px-3">
@@ -32,7 +31,7 @@
                     <ul class="nav flex-column">
                         <li class="mb-2">
                             <a asp-page="#" class="text-dark text-decoration-none fs-6">
-                                <strong>Hot tags</strong>
+                                <strong>hot tags</strong>
                             </a>
                             <p class="fs-6 mb-0 fw-lighter"><span class="fw-lighter">No.</span> Posts</p>
                         </li>
@@ -44,11 +43,19 @@
                 </div>
             </li>
             <li class="mb-3">
-                @* <partial name="_PartialFollowSuggestion" model="Model" /> *@
-                @await Component.InvokeAsync("WhoToFollow")
+                <div class="bg-light rounded p-2 px-3">
+                    <p class="fs-5 mb-4 fw-bold">Who to follow</p>
+                    <ul class="nav flex-column">
+                     <partial name="_PartialFollowSuggestion" model="@Model.FollowSuggestion" />
+                        <li class="mt-2">
+                             <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show more</button>
+                        </li>
+                    </ul>
+
+                </div>
+                @* @await Component.InvokeAsync("WhoToFollow") *@
             </li>
             <li class="mb-3 fs-6 p-2 text-center">
-
                 &copy; 2023 - Y - ShiYuan Xu, Meredith White, Xiaoxing Pan, All rights reserved.
             </li>
         </ul>
@@ -56,3 +63,11 @@
 
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+ $('.btnShowMoreFollow').click(function () {
+            window.location.href = '/FollowSuggestion';
+        });
+    });
+</script>
