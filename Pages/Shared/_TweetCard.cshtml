@@ -82,10 +82,10 @@
                                 
                     @if (isCurrentUserAuthor)
                     {
-                        <a href="/UserPortal/AddEditTweet?id=@Model.Id" class="btn btn-light mx-2 rounded">
+                        <a href="/ShowTweet/AddEditTweet?id=@Model.Id" class="btn btn-light mx-2 rounded">
                             <i class="bi bi-pencil"></i> <!--Edit-->
                         </a>
-                        <a href="/UserPortal/DeleteTweet?id=@Model.Id" class="btn btn-danger mx-2 rounded">
+                        <a href="/ShowTweet/DeleteTweet?id=@Model.Id" class="btn btn-danger mx-2 rounded">
                             <i class="bi bi-trash"></i> <!--Delete-->
                         </a>
                     }
