@@ -155,3 +155,70 @@ Meredith
 - start up profile page and add avatar/description
 3. Need assistance / figure things out
 - authorization of main page, it should redirect to login or index if user is not signed in 
+
+2023-11-26
+
+Shiyuan
+1.  Done / not done since last scrum:
+- like/unlike function and controller to response 
+- edit and delete funcion
+2. To do until next Scrum:
+- retweet funcion
+3. Need assistance / figure things out
+- 
+
+Xiaoxing
+1.  Done / not done since last scrum:
+- search page front-end
+2. To do until next Scrum:
+-  search result page and responce to search box
+3. Need assistance / figure things out
+- 
+
+Meredith
+1. Done since last scrum
+- debug authorization issues 
+- add logout button and function
+2. Plan until next Scrum
+- start the avatar img upload process, set default value when registration
+- start up profile page and add avatar/description
+3. Need assistance / figure things out
+- 
+
+2023-11-27
+
+Shiyuan
+1.  Done / not done since last scrum:
+- add nested tweet in the tweet card and edit page
+- retweet can be seen now
+2. To do until next Scrum:
+- add retweet function
+3. Need assistance / figure things out
+- 
+
+Xiaoxing
+1.  Done / not done since last scrum:
+- search people(username/nickname/description) and show results from search box
+2. To do until next Scrum:
+-  advanced search people from search box
+- search tweet from search box
+- search people and tweet from search page
+3. Need assistance / figure things out
+- 
+
+Meredith
+1. Done since last scrum
+- auth + routing
+- acount menu view component (needs debug/add jquery)
+- profile header view component
+- edit profile form page (needs debug)
+- edits to layout
+- set default avatar on signup
+2. Plan until next Scrum
+- complete edit profile
+- modify layout and/or view components 
+- public/private profile view
+- database + hosting
+- begin messages page
+3. Need assistance / figure things out
+- 
