@@ -8,8 +8,8 @@
 }
 
 @{
-    @* var isCurrentUserAuthor = Model.Author.UserName == User.Identity.Name; *@
-    var isCurrentUserAuthor = tweet.Author.UserName == "AAA222";
+    var isCurrentUserAuthor = User.Identity.Name == tweet.Author.UserName;
+    @* var isCurrentUserAuthor = tweet.Author.UserName == "AAA222"; *@
 }
 
 <div class="">

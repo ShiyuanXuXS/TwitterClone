@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -12,15 +14,17 @@ using TwitterClone.Models;
 
 namespace TwitterClone.Pages.UserPortal
 {
+    [Authorize]
     public class AddEditTweet : PageModel
     {
         private readonly ILogger<AddEditTweet> _logger;
         private readonly TwitterCloneDbContext _context;
-
-        public AddEditTweet(ILogger<AddEditTweet> logger,TwitterCloneDbContext context)
+        private readonly UserManager<User> _userManager;
+        public AddEditTweet(ILogger<AddEditTweet> logger,TwitterCloneDbContext context,UserManager<User> userManager)
         {
             _logger = logger;
             _context=context;
+            _userManager=userManager;
         }
         [BindProperty]
         public bool IsEditMode{get;set;}
@@ -34,7 +38,7 @@ namespace TwitterClone.Pages.UserPortal
         public async Task<IActionResult> OnGetAsync(int? id,int? reTweetId)
         {
             // _logger.LogInformation("----------------------id:"+id);
-            
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
             
             IsEditMode=id.HasValue;
             if (IsEditMode){
@@ -42,7 +46,7 @@ namespace TwitterClone.Pages.UserPortal
                 Tweet tweet = await _context.Tweets
                     .Include(t => t.ParentTweet)
                     .ThenInclude(pt => pt.Author)
-                    .FirstOrDefaultAsync(t => t.Id == id);
+                    .FirstOrDefaultAsync(t => t.Id == id && t.Author.Id == currentUser.Id);
                 //  _logger.LogInformation("---------------------"+tweet.ParentTweet.Author);
                 // return Page();
                 if (tweet==null){
@@ -65,14 +69,17 @@ namespace TwitterClone.Pages.UserPortal
             return Page();
         }
         public async Task<IActionResult> OnPostAsync(){
-            
-            if (!ModelState.IsValid){
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            if (!ModelState.IsValid ){
                 return Page();
             }
             if (IsEditMode){
                 // _logger.LogInformation("------------------------------Edit id="+TweetId);
                 Tweet tweet=await _context.Tweets.FirstOrDefaultAsync(t=>t.Id==TweetId);
                 if (tweet!=null){
+                    if (tweet.Author.Id!=currentUser.Id){
+                        return Page();
+                    }
                     tweet.Body=Body;
                     _context.Attach(tweet).State = EntityState.Modified;
                 }
@@ -82,7 +89,7 @@ namespace TwitterClone.Pages.UserPortal
                     Body=Body,
                     CreatedAt=DateTime.Now,
                     //Todo set Author to logged user
-                    Author=_context.Users.FirstOrDefault(u=>u.UserName=="AAA222")
+                    Author=currentUser
                 };
                 _context.Tweets.Add(tweet);
                 
