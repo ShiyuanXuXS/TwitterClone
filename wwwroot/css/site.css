@@ -71,3 +71,11 @@ body {
 .tweetCard:hover{
   background-color: rgb(242, 242, 242);
 }
+
+#acctMenu:hover {
+  background-color: rgb(242, 242, 242);
+}
+#bannerImg {
+  background-color: silver;
+  height: 12rem;
+}

@@ -39,7 +39,6 @@ namespace TwitterClone.Pages
             [Display(Name = "Date of birth")]
             [DataType(DataType.Date)]
             [DOB]
-            //TODO validate date range
             public DateTime DOB { get; set; }
 
             [Required]
@@ -68,7 +67,7 @@ namespace TwitterClone.Pages
         {
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.UserName, Email = Input.Email, NickName = Input.NickName, DateOfBirth = Input.DOB, EmailConfirmed = false };
+                var user = new User { UserName = Input.UserName, Email = Input.Email, NickName = Input.NickName, DateOfBirth = Input.DOB, Avatar = "https://storagetwitterclonev2.blob.core.windows.net/web/default-avatar.png", EmailConfirmed = false };
                 var result = await userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

@@ -1,0 +1,22 @@
+﻿@model TwitterClone.Models.User
+
+@if (Model != null)
+{
+
+<div class="row mt-5 position-relative">
+    <div class="row mb-2" id="bannerImg"></div>
+    <div class="row m-4"></div>
+    <div class="row position-absolute bottom-0">
+        <div class="col-3">
+            <img src="@Model.Avatar" alt="@Model.UserName avatar" height="120px" width="120px"
+                class="rounded-circle border border-white border-5">
+        </div>
+    </div>
+</div>
+
+
+
+
+
+}
+
