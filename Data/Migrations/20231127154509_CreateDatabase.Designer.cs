@@ -12,8 +12,8 @@ using TwitterClone.Data;
 namespace TwitterClone.Data.Migrations
 {
     [DbContext(typeof(TwitterCloneDbContext))]
-    [Migration("20231121023231_NickNameAddedToUser")]
-    partial class NickNameAddedToUser
+    [Migration("20231127154509_CreateDatabase")]
+    partial class CreateDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

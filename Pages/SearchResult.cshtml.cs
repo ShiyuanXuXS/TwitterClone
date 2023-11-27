@@ -20,6 +20,9 @@ namespace TwitterClone.Pages
         [BindProperty]
         public List<User> SearchedUser { get; set; } = null!;
 
+        [BindProperty]
+        public List<Tweet> SearchedTweet { get; set; } = null!;
+
         public SearchResultModel(ILogger<SearchResultModel> logger, TwitterCloneDbContext context, UserManager<User> userManager)
         {
             this.logger = logger;
@@ -30,9 +33,9 @@ namespace TwitterClone.Pages
         public async Task OnGetAsync(string term)
         {
             SearchTerm = term;
+
             // get users where username, nickname, or description contains search term, case ignored
             Console.WriteLine("Search Term: " + SearchTerm);
-
             if (SearchTerm != null)
             {
                 var searchedUser = context.Users
@@ -46,9 +49,14 @@ namespace TwitterClone.Pages
 
                 if (searchedUser.Count > 0)
                 {
+                    // get the current user
+                    var currentUser = await userManager.GetUserAsync(HttpContext.User);
+                    // exlcude current user from search result
+                    searchedUser = searchedUser.Where(u => u.Id != currentUser.Id).ToList();
                     SearchedUser = searchedUser;
                     Console.WriteLine("Searched User: " + SearchedUser.Count);
                 }
+                else
                 {
                     // No users found, handle this case
                     SearchedUser = new List<User>();
@@ -59,8 +67,21 @@ namespace TwitterClone.Pages
             {
                 Console.WriteLine("No users found");
             }
-        }
 
+            // get tweets where content contains search term, case ignored
+            if (SearchTerm != null)
+            {
+                var searchedTweet = context.Tweets.
+                                AsEnumerable()
+                                .Where(t => t.Body != null && t.Body.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                Console.WriteLine("---------Searched Tweet: " + searchedTweet.Count);
+            }
+            else
+            {
+                Console.WriteLine("No tweets found");
+            }
+
+        }
     }
 }
 
