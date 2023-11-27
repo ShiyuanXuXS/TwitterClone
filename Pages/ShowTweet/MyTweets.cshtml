@@ -26,7 +26,8 @@
     @foreach (var item in Model.Tweets) {
     
     
-    @Html.Partial("_TweetCard", item)
+    @* @Html.Partial("_TweetCard", item) *@
+    @await Html.PartialAsync("_TweetCard", new {Tweet=item,BodyContainerId=""})
 }
 
 </div>

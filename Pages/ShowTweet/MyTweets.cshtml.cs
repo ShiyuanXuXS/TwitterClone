@@ -14,7 +14,7 @@ namespace TwitterClone.Pages.UserPortal
     public class MyTweets : PageModel
     {
         private readonly ILogger<MyTweets> _logger;
-    private readonly TwitterCloneDbContext _context;
+        private readonly TwitterCloneDbContext _context;
         public MyTweets(ILogger<MyTweets> logger,TwitterCloneDbContext context)
         {
             _logger = logger;

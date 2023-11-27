@@ -26,22 +26,39 @@ namespace TwitterClone.Pages.UserPortal
         public bool IsEditMode{get;set;}
         [BindProperty]
         public int TweetId{get;set;}
+        public Tweet? ReTweet{ get;set; }
 
         [BindProperty,Required,MinLength(10),MaxLength(20000)]
         public string Body{get;set;}
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id,int? reTweetId)
         {
             // _logger.LogInformation("----------------------id:"+id);
             
+            
             IsEditMode=id.HasValue;
             if (IsEditMode){
-                Tweet tweet=await _context.Tweets.FirstOrDefaultAsync(t=>t.Id==id);
+                // Tweet tweet=await _context.Tweets.FirstOrDefaultAsync(t=>t.Id==id);
+                Tweet tweet = await _context.Tweets
+                    .Include(t => t.ParentTweet)
+                    .ThenInclude(pt => pt.Author)
+                    .FirstOrDefaultAsync(t => t.Id == id);
+                //  _logger.LogInformation("---------------------"+tweet.ParentTweet.Author);
+                // return Page();
                 if (tweet==null){
                     return NotFound();
                 }else{
                     Body=tweet.Body;
                     TweetId= (int)id;
+                    if (tweet.ParentTweet!=null){
+                        ReTweet=tweet.ParentTweet;
+                        _logger.LogInformation("---------------------"+ReTweet.Id);
+                    }
+                    
+                }
+            }else{
+                if (reTweetId.HasValue){
+                    ReTweet=await _context.Tweets.FirstOrDefaultAsync(t=>t.Id==reTweetId);
                 }
             }
 
