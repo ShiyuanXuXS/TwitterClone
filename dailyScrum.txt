@@ -31,6 +31,8 @@ Meredith
 3. Need assistance / figure things out
 - 
 
+
+
 2023-11-21
 
 Shiyuan
@@ -222,3 +224,38 @@ Meredith
 - begin messages page
 3. Need assistance / figure things out
 - 
+
+2023-11-28
+
+Shiyuan
+1.  Done / not done since last scrum:
+- 
+2. To do until next Scrum:
+- add retweet function
+3. Need assistance / figure things out
+- 
+
+Xiaoxing
+1.  Done / not done since last scrum:
+- search tweet back end
+- search people from search box/page
+2. To do until next Scrum:
+- what's happening part
+- notification(signalR)
+- debug, exclude current user from FollowSuggestion
+3. Need assistance / figure things out
+- show searched tweet back-end(pass tweets to _TweetCard partial view)
+- get tag string from tweet body
+
+Meredith
+1. Done since last scrum
+- complete edit profile
+- debug account menu
+- complete avatar upload
+- began public profile
+2. Plan until next Scrum
+- continue profile pages
+- begin messages
+- test deployment
+3. Need assistance / figure things out
+- maybe help with user query issues
