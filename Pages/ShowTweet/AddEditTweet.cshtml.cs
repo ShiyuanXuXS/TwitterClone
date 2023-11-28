@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -73,7 +74,7 @@ namespace TwitterClone.Pages.UserPortal
             return Page();
         }
         public async Task<IActionResult> OnPostAsync(){
-            _logger.LogInformation("------------------"+ReTweetId);
+            // _logger.LogInformation(ReplaceTag(Body));
             // return Page();
             
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
@@ -87,7 +88,7 @@ namespace TwitterClone.Pages.UserPortal
                     if (tweet.Author.Id!=currentUser.Id){
                         return Page();
                     }
-                    tweet.Body=Body;
+                    tweet.Body=ReplaceTag(Body);
                     _context.Attach(tweet).State = EntityState.Modified;
                 }
 
@@ -97,7 +98,7 @@ namespace TwitterClone.Pages.UserPortal
                     ReTweet= await _context.Tweets.FirstOrDefaultAsync(t=>t.Id==ReTweetId);
                 }
                 Tweet tweet=new Tweet{
-                    Body=Body,
+                    Body=ReplaceTag(Body),
                     ParentTweet=ReTweet,
                     CreatedAt=DateTime.Now,
                     //Todo set Author to logged user
@@ -133,6 +134,16 @@ namespace TwitterClone.Pages.UserPortal
             }
 
             return reTweet;
+        }
+
+        static string ReplaceTag(string bodyString)
+        {
+            string pattern = @"#([a-zA-Z][a-zA-Z0-9_-]*)";
+            Regex regex = new Regex(pattern);
+
+            string result = regex.Replace(bodyString, match => $"#<a href='\\searchTag?tag={match.Groups[1].Value}'>{match.Groups[1].Value}</a>");
+
+            return result;
         }
     }
 }

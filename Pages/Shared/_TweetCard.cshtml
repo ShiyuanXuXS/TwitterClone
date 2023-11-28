@@ -9,7 +9,6 @@
 
 @{
     var isCurrentUserAuthor = User.Identity.Name == tweet.Author.UserName;
-    @* var isCurrentUserAuthor = tweet.Author.UserName == "AAA222"; *@
 }
 
 <div class="">
@@ -39,8 +38,8 @@
                 <!-- Tweet Body -->
                 @{
                     string bodyId = string.IsNullOrEmpty(bodyContainerId)
-                        ? $"tweetBody_{tweet.Id}"
-                        : $"{bodyContainerId}_{tweet.Id}";
+                        ? $"tweetBody-{tweet.Id}"
+                        : $"{bodyContainerId}-{tweet.Id}";
                 }
                 <div id="@bodyId" class="CKEditor-noborder" ></div>
                 <script>
@@ -79,19 +78,20 @@
                         <i class="bi bi-arrow-repeat"></i>
                     </a>
                     <!-- Like Button -->
-                    <button id="likeButton-@tweet.Id" type="button" class="likeButton btn btn-light mx-2 rounded" tweetId="@tweet.Id">
-                        <svg id="likeIcon-@tweet.Id" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                    <button id="likeButton-@bodyId" type="button" class="likeButton btn btn-light mx-2 rounded" tweetId="@tweet.Id">
+                        <svg id="likeIcon-@bodyId" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" class="bi bi-heart-fill" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
                         </svg>
                     </button>
                     <script>
-                        var likeButton = document.getElementById(`likeButton-@tweet.Id`);
-                        var likeIcon=document.getElementById(`likeIcon-@tweet.Id`);
+                        var likeButton = document.getElementById(`likeButton-@bodyId`);
+                        var likeIcon=document.getElementById(`likeIcon-@bodyId`);
                         //set color of like icon 
                         fetch(`/api/Like/getLikeStatus?tweetId=@tweet.Id`)
                         .then(response=>response.json())
                         .then(data => {
-                            var likeIcon=document.getElementById(`likeIcon-@tweet.Id`);
+                            @* var likeIcon=document.getElementById(`likeIcon-@tweet.Id`); *@
+                            var likeIcon=document.getElementById(`likeIcon-@bodyId`);
                             if (data.liked) {
                                 likeIcon.setAttribute('fill', 'red');
                             }else{
@@ -108,12 +108,16 @@
                             })
                             .then(response=>response.json())
                             .then(data=>{
-                                var likeIcon=document.getElementById(`likeIcon-@tweet.Id`);
-                                if (data.liked) {
-                                    likeIcon.setAttribute('fill', 'red');
-                                }else{
-                                    likeIcon.setAttribute('fill', 'gray');
-                                }
+                                var likeIcons=document.querySelectorAll(`[id^="likeIcon-"][id$="-${@tweet.Id}"]`)
+                                console.log(likeIcons)
+                                likeIcons.forEach(likeIcon=>{
+                                    
+                                    if (data.liked) {
+                                        likeIcon.setAttribute('fill', 'red');
+                                    }else{
+                                        likeIcon.setAttribute('fill', 'gray');
+                                    }
+                                })
                             })
                         })
 

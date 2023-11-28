@@ -44,12 +44,29 @@
                         .then(editor => {
                             editor.setData(`@Html.Raw(Model.Body)`);
                             editor.model.document.on('change:data', () => {
+                                console.log(editor.getData())
                                 document.getElementById('bodyValue').value = editor.getData();
                             });
+
                         })
                         .catch( error => {
                             console.error( error );
                         } );
+                    var editor = CKEDITOR.instances['bodyEditor'];
+                    editor.on('key', function (event) {
+                        var selection = editor.getSelection();
+                        var startElement = selection.getStartElement();
+                        if (event.data.keyCode === CKEDITOR.CTRL + 51) {
+                            var text = startElement.getText();
+                            var match = text.match(/#(\w+)/);
+                            if (match) {
+                                var word = match[1];
+                                var tagLink = '<a href="/search?q=' + word + '">#' + word + '</a>';
+                                editor.document.$.execCommand('insertHTML', false, tagLink);
+                            }
+                        }
+                    });
+
                 </script>
             </div> 
             <div class="form-group">
