@@ -79,3 +79,7 @@ body {
   background-color: silver;
   height: 12rem;
 }
+
+.avatar {
+  object-fit: cover;
+}

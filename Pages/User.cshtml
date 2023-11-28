@@ -1,0 +1,90 @@
+﻿@page "{username}"
+@model TwitterClone.Pages.UserModel
+@{
+    ViewData["Title"] = "Y"; //TODO username
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    var user = Model.Profile;
+}
+
+@if (user != null)
+{
+    <div class="col-8 offset-1 col-xl-9 offset-xxl-0 ms-lg-5 ps-lg-5">
+    <div class="row mt-5 position-relative">
+        <div class="row mb-5" id="bannerImg"></div>
+        <div class="row m-3"></div>
+        <div class="row position-absolute bottom-0">
+            <div class="col-4">
+                <img src="@user.Avatar" alt="@user.UserName avatar" height="175px" width="175px"
+                    class="rounded-circle border border-white border-5 avatar">
+            </div>
+        </div>
+        @if (user.UserName == User.Identity.Name)
+            {
+                <div class="position-absolute bottom-0 end-0 text-end">
+                    <a class="col btn btn-link rounded-pill border-tertiary-gray fw-bold text-dark fs-5 py-2 px-4"
+                asp-page="Settings/Profile">Edit profile</a>
+                </div>
+            }
+        </div>
+
+        <div class="row fs-4 fw-bold mt-3 ps-4">@user.NickName</div>
+        <div class="row fs-5 text-secondary ps-4">&#64;@user.UserName</div>
+        <div class="row fs-5 mt-3 ps-4">@user.Description</div>
+
+        <div class="row mt-5">
+            <ul class="nav nav-tabs justify-content-around">
+                <li class="nav-item">
+                    <a id="tabPosts" class="nav-link fs-5">Posts</a>
+                </li>
+                <li class="nav-item">
+                    <a id="tabReplies" class="nav-link fs-5">Replies</a>
+                </li>
+                <li class="nav-item">
+                    <a id="tabLikes" class="nav-link fs-5">Likes</a>
+                </li>
+            </ul>
+        </div>
+
+        <div id="listPosts">
+            @await Component.InvokeAsync("UserTweets", user.UserName)
+
+        </div>
+        <div id="listReplies" style="display: none;">
+            @await Component.InvokeAsync("UserReplies", user.UserName)
+
+        </div>
+        <div id="listLikes" style="display: none;">
+            @await Component.InvokeAsync("UserLikes", user.UserName)
+
+        </div>
+
+    </div>
+
+
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $('#tabPosts').click(function () {
+            $('#listPosts').show();
+            $('#listReplies').hide();
+            $('#listLikes').hide();
+        });
+
+        $('#tabReplies').click(function () {
+            $('#listPosts').hide();
+            $('#listReplies').show();
+            $('#listLikes').hide();
+        });
+
+        $('#tabLikes').click(function () {
+            $('#listPosts').hide();
+            $('#listReplies').hide();
+            $('#listLikes').show();
+        });
+    });
+
+</script>

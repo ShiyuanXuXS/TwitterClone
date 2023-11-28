@@ -116,11 +116,11 @@ namespace TwitterClone.Pages.Settings
 
                 if (result.Succeeded)
                 {
-                    return RedirectToPage("../Home"); //TODO back to profile + flash msg
+                    return RedirectToPage("../User", new { username = ModelUser.UserName}); //TODO flash msg
                 }
                 else
                 {
-                    return RedirectToPage("../NotFound"); //FIXME
+                    return RedirectToPage("../NotFound");
                 }
             }
 

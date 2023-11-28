@@ -1,0 +1,15 @@
+﻿@using TwitterClone.Models
+@model List<Tweet>
+
+@if (Model != null && Model.Any() == true)
+{
+    @foreach (var tweet in Model) {
+    
+    
+    @await Html.PartialAsync("_TweetCard", new {Tweet=tweet,BodyContainerId=""})
+}
+} else {
+
+            <div class="row m-5 text-secondary">No posts yet</div>
+
+}

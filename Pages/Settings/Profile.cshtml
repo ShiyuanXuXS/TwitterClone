@@ -56,8 +56,7 @@
             </div>
             <div class="row my-4">
                 <a class="col btn btn-link rounded-pill border-tertiary-gray fw-bold text-dark fs-5 py-2"
-                    asp-page="../Home">Cancel</a>
-                @* TODO: go back to profile *@
+                    asp-page="../User" asp-route-username="@User.Identity.Name">Cancel</a>
             </div>
         </form>
     </div>
