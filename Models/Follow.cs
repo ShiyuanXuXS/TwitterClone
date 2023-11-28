@@ -21,8 +21,8 @@ namespace TwitterClone.Models
         public DateTime CreatedAt { get; set; }
 
 
-        public User User { get; set; }
-        public User Author { get; set; }
+        public User? User { get; set; }
+        public User? Author { get; set; }
 
 
     }

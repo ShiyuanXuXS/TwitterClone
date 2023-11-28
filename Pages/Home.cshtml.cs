@@ -5,6 +5,7 @@ using TwitterClone.Data;
 using TwitterClone.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Policy;
 
 
 namespace TwitterClone.Pages
@@ -21,6 +22,8 @@ namespace TwitterClone.Pages
         public List<User> FollowedUser { get; set; } = null!;
         public List<User> FollowSuggestion { get; set; } = null!;
 
+        public List<Tweet> Tweet { get; set; } = null!;
+
         [BindProperty]
         public User? CurrentUser { get; set; }
 
@@ -31,6 +34,35 @@ namespace TwitterClone.Pages
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
+
+        // private List<ShowTrendModel> getTrend(User currentUser)
+        // {
+        //     var randomTweets = context.Tweets
+        // .AsEnumerable() // Switch to client-side evaluation
+        // .Where(t => t.Author.Id != currentUser.Id)
+        // .OrderBy(x => Guid.NewGuid()) // Random order
+        // .Take(5) // Take 3 tweets
+        // .ToList();
+
+
+        // foreach (var tweet in randomTweets)
+        //     {
+        //         Count = context.Tweets.Where(t => t.ParentTweet.Id == tweet.Id).Count();
+        //         Hashtag = tweet.Hashtag; 
+        //     }
+
+        //     return res;
+        // }
+
+        public class ShowTrendModel
+        {
+            public string? Hashtag { get; set; }
+            public int Count { get; set; }
+        }
+
+        public ShowTrendModel? ShowTrend { get; set; }
+
+
         public async Task OnGetAsync()
         {
             // get all users
@@ -49,7 +81,9 @@ namespace TwitterClone.Pages
                     {  // if current user is following someone, show users that current user is not following
                         FollowedUser = followedUser;
                         Console.WriteLine("Followed User: " + FollowedUser.Count);
-                        var followSuggestion = User.Except(FollowedUser).ToList();
+
+                        var followSuggestionRes = User.Except(FollowedUser).ToList();
+                        var followSuggestion = followSuggestionRes.Where(u => u.Id != currentUser.Id).ToList();
                         if (followSuggestion.Count > 0)
                         {
                             FollowSuggestion = followSuggestion;

@@ -28,8 +28,8 @@ namespace TwitterClone.Controllers
         {
             Console.WriteLine("--------HandleFollow--------");
             // Get the current user
-            var currentUser = await _userManager.FindByIdAsync("e1ea2e3b-d50f-4cc9-adaa-050b57eb412d");  // test user
-            // var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            // var currentUser = await _userManager.FindByIdAsync("e1ea2e3b-d50f-4cc9-adaa-050b57eb412d");  // test user
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
             var userToFollow = await _userManager.FindByIdAsync(userId);
 
             if (currentUser != null && userToFollow != null)

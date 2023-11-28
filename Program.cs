@@ -21,6 +21,13 @@ builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.Requi
 .AddEntityFrameworkStores<TwitterCloneDbContext>()
 .AddDefaultTokenProviders();
 
+// builder.Services.AddSession(options =>
+// {
+//     options.IdleTimeout = TimeSpan.FromMinutes(25);
+//     options.Cookie.HttpOnly = true;
+//     options.Cookie.IsEssential = true;
+// });
+
 //blob storage config
 var blobStorageConn = builder.Configuration.GetConnectionString("BlobStorageConnection");
 builder.Services.AddAzureClients(azureBuilder =>

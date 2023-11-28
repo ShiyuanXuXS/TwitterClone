@@ -29,12 +29,13 @@
                 <div class="bg-light rounded p-2 px-3">
                     <p class="fs-5 mb-4 fw-bold">What's happening</p>
                     <ul class="nav flex-column">
-                        <li class="mb-2">
-                            <a asp-page="#" class="text-dark text-decoration-none fs-6">
-                                <strong>hot tags</strong>
-                            </a>
-                            <p class="fs-6 mb-0 fw-lighter"><span class="fw-lighter">No.</span> Posts</p>
-                        </li>
+                        <partial name="_PartialWhatsHappening" />
+                        @* <li class="mb-2">
+                        <a asp-page="#" class="text-dark text-decoration-none fs-6">
+                        <strong>hot tags</strong>
+                        </a>
+                        <p class="fs-6 mb-0 fw-lighter"><span class="fw-lighter">No.</span> Posts</p>
+                        </li> *@
                         <li class="mt-2">
                             <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
                                 more</button>
@@ -46,9 +47,9 @@
                 <div class="bg-light rounded p-2 px-3">
                     <p class="fs-5 mb-4 fw-bold">Who to follow</p>
                     <ul class="nav flex-column">
-                     <partial name="_PartialFollowSuggestion" model="@Model.FollowSuggestion" />
+                        <partial name="_PartialFollowSuggestion" model="@Model.FollowSuggestion" />
                         <li class="mt-2">
-                             <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show more</button>
+                            <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show more</button>
                         </li>
                     </ul>
 
@@ -66,7 +67,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
- $('.btnShowMoreFollow').click(function () {
+        $('.btnShowMoreFollow').click(function () {
             window.location.href = '/FollowSuggestion';
         });
     });

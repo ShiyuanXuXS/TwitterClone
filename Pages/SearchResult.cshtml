@@ -2,7 +2,12 @@
 @model TwitterClone.Pages.SearchResultModel
 @{
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    var allSearchedUser = Model.AllSearchedUser;
+    var displayUser = Model.SearchedUser;
+    int indexPeople = Model.indexPeople;
+    int indexTweet = Model.indexTweet;
 }
+
 <div class="col-8">
     <div class="p-2 px-3 border-end border-start">
         <div class="d-flex align-items-center p-2 mb-3">
@@ -20,214 +25,220 @@
         <div>
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active fs-5" aria-current="page" href="#">Top</a>
+                    <form method="post" asp-page-handler="ShowTweetAndUser" name="ShowTweetAndUserForm">
+                        <input type="hidden" value="@ViewData["SearchTerm"]" />
+                        <button type="submit" style="display:none;"></button>
+                        <a id="peopleTweetLink" class="nav-link fs-5" onclick="submitShowTweetAndUserForm()">Top</a>
+                    </form>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled fs-5" aria-disabled="true">People</a>
+                    <form method="post" asp-page-handler="ShowAllPeople" name="showAllPeopleForm">
+                        <input type="hidden" value="@ViewData["SearchTerm"]" />
+                        <button type="submit" style="display:none;"></button>
+                        <a id="userLink" class="nav-link fs-5" onclick="submitShowAllPeopleForm()">People</a>
+                    </form>
+                </li>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled fs-5" aria-disabled="true">Media</a>
+                    <form method="post" asp-page-handler="ShowAllTweet" name="showAllTweetForm">
+                        <input type="hidden" value="@ViewData["SearchTerm"]" />
+                        <button type="submit" style="display:none;"></button>
+                        <a id="TweetLink" class="nav-link fs-5" onclick="submitShowAllTweetForm()">Media</a>
+                    </form>
+
                 </li>
             </ul>
         </div>
-        <div class="p-2">
-            <p class="fs-5 fw-bold mt-3 mb-0">People</p>
-            @if (Model.SearchedUser != null && Model.SearchedUser.Any())
-            {
-                <ul class="nav flex-column">
-                    @foreach (var user in Model.SearchedUser)
-                    {
-                        <li class="mb-2 d-flex align-items-center p-2 ps-0">
-                            <div class="fs-6"> <img src="@user.Avatar" alt="avatar" width="32" height="32"
-                                    class="rounded-circle"></div>
-                            <div class="names fs-6 ps-2">
-                                <div class="fw-bold">@user.NickName</div>
-                                <div>&#64;@user.UserName</div>
-                            </div>
-                            <div class="ms-auto">
-                                <button class="btnFollow btn btn-dark btn-sm rounded rounded-pill fw-bold"
-                                    data-user-id="@user.Id">Follow</button>
-                            </div>
+        @if (indexTweet == 0 || indexPeople == 1)
+        {
+            <div class="p-2">
+                <p class="fs-5 fw-bold mt-3 mb-0">People</p>
+                @if (displayUser != null && displayUser.Any())
+                {
+                    <ul class="nav flex-column">
+                        @foreach (var user in displayUser)
+                        {
+                            <li class="mb-2 d-flex align-items-center p-2 ps-0">
+                                <div class="fs-6">
+                                    <img src="@user.Avatar" alt="avatar" width="32" height="32" class="rounded-circle">
+                                </div>
+                                <div class="names fs-6 ps-2">
+                                    <div class="fw-bold">@user.NickName</div>
+                                    <div>&#64;@user.UserName</div>
+                                    <div>@user.Description</div>
+                                </div>
+                                <div class="ms-auto">
+                                    <button class="btnFollowSearch btn btn-dark btn-sm rounded rounded-pill fw-bold"
+                                        data-user-id="@user.Id">Follow</button>
+                                </div>
+                            </li>
+                        }
+                        <li class="mt-2">
+                            @if (indexPeople == 1)
+                            {
+                                <button type="button" class="btn btn-link fs-6 no-underline ps-0" id="BtnShowMorePeople"
+                                    onclick="submitshowAllPeopleForm()">Show
+                                    more </button>
+                            }
                         </li>
-                    }
-                    <li class="mt-2">
-                        <button type="button" class="btnShowMoreFollow btn btn-link fs-6 no-underline ps-0">Show
-                            more</button>
-                    </li>
-                </ul>
-            }
-            else
-            {
-                <div class="d-flex mt-3 mb-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-emoji-dizzy" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                        <path
-                            d="M9.146 5.146a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708m-5 0a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 1 1 .708.708l-.647.646.647.646a.5.5 0 1 1-.708.708L5.5 7.207l-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708zM10 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-emoji-dizzy" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                        <path
-                            d="M9.146 5.146a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708m-5 0a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 1 1 .708.708l-.647.646.647.646a.5.5 0 1 1-.708.708L5.5 7.207l-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708zM10 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-emoji-dizzy" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                        <path
-                            d="M9.146 5.146a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708m-5 0a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 1 1 .708.708l-.647.646.647.646a.5.5 0 1 1-.708.708L5.5 7.207l-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708zM10 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0" />
-                    </svg>
-                </div>
-                <p class="fw-bold fs-6 my-0">No results</p>
-                <p class="fs-6 mt-0">Try different keywords.</p>
-            }
-        </div>
-        <hr>
-        <div>
-            // twitter posts
-            @* <div class="card tweetCard border-0">
-            <div class="card-body p-4">
-            <div class="d-flex align-items-center mb-2">
-            @if (!string.IsNullOrEmpty(Model.Author.Avatar))
-            {
-            <img src="@Model.Author.Avatar" alt="Author Avatar" class="rounded-circle" width="32"
-            height="32">
-            }
-            else
-            {
-            <i class="bi bi-person-fill fs-4 text-muted"></i>
-            }
-            <div class="ms-2">
-            <h6 class="mb-0">@Model.Author.NickName</h6>
-            <p class="text-muted">@Model.Author.UserName</p>
+                    </ul>
+                }
+                else
+                {
+                    <div class="d-flex mt-3 mb-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-emoji-dizzy" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                            <path
+                                d="M9.146 5.146a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708m-5 0a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 1 1 .708.708l-.647.646.647.646a.5.5 0 1 1-.708.708L5.5 7.207l-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708zM10 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-emoji-dizzy" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                            <path
+                                d="M9.146 5.146a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708m-5 0a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 1 1 .708.708l-.647.646.647.646a.5.5 0 1 1-.708.708L5.5 7.207l-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708zM10 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-emoji-dizzy" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                            <path
+                                d="M9.146 5.146a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708m-5 0a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 1 1 .708.708l-.647.646.647.646a.5.5 0 1 1-.708.708L5.5 7.207l-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708zM10 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0" />
+                        </svg>
+                    </div>
+                    <p class="fw-bold fs-6 my-0">No results</p>
+                    <p class="fs-6 mt-0">Try different keywords.</p>
+                }
             </div>
-            <button type="button" class="followButton btn btn-light ms-auto"
-            data-user-id="@Model.Author.Id">
-            <i id="followIcon-@Model.Author.Id" class="bi bi-person-plus-fill"></i>
-            </button>
+            <hr>
+        }
+        @if (indexPeople == 1 || indexTweet == 1)
+        {
+            <div class="p-2">
+                <p class="fs-5 fw-bold mt-3 mb-0">Tweets</p>
+                @* <partial name="_TweetCard" model="@Model.SearchedTweet" /> *@
             </div>
-            <div id="readonlyEditor_@Model.Id"></div>
+        }
 
-            <p class="card-text"><small class="text-muted">@Html.DisplayFor(modelItem =>
-            Model.CreatedAt)</small></p>
-            <div class="btn-group" role="group" aria-label="">
-            <button type="button" class="btn btn-light mx-2 rounded">
-            <i class="bi bi-chat"></i> <!-- replay -->
-            </button>
-            <button type="button" class="btn btn-light mx-2 rounded">
-            <i class="bi bi-arrow-repeat"></i><!-- Repost -->
-            </button>
-            <!-- Like Button -->
-            <button id="likeButton-@Model.Id" type="button" class="likeButton btn btn-light mx-2 rounded"
-            tweetId="@Model.Id">
-            <!--<i id="likeIcon-@Model.Id" class="bi bi-heart-fill" fill="red"></i> -->
-            <svg id="likeIcon-@Model.Id" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-            fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
-            <path fill-rule="evenodd"
-            d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
-            </svg>
-            </button>
-            <script>
-            var likeButton = document.getElementById(`likeButton-@Model.Id`);
-            var likeIcon = document.getElementById(`likeIcon-@Model.Id`);
-            //set color of like icon
-            fetch(`/api/Like/getLikeStatus?tweetId=@Model.Id`)
-            .then(response => response.json())
-            .then(data => {
-            var likeIcon = document.getElementById(`likeIcon-@Model.Id`);
-            if (data.liked) {
-            console.log("red");
-            likeIcon.setAttribute('fill', 'red');
-            } else {
-            likeIcon.setAttribute('fill', 'gray');
-            console.log("gray");
-            }
-            })
-            .catch(error => {
-            console.error(error);
-            });
-            //add click event handler on like button
-            likeButton.addEventListener('click', () => {
-            fetch('/api/Like/setLike?tweetId=@Model.Id', {
-            method: 'post'
-            })
-            .then(response => response.json())
-            .then(data => {
-            var likeIcon = document.getElementById(`likeIcon-@Model.Id`);
-            if (data.liked) {
-            likeIcon.setAttribute('fill', 'red');
-            } else {
-            likeIcon.setAttribute('fill', 'gray');
-            }
-            })
-            })
-
-            </script>
-
-            @if (isCurrentUserAuthor)
-            {
-            <a href="/ShowTweet/AddEditTweet?id=@Model.Id" class="btn btn-light mx-2 rounded">
-            <i class="bi bi-pencil"></i> <!--Edit-->
-            </a>
-            <a href="/ShowTweet/DeleteTweet?id=@Model.Id" class="btn btn-danger mx-2 rounded">
-            <i class="bi bi-trash"></i> <!--Delete-->
-            </a>
-            }
-            </div>
-
-            </div>
-            </div> *@
-        </div>
     </div>
+</div>
 
-    <div class="col-4">
-        <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary">
-            <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
-                <li class="mb-3">
-                    <div class="border rounded px-3">
-                        <p class="fs-5 fw-bold mb-0 py-2">Search Filters</p>
-                    </div>
-                    @* search filters/advanced search *@
-                </li>
-                <li class="mb-3 ">
-                    <div class="border rounded px-3">
-                        <p class="fs-6 fw-bold mb-0 pt-2">Pepole</p>
-                        <div class="py-2">
-                            <div class="d-flex">
-                                <label class="fs-6">From anyone</label>
-                                <input type="radio" class="ms-auto" name="searchOption" />
-                            </div>
-                            <div class="d-flex">
-                                <label class="fs-6">People you follow</label>
-                                <input type="radio" class="ms-auto" name="searchOption" />
-                            </div>
-                        </div>
-                    </div>
+<div class="col-4">
+    <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary">
+        <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
+            @* <li class="mb-3">
+            <div class="border rounded px-3">
+            <p class="fs-5 fw-bold mb-0 py-2">Search Filters</p>
+            </div>
 
-                </li>
-                <li class="mb-3">
-                    <div class="bg-light rounded p-2 px-3">
-                        <p class="fs-5 mb-4 fw-bold">What's happening</p>
-                        <ul class="nav flex-column">
-                            <li class="mb-2">
-                                <a asp-page="#" class="text-dark text-decoration-none fs-6">
-                                    <strong>Hot tags</strong>
-                                </a>
-                                <p class="fs-6 mb-0 fw-lighter"><span class="fw-lighter">No.</span> Posts</p>
-                            </li>
-                            <li class="mt-2">
-                                <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
-                                    more</button>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="mb-3">
-                    @await Component.InvokeAsync("WhoToFollow")
-                </li>
-                <li class="mb-3 fs-6 p-2 text-center">
+            </li>
+            <li class="mb-3 ">
+            <div class="border rounded px-3">
+            <p class="fs-6 fw-bold mb-0 pt-2">Pepole</p>
+            <div class="py-2">
+            <div class="d-flex">
+            <label class="fs-6">From anyone</label>
+            <input type="radio" class="ms-auto" name="searchOption" />
+            </div>
+            <div class="d-flex">
+            <label class="fs-6">People you follow</label>
+            <input type="radio" class="ms-auto" name="searchOption" />
+            </div>
+            </div>
+            </div>
+            </li> *@
+            <li class="mb-3">
+                <div class="bg-light rounded p-2 px-3">
+                    <p class="fs-5 mb-4 fw-bold">What's happening</p>
+                    <ul class="nav flex-column">
+                        <li class="mb-2">
+                            <a asp-page="#" class="text-dark text-decoration-none fs-6">
+                                <strong>Hot tags</strong>
+                            </a>
+                            <p class="fs-6 mb-0 fw-lighter"><span class="fw-lighter">No.</span> Posts</p>
+                        </li>
+                        <li class="mt-2">
+                            <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
+                                more</button>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-3">
+                @await Component.InvokeAsync("WhoToFollow")
+            </li>
+            <li class="mb-3 fs-6 p-2 text-center">
+                &copy; 2023 - Y - ShiYuan Xu, Meredith White, Xiaoxing Pan, All rights
+                reserved.
+            </li>
+        </ul>
+    </div>
+</div>
 
-                    &copy; 2023 - Y - ShiYuan Xu, Meredith White, Xiaoxing Pan, All rights reserved.
-                </li>
-            </ul>
-        </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function submitShowAllPeopleForm() {
+        document.forms["showAllPeopleForm"].submit();
+    }
+
+    function submitShowTweetAndUserForm() {
+        document.forms["ShowTweetAndUserForm"].submit();
+    }
+
+    function submitShowAllTweetForm() {
+        document.forms["showAllTweetForm"].submit();
+    }
+    $(document).ready(function () {
+        // Attach click event to follow buttons
+        $('.btnFollowSearch').click(function () {
+            // Get the user id from the data attribute
+            var userId = $(this).data('user-id');
+            var button = $(this);
+            // Make an asynchronous request to the server
+            fetch('api/Follow/HandleFollow', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userId),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle success
+                    console.log('Success:', data);
+                    // Toggle between "Follow" and "Unfollow"
+                    button.text(button.text() === 'Follow' ? 'Unfollow' : 'Follow');
+                    // Optionally, you can also toggle classes based on the text content
+                    button.toggleClass('btn-dark btn-secondary');
+                })
+                .catch(function (error) {
+                    // Handle error
+                    console.error(error);
+                });
+        });
+        $('.btnShowMoreFollow').click(function () {
+            window.location.href = '/FollowSuggestion';
+        });
+    });
+
+</script>
+@* <script>
+function showall(allSearchedUser) {
+var searchedUser = allSearchedUser;
+var html = "";
+for (var i = 0; i < searchedUser.length; i++) {
+html += '<li class="mb-2 d-flex align-items-center p-2 ps-0">';
+html += '<div class="fs-6"> <img src="' + searchedUser[i].avatar + '" alt="avatar" width="32" height="32"
+class="rounded-circle"></div>';
+html += '<div class="names fs-6 ps-2">';
+html += '<div class="fw-bold">' + searchedUser[i].nickName + '</div>';
+html += '<div>&#64;' + searchedUser[i].userName + '</div>';
+html += '</div>';
+html += '<div class="ms-auto">';
+html += '<button class="btnFollow btn btn-dark btn-sm rounded rounded-pill fw-bold" data-user-id="' +
+searchedUser[i].id + '">Follow</button>';
+html += '</div>';
+html += '</li>';
+}
+$(".nav").html(html);
+}
+</script> *@
