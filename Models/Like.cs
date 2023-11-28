@@ -16,11 +16,11 @@ namespace TwitterClone.Models
 
         // // [Key, Column(Order = 2)]
         // public int TweetId { get; set; }
-        public int Id{get;set;}
-        public DateTime CreatedAt{get;set;}
-        public User? User{get;set;}
-        public Tweet Tweet{get;set;}
+        public int Id { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public User? User { get; set; }
+        public Tweet? Tweet { get; set; }
 
-        
+
     }
 }

@@ -1,10 +1,9 @@
-
 @* @model TwitterClone.Models.Tweet *@
 @model dynamic
 
 @{
-    Tweet tweet=Model.Tweet;
-    string bodyContainerId=Model.BodyContainerId;
+    Tweet tweet = Model.Tweet;
+    string bodyContainerId = Model.BodyContainerId;
 }
 
 @{
@@ -12,36 +11,36 @@
 }
 
 <div class="">
-        <div class="card tweetCard border-0" >
-            <div class="card-body p-4">
-                <!-- Avatar -->
-                <div class="d-flex align-items-center mb-2">
+    <div class="card tweetCard border-0">
+        <div class="card-body p-2">
+            <!-- Avatar -->
+            <div class="d-flex align-items-center mb-2">
                 @if (!string.IsNullOrEmpty(tweet.Author.Avatar))
                 {
                     <img src="@tweet.Author.Avatar" alt="Author Avatar" class="rounded-circle" width="32" height="32">
                 }
                 else
                 {
-                    <i class="bi bi-person-fill fs-4 text-muted"></i> 
+                    <i class="bi bi-person-fill fs-4 text-muted"></i>
                 }
                 <!-- Author Name -->
                 <div class="ms-2">
-                    <h6 class="mb-0">@tweet.Author.NickName</h6>
-                    <p class="text-muted">@tweet.Author.UserName</p>
+                    <h6 class="mb-0 fs-6">@tweet.Author.NickName</h6>
+                    <p class="text-muted fs-6 mb-0">@tweet.Author.UserName</p>
                 </div>
                 <!-- Follow Button -->
                 <button type="button" class="followButton btn btn-light ms-auto" data-user-id="@tweet.Author.Id">
-                    <i id="followIcon-@tweet.Author.Id" class="bi bi-person-plus-fill"></i> 
+                    <i id="followIcon-@tweet.Author.Id" class="bi bi-person-plus-fill"></i>
                 </button>
             </div>
-            <div class="border">
+            <div class="border fs-6">
                 <!-- Tweet Body -->
                 @{
                     string bodyId = string.IsNullOrEmpty(bodyContainerId)
                         ? $"tweetBody-{tweet.Id}"
                         : $"{bodyContainerId}-{tweet.Id}";
                 }
-                <div id="@bodyId" class="CKEditor-noborder" ></div>
+                <div id="@bodyId" class="CKEditor-noborder"></div>
                 <script>
                     ClassicEditor
                         .create(document.querySelector('#@bodyId'), {
@@ -50,18 +49,19 @@
                         })
                         .then(editor => {
                             editor.setData(`@Html.Raw(tweet.Body)`);
-                            editor.enableReadOnlyMode( '#@bodyId');
+                            editor.enableReadOnlyMode('#@bodyId');
                         })
                         .catch(error => {
                             console.error(error);
                         });
                 </script>
                 <!-- ReTweet -->
-                
-                <div class="">
-                    @if (tweet.ParentTweet!=null){
-                        @await Html.PartialAsync("_TweetCard", new {Tweet=tweet.ParentTweet,BodyContainerId=bodyId})
-                        
+
+                <div class="fs-6">
+                    @if (tweet.ParentTweet != null)
+                    {
+                        @await Html.PartialAsync("_TweetCard", new { Tweet = tweet.ParentTweet, BodyContainerId = bodyId })
+
                     }
                 </div>
             </div>
@@ -94,12 +94,12 @@
                             var likeIcon=document.getElementById(`likeIcon-@bodyId`);
                             if (data.liked) {
                                 likeIcon.setAttribute('fill', 'red');
-                            }else{
+                            } else {
                                 likeIcon.setAttribute('fill', 'gray');
                             }
                         })
                         .catch(error => {
-                            console.error( error);
+                            console.error(error);
                         });
                         //add click event handler on like button
                         likeButton.addEventListener('click',()=>{
@@ -119,27 +119,25 @@
                                     }
                                 })
                             })
-                        })
+                    })
 
-                    </script>
-                                
-                    @if (isCurrentUserAuthor)
-                    {
-                        <!-- Edit Button -->
-                        <a href="/ShowTweet/AddEditTweet?id=@tweet.Id" class="btn btn-light mx-2 rounded">
-                            <i class="bi bi-pencil"></i> 
-                        </a>
-                        <!-- Delete Button -->
-                        <a href="/ShowTweet/DeleteTweet?id=@tweet.Id" class="btn btn-danger mx-2 rounded">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    }
-                </div>
-                
+                </script>
+
+                @if (isCurrentUserAuthor)
+                {
+                    <!-- Edit Button -->
+                    <a href="/ShowTweet/AddEditTweet?id=@tweet.Id" class="btn btn-light mx-2 rounded">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <!-- Delete Button -->
+                    <a href="/ShowTweet/DeleteTweet?id=@tweet.Id" class="btn btn-danger mx-2 rounded">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                }
             </div>
+
         </div>
-        
-        
+    </div>
+
+
 </div>
-
-

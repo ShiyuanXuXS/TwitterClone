@@ -1,0 +1,30 @@
+﻿@using TwitterClone.Models
+@model List<Comment>
+
+@if (Model != null && Model.Any() == true)
+{
+    <div class="row">Coming soon</div>
+
+    @foreach (var reply in Model)
+    {
+
+
+        <div class="row">@reply.Body</div>
+        <div class="row">@reply.CreatedAt</div>
+        <div class="row">Original tweet:</div>
+        <div class="card">
+    <div class="card-body">@reply.Tweet.Body</div>
+    <div class="card-footer">
+        <div class="row">&#64;@reply.Tweet.Author.UserName</div>
+        <div class="row">@reply.Tweet.CreatedAt</div>
+    </div>
+</div>
+
+
+
+    }
+} else {
+
+            <div class="row m-5 text-secondary">No replies yet</div>
+
+}

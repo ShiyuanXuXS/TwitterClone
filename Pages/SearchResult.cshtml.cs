@@ -4,6 +4,9 @@ using TwitterClone.Data;
 using TwitterClone.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.VisualBasic;
+using System.Text.Json;
 
 
 namespace TwitterClone.Pages
@@ -21,7 +24,24 @@ namespace TwitterClone.Pages
         public List<User> SearchedUser { get; set; } = null!;
 
         [BindProperty]
+        public List<User> AllSearchedUser { get; set; } = null!;
+
+        [BindProperty]
         public List<Tweet> SearchedTweet { get; set; } = null!;
+
+        public List<User> FollowedUser { get; set; } = null!;
+
+        public List<User> FollowSuggestion { get; set; } = null!;
+
+        [BindProperty]
+        public User? CurrentUser { get; set; }
+
+        [BindProperty]
+        public int indexPeople { get; set; } = 1;
+
+        public int indexTweet { get; set; } = 1;
+
+        public int ShowDescription { get; set; } = 1;  // 0: hide, 1: show
 
         public SearchResultModel(ILogger<SearchResultModel> logger, TwitterCloneDbContext context, UserManager<User> userManager)
         {
@@ -30,57 +50,126 @@ namespace TwitterClone.Pages
             this.userManager = userManager;
         }
 
+        private List<User> getUnFollowedUserList(User currentUser)
+        {
+            // get all users
+            var allUsers = userManager.Users.ToList();
+            // get all users that current user is following
+            var followedUser = context.Follows.Where(f => f.User.Id == currentUser.Id).Select(f => f.Author).ToList();
+            List<User> followSuggestion;
+            if (followedUser.Count > 0)
+            {  // if current user is following someone, show users that current user is not following
+                FollowedUser = followedUser;
+                var excludeFollowed = allUsers.Except(FollowedUser).ToList();
+                followSuggestion = excludeFollowed.Where(user => user.Id != currentUser.Id).ToList();
+                Console.WriteLine("Follow Suggestion: " + FollowSuggestion.Count);
+            }
+            else
+            {  // if current user is not following anyone, show all users
+                followSuggestion = allUsers.Where(user => user.Id != currentUser.Id).ToList();
+            }
+
+            return followSuggestion;
+        }
+
+
+
+        private List<User> PerformUserSearch(string searchTerm, User currentUser)
+        {
+            //query users that username/nickname/description contain search term
+            var res =
+           context.Users
+               .AsEnumerable() // Switch to client-side evaluation
+               .Where(u =>
+                   u.Id != currentUser.Id && // Exclude the current user
+                   ((u.NickName != null && u.NickName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                   (u.Description != null && u.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                   (u.UserName != null && u.UserName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))))
+               .ToList();
+            var followedUser = context.Follows.Where(f => f.User.Id == currentUser.Id).Select(f => f.Author).ToList();
+            if (followedUser.Count > 0)
+            {  // if current user is following someone, show users that current user is not following
+                return res.Except(followedUser).ToList();
+            }
+            return res;
+        }
+
+        private List<Tweet> PerformTweetSearch(string searchTerm, User currentUser)
+        {
+            //query tweets that author username/nickname or body contain search term
+            var res =
+           context.Tweets
+               .AsEnumerable() // Switch to client-side evaluation
+               .Where(t =>
+                   t.Author.Id != currentUser.Id && // Exclude the current user
+                   t.Body != null && t.Body.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+                   || t.Author.NickName != null && t.Author.NickName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+                   || t.Author.UserName != null && t.Author.UserName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+               .ToList();
+            return res;
+        }
+
+
         public async Task OnGetAsync(string term)
         {
+            // get all users that current user followed
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            // get all users that current user is following
             SearchTerm = term;
-
-            // get users where username, nickname, or description contains search term, case ignored
-            Console.WriteLine("Search Term: " + SearchTerm);
+            ViewData["SearchTerm"] = term;
             if (SearchTerm != null)
             {
-                var searchedUser = context.Users
-        .AsEnumerable() // Switch to client-side evaluation
-        .Where(u =>
-            (u.NickName != null && u.NickName.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)) ||
-            (u.Description != null && u.Description.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)) ||
-            (u.UserName != null && u.UserName.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)))
-        .ToList();
-                Console.WriteLine("---------Searched User: " + searchedUser.Count);
-
-                if (searchedUser.Count > 0)
-                {
-                    // get the current user
-                    var currentUser = await userManager.GetUserAsync(HttpContext.User);
-                    // exlcude current user from search result
-                    searchedUser = searchedUser.Where(u => u.Id != currentUser.Id).ToList();
-                    SearchedUser = searchedUser;
-                    Console.WriteLine("Searched User: " + SearchedUser.Count);
-                }
-                else
-                {
-                    // No users found, handle this case
-                    SearchedUser = new List<User>();
-                    Console.WriteLine("No users found");
-                }
+                // search users and tweets
+                var resUser = PerformUserSearch(SearchTerm, currentUser);
+                SearchedUser = resUser.OrderBy(x => Guid.NewGuid()).Take(3).ToList();
+                Console.WriteLine("---------Searched User: " + SearchedUser.Count);
+                var resTweet = PerformTweetSearch(SearchTerm, currentUser);
+                SearchedTweet = resTweet.OrderBy(x => Guid.NewGuid()).Take(5).ToList();
+                Console.WriteLine("=======Searched Tweet=========: " + SearchedTweet.Count);
+                FollowSuggestion = getUnFollowedUserList(currentUser);
             }
             else
             {
                 Console.WriteLine("No users found");
+                SearchedUser = new List<User>();
+                SearchedTweet = new List<Tweet>();
             }
+        }
 
-            // get tweets where content contains search term, case ignored
-            if (SearchTerm != null)
-            {
-                var searchedTweet = context.Tweets.
-                                AsEnumerable()
-                                .Where(t => t.Body != null && t.Body.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-                Console.WriteLine("---------Searched Tweet: " + searchedTweet.Count);
-            }
-            else
-            {
-                Console.WriteLine("No tweets found");
-            }
+        public async Task<IActionResult> OnPostShowAllPeople()
+        {
+            indexPeople = 0;
+            indexTweet = 0;
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            var searchTerm = Request.Form["searchTerm"].ToString();
+            SearchedUser = PerformUserSearch(searchTerm, currentUser);
+            FollowSuggestion = getUnFollowedUserList(currentUser);
 
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostShowTweetAndUser()
+        {
+            indexPeople = 1;
+            indexTweet = 1;
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            var searchTerm = Request.Form["searchTerm"].ToString();
+            // Console.WriteLine("========in post Search Term: " + searchTerm);
+            // Console.WriteLine("Current User: " + currentUser.Id);
+            SearchedUser = PerformUserSearch(searchTerm, currentUser).OrderBy(x => Guid.NewGuid()).Take(3).ToList();
+            SearchedTweet = PerformTweetSearch(searchTerm, currentUser).OrderBy(x => Guid.NewGuid()).Take(5).ToList(); ;
+            FollowSuggestion = getUnFollowedUserList(currentUser);
+            return Page();
+        }
+        public async Task<IActionResult> OnPostShowAllTweet()
+        {
+            indexPeople = 0;
+            indexTweet = 1;
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            var searchTerm = Request.Form["searchTerm"].ToString();
+            SearchedTweet = PerformTweetSearch(searchTerm, currentUser);
+            FollowSuggestion = getUnFollowedUserList(currentUser);
+            return Page();
         }
     }
 }
