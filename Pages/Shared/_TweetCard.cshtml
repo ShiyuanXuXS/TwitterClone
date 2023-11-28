@@ -1,10 +1,9 @@
-
 @* @model TwitterClone.Models.Tweet *@
 @model dynamic
 
 @{
-    Tweet tweet=Model.Tweet;
-    string bodyContainerId=Model.BodyContainerId;
+    Tweet tweet = Model.Tweet;
+    string bodyContainerId = Model.BodyContainerId;
 }
 
 @{
@@ -13,36 +12,36 @@
 }
 
 <div class="">
-        <div class="card tweetCard border-0" >
-            <div class="card-body p-4">
-                <!-- Avatar -->
-                <div class="d-flex align-items-center mb-2">
+    <div class="card tweetCard border-0">
+        <div class="card-body p-2">
+            <!-- Avatar -->
+            <div class="d-flex align-items-center mb-2">
                 @if (!string.IsNullOrEmpty(tweet.Author.Avatar))
                 {
                     <img src="@tweet.Author.Avatar" alt="Author Avatar" class="rounded-circle" width="32" height="32">
                 }
                 else
                 {
-                    <i class="bi bi-person-fill fs-4 text-muted"></i> 
+                    <i class="bi bi-person-fill fs-4 text-muted"></i>
                 }
                 <!-- Author Name -->
                 <div class="ms-2">
-                    <h6 class="mb-0">@tweet.Author.NickName</h6>
-                    <p class="text-muted">@tweet.Author.UserName</p>
+                    <h6 class="mb-0 fs-6">@tweet.Author.NickName</h6>
+                    <p class="text-muted fs-6 mb-0">@tweet.Author.UserName</p>
                 </div>
                 <!-- Follow Button -->
                 <button type="button" class="followButton btn btn-light ms-auto" data-user-id="@tweet.Author.Id">
-                    <i id="followIcon-@tweet.Author.Id" class="bi bi-person-plus-fill"></i> 
+                    <i id="followIcon-@tweet.Author.Id" class="bi bi-person-plus-fill"></i>
                 </button>
             </div>
-            <div class="border">
+            <div class="border fs-6">
                 <!-- Tweet Body -->
                 @{
                     string bodyId = string.IsNullOrEmpty(bodyContainerId)
-                        ? $"tweetBody_{tweet.Id}"
-                        : $"{bodyContainerId}_{tweet.Id}";
+                    ? $"tweetBody_{tweet.Id}"
+                    : $"{bodyContainerId}_{tweet.Id}";
                 }
-                <div id="@bodyId" class="CKEditor-noborder" ></div>
+                <div id="@bodyId" class="CKEditor-noborder"></div>
                 <script>
                     ClassicEditor
                         .create(document.querySelector('#@bodyId'), {
@@ -51,91 +50,95 @@
                         })
                         .then(editor => {
                             editor.setData(`@Html.Raw(tweet.Body)`);
-                            editor.enableReadOnlyMode( '#@bodyId');
+                            editor.enableReadOnlyMode('#@bodyId');
                         })
                         .catch(error => {
                             console.error(error);
                         });
                 </script>
                 <!-- ReTweet -->
-                
-                <div class="">
-                    @if (tweet.ParentTweet!=null){
-                        @await Html.PartialAsync("_TweetCard", new {Tweet=tweet.ParentTweet,BodyContainerId=bodyId})
-                        
+
+                <div class="fs-6">
+                    @if (tweet.ParentTweet != null)
+                    {
+                        @await Html.PartialAsync("_TweetCard", new { Tweet = tweet.ParentTweet, BodyContainerId = bodyId })
+
                     }
                 </div>
             </div>
-                
-                <!-- CreatedAt -->
-                <p class="card-text"><small class="text-muted">@Html.DisplayFor(modelItem => tweet.CreatedAt)</small></p>
-                <div class="btn-group" role="group" aria-label="">
-                    <!-- reply Button -->
-                    <button type="button" class="btn btn-light mx-2 rounded">
-                        <i class="bi bi-chat"></i>
-                    </button>
-                    <!-- Retweet Button -->
-                    <a href="/ShowTweet/AddEditTweet?reTweetId=@tweet.Id" class="btn btn-light mx-2 rounded">
-                        <i class="bi bi-arrow-repeat"></i>
-                    </a>
-                    <!-- Like Button -->
-                    <button id="likeButton-@tweet.Id" type="button" class="likeButton btn btn-light mx-2 rounded" tweetId="@tweet.Id">
-                        <svg id="likeIcon-@tweet.Id" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                        </svg>
-                    </button>
-                    <script>
-                        var likeButton = document.getElementById(`likeButton-@tweet.Id`);
-                        var likeIcon=document.getElementById(`likeIcon-@tweet.Id`);
-                        //set color of like icon 
-                        fetch(`/api/Like/getLikeStatus?tweetId=@tweet.Id`)
-                        .then(response=>response.json())
+
+            <!-- CreatedAt -->
+            <p class="card-text  mb-1"><small class="text-muted fs-6">@Html.DisplayFor(modelItem =>
+                    tweet.CreatedAt)</small>
+            </p>
+            <div class="btn-group" role="group" aria-label="">
+                <!-- reply Button -->
+                <button type="button" class="btn btn-light mx-2 rounded">
+                    <i class="bi bi-chat"></i>
+                </button>
+                <!-- Retweet Button -->
+                <a href="/ShowTweet/AddEditTweet?reTweetId=@tweet.Id" class="btn btn-light mx-2 rounded">
+                    <i class="bi bi-arrow-repeat"></i>
+                </a>
+                <!-- Like Button -->
+                <button id="likeButton-@tweet.Id" type="button" class="likeButton btn btn-light mx-2 rounded"
+                    tweetId="@tweet.Id">
+                    <svg id="likeIcon-@tweet.Id" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red"
+                        class="bi bi-heart-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+                    </svg>
+                </button>
+                <script>
+                    var likeButton = document.getElementById(`likeButton-@tweet.Id`);
+                    var likeIcon = document.getElementById(`likeIcon-@tweet.Id`);
+                    //set color of like icon 
+                    fetch(`/api/Like/getLikeStatus?tweetId=@tweet.Id`)
+                        .then(response => response.json())
                         .then(data => {
-                            var likeIcon=document.getElementById(`likeIcon-@tweet.Id`);
+                            var likeIcon = document.getElementById(`likeIcon-@tweet.Id`);
                             if (data.liked) {
                                 likeIcon.setAttribute('fill', 'red');
-                            }else{
+                            } else {
                                 likeIcon.setAttribute('fill', 'gray');
                             }
                         })
                         .catch(error => {
-                            console.error( error);
+                            console.error(error);
                         });
-                        //add click event handler on like button
-                        likeButton.addEventListener('click',()=>{
-                            fetch('/api/Like/setLike?tweetId=@tweet.Id',{
-                                method:'post'
-                            })
-                            .then(response=>response.json())
-                            .then(data=>{
-                                var likeIcon=document.getElementById(`likeIcon-@tweet.Id`);
+                    //add click event handler on like button
+                    likeButton.addEventListener('click', () => {
+                        fetch('/api/Like/setLike?tweetId=@tweet.Id', {
+                            method: 'post'
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                var likeIcon = document.getElementById(`likeIcon-@tweet.Id`);
                                 if (data.liked) {
                                     likeIcon.setAttribute('fill', 'red');
-                                }else{
+                                } else {
                                     likeIcon.setAttribute('fill', 'gray');
                                 }
                             })
-                        })
+                    })
 
-                    </script>
-                                
-                    @if (isCurrentUserAuthor)
-                    {
-                        <!-- Edit Button -->
-                        <a href="/ShowTweet/AddEditTweet?id=@tweet.Id" class="btn btn-light mx-2 rounded">
-                            <i class="bi bi-pencil"></i> 
-                        </a>
-                        <!-- Delete Button -->
-                        <a href="/ShowTweet/DeleteTweet?id=@tweet.Id" class="btn btn-danger mx-2 rounded">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    }
-                </div>
-                
+                </script>
+
+                @if (isCurrentUserAuthor)
+                {
+                    <!-- Edit Button -->
+                    <a href="/ShowTweet/AddEditTweet?id=@tweet.Id" class="btn btn-light mx-2 rounded">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <!-- Delete Button -->
+                    <a href="/ShowTweet/DeleteTweet?id=@tweet.Id" class="btn btn-danger mx-2 rounded">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                }
             </div>
+
         </div>
-        
-        
+    </div>
+
+
 </div>
-
-
