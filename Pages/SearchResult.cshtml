@@ -6,13 +6,14 @@
     var displayUser = Model.SearchedUser;
     int indexPeople = Model.indexPeople;
     int indexTweet = Model.indexTweet;
+    ViewData["ShowDescription"] = Model.ShowDescription;
 }
 
 <div class="col-8">
     <div class="p-2 px-3 border-end border-start">
         <div class="d-flex align-items-center p-2 mb-3">
             <div class="">
-                <a class="btnBackToMain" asp-page="/Main">
+                <a class="btnBackToMain" asp-page="/Home">
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black"
                         class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
                         <path
@@ -56,23 +57,7 @@
                 @if (displayUser != null && displayUser.Any())
                 {
                     <ul class="nav flex-column">
-                        @foreach (var user in displayUser)
-                        {
-                            <li class="mb-2 d-flex align-items-center p-2 ps-0">
-                                <div class="fs-6">
-                                    <img src="@user.Avatar" alt="avatar" width="32" height="32" class="rounded-circle">
-                                </div>
-                                <div class="names fs-6 ps-2">
-                                    <div class="fw-bold">@user.NickName</div>
-                                    <div>&#64;@user.UserName</div>
-                                    <div>@user.Description</div>
-                                </div>
-                                <div class="ms-auto">
-                                    <button class="btnFollowSearch btn btn-dark btn-sm rounded rounded-pill fw-bold"
-                                        data-user-id="@user.Id">Follow</button>
-                                </div>
-                            </li>
-                        }
+                        <partial name="_PartialFollowSuggestion" model="Model.SearchedUser" />
                         <li class="mt-2">
                             @if (indexPeople == 1)
                             {
@@ -85,28 +70,8 @@
                 }
                 else
                 {
-                    <div class="d-flex mt-3 mb-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-emoji-dizzy" viewBox="0 0 16 16">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                            <path
-                                d="M9.146 5.146a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708m-5 0a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 1 1 .708.708l-.647.646.647.646a.5.5 0 1 1-.708.708L5.5 7.207l-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708zM10 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0" />
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-emoji-dizzy" viewBox="0 0 16 16">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                            <path
-                                d="M9.146 5.146a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708m-5 0a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 1 1 .708.708l-.647.646.647.646a.5.5 0 1 1-.708.708L5.5 7.207l-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708zM10 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0" />
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-emoji-dizzy" viewBox="0 0 16 16">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                            <path
-                                d="M9.146 5.146a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708m-5 0a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 1 1 .708.708l-.647.646.647.646a.5.5 0 1 1-.708.708L5.5 7.207l-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708zM10 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0" />
-                        </svg>
-                    </div>
-                    <p class="fw-bold fs-6 my-0">No results</p>
-                    <p class="fs-6 mt-0">Try different keywords.</p>
+                    <partial name="_PartialNoSearchResult" />
+
                 }
             </div>
             <hr>
@@ -115,10 +80,21 @@
         {
             <div class="p-2">
                 <p class="fs-5 fw-bold mt-3 mb-0">Tweets</p>
-                @* <partial name="_TweetCard" model="@Model.SearchedTweet" /> *@
+                @if (Model.SearchedTweet != null && Model.SearchedTweet.Any())
+                {
+                    <div class="d-flex flex-column">
+                        @foreach (var item in Model.SearchedTweet)
+                        {
+                            @await Html.PartialAsync("_TweetCard", new { Tweet = item, BodyContainerId = "" })
+                        }
+                    </div>
+                }
+                else
+                {
+                    <partial name="_PartialNoSearchResult" />
+                }
             </div>
         }
-
     </div>
 </div>
 
@@ -164,7 +140,30 @@
                 </div>
             </li>
             <li class="mb-3">
-                @await Component.InvokeAsync("WhoToFollow")
+                @* @await Component.InvokeAsync("WhoToFollow") *@
+                <div class="bg-light rounded p-2 px-3">
+                    <p class="fs-5 mb-4 fw-bold">Who to follow</p>
+                    <ul class="nav flex-column">
+                        @foreach (var user in Model.FollowSuggestion.OrderBy(x => Guid.NewGuid()).Take(3).ToList())
+                        {
+                            <li class="mb-2 d-flex align-items-center p-2 ps-0">
+                                <div class="fs-6"> <img src="@user.Avatar" alt="avatar" width="32" height="32"
+                                        class="rounded-circle"></div>
+                                <div class="names fs-6 ps-2">
+                                    <div class="fw-bold">@user.NickName</div>
+                                    <div>&#64;@user.UserName</div>
+                                </div>
+                                <div class="ms-auto">
+                                    <button class="btn btn-dark btn-sm rounded rounded-pill fw-bold">Follow</button>
+                                </div>
+                            </li>
+                        }
+                        <li class=" mt-2">
+                            <button type="button" class="btnShowMoreFollow btn btn-link fs-6 no-underline ps-0">Show
+                                more</button>
+                        </li>
+                    </ul>
+                </div>
             </li>
             <li class="mb-3 fs-6 p-2 text-center">
                 &copy; 2023 - Y - ShiYuan Xu, Meredith White, Xiaoxing Pan, All rights
@@ -221,24 +220,3 @@
     });
 
 </script>
-@* <script>
-function showall(allSearchedUser) {
-var searchedUser = allSearchedUser;
-var html = "";
-for (var i = 0; i < searchedUser.length; i++) {
-html += '<li class="mb-2 d-flex align-items-center p-2 ps-0">';
-html += '<div class="fs-6"> <img src="' + searchedUser[i].avatar + '" alt="avatar" width="32" height="32"
-class="rounded-circle"></div>';
-html += '<div class="names fs-6 ps-2">';
-html += '<div class="fw-bold">' + searchedUser[i].nickName + '</div>';
-html += '<div>&#64;' + searchedUser[i].userName + '</div>';
-html += '</div>';
-html += '<div class="ms-auto">';
-html += '<button class="btnFollow btn btn-dark btn-sm rounded rounded-pill fw-bold" data-user-id="' +
-searchedUser[i].id + '">Follow</button>';
-html += '</div>';
-html += '</li>';
-}
-$(".nav").html(html);
-}
-</script> *@

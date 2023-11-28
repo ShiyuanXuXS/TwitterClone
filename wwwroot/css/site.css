@@ -63,18 +63,20 @@ body {
 
 
 /* remove the underline from the button link */
-.btn-link, .no-underline {
+.btn-link,
+.no-underline {
   text-decoration: none;
 }
 
 
-.tweetCard:hover{
+.tweetCard:hover {
   background-color: rgb(242, 242, 242);
 }
 
 #acctMenu:hover {
   background-color: rgb(242, 242, 242);
 }
+
 #bannerImg {
   background-color: silver;
   height: 12rem;
@@ -82,4 +84,8 @@ body {
 
 .avatar {
   object-fit: cover;
+}
+
+#TrendList:hover {
+  background-color: rgb(242, 242, 242);
 }
