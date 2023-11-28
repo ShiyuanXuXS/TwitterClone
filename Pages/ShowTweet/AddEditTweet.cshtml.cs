@@ -30,6 +30,8 @@ namespace TwitterClone.Pages.UserPortal
         public bool IsEditMode{get;set;}
         [BindProperty]
         public int TweetId{get;set;}
+        [BindProperty]
+        public int ReTweetId{get;set;}
         public Tweet? ReTweet{ get;set; }
 
         [BindProperty,Required,MinLength(10),MaxLength(20000)]
@@ -56,19 +58,24 @@ namespace TwitterClone.Pages.UserPortal
                     TweetId= (int)id;
                     if (tweet.ParentTweet!=null){
                         ReTweet=tweet.ParentTweet;
-                        _logger.LogInformation("---------------------"+ReTweet.Id);
+                        _logger.LogInformation("---------------------"+ReTweet.ParentTweet.Id);
                     }
                     
                 }
             }else{
                 if (reTweetId.HasValue){
-                    ReTweet=await _context.Tweets.FirstOrDefaultAsync(t=>t.Id==reTweetId);
+                    // ReTweet=await _context.Tweets.Include(t => t.ParentTweet).FirstOrDefaultAsync(t=>t.Id==reTweetId);
+                    // _logger.LogInformation("---------------------"+ReTweet.ParentTweet.Id);
+                    ReTweet=GetFullReTweet((int)reTweetId);
                 }
             }
 
             return Page();
         }
         public async Task<IActionResult> OnPostAsync(){
+            _logger.LogInformation("------------------"+ReTweetId);
+            // return Page();
+            
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
             if (!ModelState.IsValid ){
                 return Page();
@@ -85,8 +92,13 @@ namespace TwitterClone.Pages.UserPortal
                 }
 
             }else{
+                _logger.LogInformation("------------------"+ReTweetId);
+                if (ReTweetId>0){
+                    ReTweet= await _context.Tweets.FirstOrDefaultAsync(t=>t.Id==ReTweetId);
+                }
                 Tweet tweet=new Tweet{
                     Body=Body,
+                    ParentTweet=ReTweet,
                     CreatedAt=DateTime.Now,
                     //Todo set Author to logged user
                     Author=currentUser
@@ -106,6 +118,21 @@ namespace TwitterClone.Pages.UserPortal
                 return Page();
             };
             return RedirectToPage("MyTweets");
+        }
+    
+        private Tweet? GetFullReTweet(int reTweetId)
+        {
+            Tweet? reTweet =  _context.Tweets
+                .Include(t => t.ParentTweet)
+                // .ThenInclude(pt => pt.Author)
+                .FirstOrDefault(t => t.Id == reTweetId);
+
+            if (reTweet!= null && reTweet.ParentTweet!=null)
+            {
+                reTweet.ParentTweet = GetFullReTweet(reTweet.ParentTweet.Id);
+            }
+
+            return reTweet;
         }
     }
 }

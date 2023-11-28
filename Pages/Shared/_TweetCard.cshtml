@@ -70,14 +70,14 @@
                 <!-- CreatedAt -->
                 <p class="card-text"><small class="text-muted">@Html.DisplayFor(modelItem => tweet.CreatedAt)</small></p>
                 <div class="btn-group" role="group" aria-label="">
-                    <!-- replay Button -->
+                    <!-- reply Button -->
                     <button type="button" class="btn btn-light mx-2 rounded">
                         <i class="bi bi-chat"></i>
                     </button>
-                    <!-- Repost Button -->
-                    <button type="button" class="btn btn-light mx-2 rounded">
+                    <!-- Retweet Button -->
+                    <a href="/ShowTweet/AddEditTweet?reTweetId=@tweet.Id" class="btn btn-light mx-2 rounded">
                         <i class="bi bi-arrow-repeat"></i>
-                    </button>
+                    </a>
                     <!-- Like Button -->
                     <button id="likeButton-@tweet.Id" type="button" class="likeButton btn btn-light mx-2 rounded" tweetId="@tweet.Id">
                         <svg id="likeIcon-@tweet.Id" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">

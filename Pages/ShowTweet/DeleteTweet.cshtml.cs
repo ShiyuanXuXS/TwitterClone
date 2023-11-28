@@ -61,7 +61,7 @@ namespace TwitterClone.Pages.UserPortal
                 Tweet = tweet;
                 _context.Tweets.Remove(tweet);
                 await _context.SaveChangesAsync();
-                TempData["Message"] = "Todo deleted successfully!";
+                TempData["Message"] = "Tweet deleted successfully!";
             }
 
             return RedirectToPage("./MyTweets");
