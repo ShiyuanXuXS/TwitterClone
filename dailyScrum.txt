@@ -229,9 +229,11 @@ Meredith
 
 Shiyuan
 1.  Done / not done since last scrum:
-- 
+- retweet an existing tweet
 2. To do until next Scrum:
-- add retweet function
+- add reply function
+- add follow status check controller
+- debug the tweet card
 3. Need assistance / figure things out
 - 
 
