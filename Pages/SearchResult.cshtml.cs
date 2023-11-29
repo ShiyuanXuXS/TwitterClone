@@ -42,6 +42,7 @@ namespace TwitterClone.Pages
         public int indexTweet { get; set; } = 1;
 
         public int ShowDescription { get; set; } = 1;  // 0: hide, 1: show
+        public int indexView { get; set; } = 1;  // 1: top, 2: people, 3: tweet
 
         public SearchResultModel(ILogger<SearchResultModel> logger, TwitterCloneDbContext context, UserManager<User> userManager)
         {
@@ -67,6 +68,7 @@ namespace TwitterClone.Pages
             }
             else
             {  // if current user is not following anyone, show all users
+                FollowedUser = new List<User>();
                 FollowSuggestion = allUsers.Where(user => user.Id != currentUser.Id).ToList();
                 Console.WriteLine("==========4.Follow Suggestion: " + FollowSuggestion.Count);
             }
@@ -95,8 +97,28 @@ namespace TwitterClone.Pages
             return res;
         }
 
+        private List<Tweet> PerformFollowedTweetSearch(string searchTerm, User currentUser)
+        {
+            getUnFollowedUserList(currentUser);
+
+            //query tweets that followed user username/nickname or body contain search term
+            var res =
+           context.Tweets
+               .AsEnumerable() // Switch to client-side evaluation
+               .Where(t =>
+                    t.Author != null &&
+                    t.Author.Id != currentUser.Id &&
+                    FollowedUser.Contains(t.Author) &&
+                   t.Body != null && t.Body.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+                   || t.Author.NickName != null && t.Author.NickName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+                   || t.Author.UserName != null && t.Author.UserName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+               .ToList();
+            return res;
+        }
+
         private List<Tweet> PerformTweetSearch(string searchTerm, User currentUser)
         {
+
             //query tweets that author username/nickname or body contain search term
             var res =
            context.Tweets
@@ -113,6 +135,9 @@ namespace TwitterClone.Pages
 
         public async Task OnGetAsync(string term)
         {
+            ViewData["SearchOptionValue"] = null;
+
+            Console.WriteLine("==========search result enter");
             // get all users that current user followed
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
             // get all users that current user is following
@@ -123,15 +148,12 @@ namespace TwitterClone.Pages
                 // search users and tweets
                 var resUser = PerformUserSearch(SearchTerm, currentUser);
                 SearchedUser = resUser.OrderBy(x => Guid.NewGuid()).Take(3).ToList();
-                Console.WriteLine("---------Searched User: " + SearchedUser.Count);
                 var resTweet = PerformTweetSearch(SearchTerm, currentUser);
                 SearchedTweet = resTweet.OrderBy(x => Guid.NewGuid()).Take(5).ToList();
-                Console.WriteLine("=======Searched Tweet=========: " + SearchedTweet.Count);
                 getUnFollowedUserList(currentUser);
             }
             else
             {
-                Console.WriteLine("No users found");
                 SearchedUser = new List<User>();
                 SearchedTweet = new List<Tweet>();
             }
@@ -139,44 +161,97 @@ namespace TwitterClone.Pages
 
         public async Task<IActionResult> OnPostShowAllPeople(string searchOptionValue)
         {
+            ViewData["SearchOptionValue"] = searchOptionValue;
+
+            Console.WriteLine("==========show all people enter");
             indexPeople = 0;
             indexTweet = 0;
+            indexView = 2;
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
             getUnFollowedUserList(currentUser);
             var searchTerm = Request.Form["searchTerm"].ToString();
-            if (searchOptionValue == "anyone") { SearchedUser = PerformUserSearch(searchTerm, currentUser); }
+            if (searchOptionValue == "anyone" || searchOptionValue == null) { SearchedUser = PerformUserSearch(searchTerm, currentUser); }
             else
             {
                 SearchedUser = PerformUserSearch(searchTerm, currentUser).Except(FollowSuggestion).ToList();
             }
-
-
             return Page();
         }
 
-        public async Task<IActionResult> OnPostShowTweetAndUser()
+        public async Task<IActionResult> OnPostShowTweetAndUser(string searchOptionValue)
         {
+            ViewData["SearchOptionValue"] = searchOptionValue;
+            Console.WriteLine("==========show tweet and user enter");
             indexPeople = 1;
             indexTweet = 1;
+            indexView = 1;
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
             var searchTerm = Request.Form["searchTerm"].ToString();
-            // Console.WriteLine("========in post Search Term: " + searchTerm);
-            // Console.WriteLine("Current User: " + currentUser.Id);
-            SearchedUser = PerformUserSearch(searchTerm, currentUser).OrderBy(x => Guid.NewGuid()).Take(3).ToList();
-            SearchedTweet = PerformTweetSearch(searchTerm, currentUser).OrderBy(x => Guid.NewGuid()).Take(5).ToList(); ;
             getUnFollowedUserList(currentUser);
+            if (searchOptionValue == "anyone" || searchOptionValue == null)
+            {
+                SearchedUser = PerformUserSearch(searchTerm, currentUser);
+                SearchedTweet = PerformTweetSearch(searchTerm, currentUser);
+            }
+            else
+            {
+                if (FollowedUser.Count == 0)
+                {
+                    SearchedUser = new List<User>();
+                    SearchedTweet = new List<Tweet>();
+                }
+                else
+                {
+                    SearchedUser = PerformUserSearch(searchTerm, currentUser).Except(FollowSuggestion).ToList();
+                    var searchedTweet = PerformFollowedTweetSearch(searchTerm, currentUser).ToList();
+                    if (searchedTweet.Count == 0)
+                    {
+                        SearchedTweet = new List<Tweet>();
+                    }
+                    else
+                    {
+                        SearchedTweet = searchedTweet;
+                    }
+                }
+            }
             return Page();
         }
-        public async Task<IActionResult> OnPostShowAllTweet()
+        public async Task<IActionResult> OnPostShowAllTweet(string searchOptionValue)
         {
+            ViewData["SearchOptionValue"] = searchOptionValue;
 
             indexPeople = 0;
             indexTweet = 1;
+            indexView = 3;
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
             var searchTerm = Request.Form["searchTerm"].ToString();
-            SearchedUser = PerformUserSearch(searchTerm, currentUser);
-            SearchedTweet = PerformTweetSearch(searchTerm, currentUser);
             getUnFollowedUserList(currentUser);
+            if (searchOptionValue == "anyone" || searchOptionValue == null)
+            {
+                SearchedUser = PerformUserSearch(searchTerm, currentUser);
+                SearchedTweet = PerformTweetSearch(searchTerm, currentUser);
+            }
+            else
+            {
+                if (FollowedUser.Count == 0)
+                {
+                    SearchedUser = new List<User>();
+                    SearchedTweet = new List<Tweet>();
+                }
+                else
+                {
+                    SearchedUser = PerformUserSearch(searchTerm, currentUser).Except(FollowSuggestion).ToList();
+                    var searchedTweet = PerformFollowedTweetSearch(searchTerm, currentUser).ToList();
+                    if (searchedTweet.Count == 0)
+                    {
+                        SearchedTweet = new List<Tweet>();
+                    }
+                    else
+                    {
+                        SearchedTweet = searchedTweet;
+                    }
+                }
+            }
             return Page();
         }
     }

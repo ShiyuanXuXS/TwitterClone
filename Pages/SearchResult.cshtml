@@ -6,6 +6,7 @@
     var displayUser = Model.SearchedUser;
     int indexPeople = Model.indexPeople;
     int indexTweet = Model.indexTweet;
+    int indexView = Model.indexView;
     ViewData["ShowDescription"] = Model.ShowDescription;
 }
 
@@ -25,6 +26,7 @@
         </div>
         <div>
             <ul class="nav nav-tabs">
+                <input type="hidden" name="viewIndex" value=@indexView />
                 <li class="nav-item">
                     <form method="post" asp-page-handler="ShowTweetAndUser" name="showTweetAndUserForm">
                         <input type="hidden" value="@ViewData["SearchTerm"]" />
@@ -98,7 +100,8 @@
                                 onclick="submitShowAllTweetForm()">Show
                                 more </button>
                         </div>
-                    }   }
+                    }
+                }
                 else
                 {
                     <partial name="_PartialNoSearchResult" />
@@ -192,14 +195,24 @@
     }
 
     function submitShowTweetAndUserForm() {
+        // check advanced search
+        var selectedOption = $('input[name="searchOption"]:checked').val();
+        $('input[name="searchOptionValue"]').val(selectedOption);
         document.forms["showTweetAndUserForm"].submit();
     }
 
     function submitShowAllTweetForm() {
+        // check advanced search
+        var selectedOption = $('input[name="searchOption"]:checked').val();
+        $('input[name="searchOptionValue"]').val(selectedOption);
         document.forms["showAllTweetForm"].submit();
     }
 
     $(document).ready(function () {
+        var searchOptionValue = '@ViewData["SearchOptionValue"]';
+        if (searchOptionValue !== null && searchOptionValue !== undefined && searchOptionValue !== "") {
+            $('input[name="searchOption"][value="' + searchOptionValue + '"]').prop('checked', true);
+        }
         // Attach click event to follow buttons
         $('.btnFollowSearch').click(function () {
             // Get the user id from the data attribute
@@ -230,34 +243,26 @@
         $('.btnShowMoreFollow').click(function () {
             window.location.href = '/FollowSuggestion';
         });
-    @* console.log('Document ready!');
-            // Attach click event to follow buttons
-            $('.btnFollowSide').click(function () {
-            // Get the user id from the data attribute
-            var userId = $(this).data('user-id');
-            var button = $(this);
-            // Make an asynchronous request to the server
-            fetch('api/Follow/HandleFollow', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userId),
-            })
-            .then(response => response.json())
-            .then(data => {
-            // Handle success
-            console.log('Success:', data);
-            // Toggle between "Follow" and "Unfollow"
-            button.text(button.text() === 'Follow' ? 'Unfollow' : 'Follow');
-            // Optionally, you can also toggle classes based on the text content
-            button.toggleClass('btn-dark btn-secondary');
-            })
-            .catch(function (error) {
-            // Handle error
-            console.error(error);
-            });
-            }); *@
+        $('input[name="searchOption"]').change(function () {
+            var selectedOption = $('input[name="searchOption"]:checked').val();
+
+            // Update the value of the hidden input
+            $('input[name="searchOptionValue"]').val(selectedOption);
+
+            var viewIndex = $('input[name="viewIndex"]').val();
+
+            if (viewIndex == 1) {
+                document.forms["showTweetAndUserForm"].submit();
+            }
+            else if (viewIndex == 2) {
+                document.forms["showAllPeopleForm"].submit();
+            }
+            else if (viewIndex == 3) {
+                document.forms["showAllTweetForm"].submit();
+            }
+
+
+        });
     });
 
 </script>
