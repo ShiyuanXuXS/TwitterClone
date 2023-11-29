@@ -44,7 +44,7 @@
                         .then(editor => {
                             editor.setData(`@Html.Raw(Model.Body)`);
                             editor.model.document.on('change:data', () => {
-                                console.log(editor.getData())
+                                @* console.log(editor.getData()) *@
                                 document.getElementById('bodyValue').value = editor.getData();
                             });
 

@@ -109,7 +109,7 @@
                             .then(response=>response.json())
                             .then(data=>{
                                 var likeIcons=document.querySelectorAll(`[id^="likeIcon-"][id$="-${@tweet.Id}"]`)
-                                console.log(likeIcons)
+                                @* console.log(likeIcons) *@
                                 likeIcons.forEach(likeIcon=>{
                                     
                                     if (data.liked) {
