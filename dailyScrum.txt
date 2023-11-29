@@ -261,3 +261,40 @@ Meredith
 - test deployment
 3. Need assistance / figure things out
 - maybe help with user query issues
+
+
+2023-11-28
+
+Shiyuan
+1.  Done / not done since last scrum:
+- fix bugs in like/unlike function and in retweet 
+- reply controller
+- add reply front-end
+2. To do until next Scrum:
+- reply list
+3. Need assistance / figure things out
+- 
+
+Xiaoxing
+1.  Done / not done since last scrum:
+- combine whotofollow/whotofollowfullview with partialfollowsuggestion
+- getFollowStatus function in follow controller, follow button dynamically show the relationship(follow/unfollow)
+- what's happening front-end
+- debug to exclude current user in follow list
+2. To do until next Scrum:
+- notification(signalR)
+- what's happening back-end
+3. Need assistance / figure things out
+- 
+
+Meredith
+1. Done since last scrum
+- partial impl of user pages with view components for user posts, replies, likes
+- tested deployment
+- began messages page
+2. Plan until next Scrum
+- continue messages
+- debug user pages
+- admin login
+3. Need assistance / figure things out
+- troubleshooting tweet card and likes
