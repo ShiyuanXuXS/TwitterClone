@@ -166,14 +166,16 @@
                                     <div>&#64;@user.UserName</div>
                                 </div>
                                 <div class="ms-auto">
-                                    <button class="btn btn-dark btn-sm rounded rounded-pill fw-bold">Follow</button>
+                                    <button class="btnFollowSide btn-dark btn-sm rounded rounded-pill fw-bold"
+                                        data-user-id="@user.Id">Follow</button>
                                 </div>
                             </li>
                         }
                         <li class=" mt-2">
-                            <button type="button" class="btnShowMoreFollow btn btn-link fs-6 no-underline ps-0">Show
+                            <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
                                 more</button>
                         </li>
+
                     </ul>
                 </div>
             </li>
@@ -216,7 +218,7 @@
         // Attach click event to follow buttons
         $('.btnFollowSearch').click(function () {
             // Get the user id from the data attribute
-            var userId = $(this).data('user-id');
+            var userId = $(this).data('userToFollow-id');
             var button = $(this);
             // Make an asynchronous request to the server
             fetch('api/Follow/HandleFollow', {
@@ -240,9 +242,11 @@
                     console.error(error);
                 });
         });
+
         $('.btnShowMoreFollow').click(function () {
             window.location.href = '/FollowSuggestion';
         });
+
         $('input[name="searchOption"]').change(function () {
             var selectedOption = $('input[name="searchOption"]:checked').val();
 
@@ -260,8 +264,40 @@
             else if (viewIndex == 3) {
                 document.forms["showAllTweetForm"].submit();
             }
+        });
 
+        console.log('Before click event binding');
 
+        $('.btnFollowSide').click(function () {
+            console.log('click');
+            var button = $(this);
+            var userId = $(this).data('user-id');
+
+            // Make an asynchronous request to the server to handle follow/unfollow
+            fetch('/api/Follow/HandleFollow', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userId),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        // If the response status is not ok, handle the error
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Handle success
+                    console.log('Success:', data);
+                    button.text(button.text() === 'Follow' ? 'Unfollow' : 'Follow');
+                    button.toggleClass('btn-dark btn-secondary');
+                })
+                .catch(function (error) {
+                    // Handle error
+                    console.error(error);
+                });
         });
     });
 
