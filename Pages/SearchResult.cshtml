@@ -26,25 +26,28 @@
         <div>
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <form method="post" asp-page-handler="ShowTweetAndUser" name="ShowTweetAndUserForm">
+                    <form method="post" asp-page-handler="ShowTweetAndUser" name="showTweetAndUserForm">
                         <input type="hidden" value="@ViewData["SearchTerm"]" />
+                        <input type="hidden" name="searchOptionValue" />
                         <button type="submit" style="display:none;"></button>
-                        <a id="peopleTweetLink" class="nav-link fs-5" onclick="submitShowTweetAndUserForm()">Top</a>
+                        <a class="nav-link fs-5" onclick="submitShowTweetAndUserForm()">Top</a>
                     </form>
                 </li>
                 <li class="nav-item">
                     <form method="post" asp-page-handler="ShowAllPeople" name="showAllPeopleForm">
                         <input type="hidden" value="@ViewData["SearchTerm"]" />
+                        <input type="hidden" name="searchOptionValue" />
                         <button type="submit" style="display:none;"></button>
-                        <a id="userLink" class="nav-link fs-5" onclick="submitShowAllPeopleForm()">People</a>
+                        <a class="nav-link fs-5" onclick="submitShowAllPeopleForm()">People</a>
                     </form>
                 </li>
                 </li>
                 <li class="nav-item">
                     <form method="post" asp-page-handler="ShowAllTweet" name="showAllTweetForm">
                         <input type="hidden" value="@ViewData["SearchTerm"]" />
+                        <input type="hidden" name="searchOptionValue" />
                         <button type="submit" style="display:none;"></button>
-                        <a id="TweetLink" class="nav-link fs-5" onclick="submitShowAllTweetForm()">Media</a>
+                        <a class="nav-link fs-5" onclick="submitShowAllTweetForm()">Media</a>
                     </form>
 
                 </li>
@@ -62,7 +65,7 @@
                             @if (indexPeople == 1)
                             {
                                 <button type="button" class="btn btn-link fs-6 no-underline ps-0" id="BtnShowMorePeople"
-                                    onclick="submitshowAllPeopleForm()">Show
+                                    onclick="submitShowAllPeopleForm()">Show
                                     more </button>
                             }
                         </li>
@@ -88,7 +91,14 @@
                             @await Html.PartialAsync("_TweetCard", new { Tweet = item, BodyContainerId = "" })
                         }
                     </div>
-                }
+                    @if (indexPeople == 1)
+                    {
+                        <div>
+                            <button type="button" class="btn btn-link fs-6 no-underline ps-0" id="BtnShowMoreTweet"
+                                onclick="submitShowAllTweetForm()">Show
+                                more </button>
+                        </div>
+                    }   }
                 else
                 {
                     <partial name="_PartialNoSearchResult" />
@@ -101,27 +111,27 @@
 <div class="col-4">
     <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary">
         <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
-            @* <li class="mb-3">
-            <div class="border rounded px-3">
-            <p class="fs-5 fw-bold mb-0 py-2">Search Filters</p>
-            </div>
+            <li class="mb-3">
+                <div class="border rounded px-3">
+                    <p class="fs-5 fw-bold mb-0 py-2">Search Filters</p>
+                </div>
 
             </li>
             <li class="mb-3 ">
-            <div class="border rounded px-3">
-            <p class="fs-6 fw-bold mb-0 pt-2">Pepole</p>
-            <div class="py-2">
-            <div class="d-flex">
-            <label class="fs-6">From anyone</label>
-            <input type="radio" class="ms-auto" name="searchOption" />
-            </div>
-            <div class="d-flex">
-            <label class="fs-6">People you follow</label>
-            <input type="radio" class="ms-auto" name="searchOption" />
-            </div>
-            </div>
-            </div>
-            </li> *@
+                <div class="border rounded px-3">
+                    <p class="fs-6 fw-bold mb-0 pt-2">Pepole</p>
+                    <div class="py-2">
+                        <div class="d-flex">
+                            <label class="fs-6">From anyone</label>
+                            <input type="radio" class="ms-auto" name="searchOption" value="anyone" />
+                        </div>
+                        <div class="d-flex">
+                            <label class="fs-6">People you follow</label>
+                            <input type="radio" class="ms-auto" name="searchOption" value="followed" />
+                        </div>
+                    </div>
+                </div>
+            </li>
             <li class="mb-3">
                 <div class="bg-light rounded p-2 px-3">
                     <p class="fs-5 mb-4 fw-bold">What's happening</p>
@@ -140,7 +150,6 @@
                 </div>
             </li>
             <li class="mb-3">
-                @* @await Component.InvokeAsync("WhoToFollow") *@
                 <div class="bg-light rounded p-2 px-3">
                     <p class="fs-5 mb-4 fw-bold">Who to follow</p>
                     <ul class="nav flex-column">
@@ -176,16 +185,20 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     function submitShowAllPeopleForm() {
+        // check advanced search
+        var selectedOption = $('input[name="searchOption"]:checked').val();
+        $('input[name="searchOptionValue"]').val(selectedOption);
         document.forms["showAllPeopleForm"].submit();
     }
 
     function submitShowTweetAndUserForm() {
-        document.forms["ShowTweetAndUserForm"].submit();
+        document.forms["showTweetAndUserForm"].submit();
     }
 
     function submitShowAllTweetForm() {
         document.forms["showAllTweetForm"].submit();
     }
+
     $(document).ready(function () {
         // Attach click event to follow buttons
         $('.btnFollowSearch').click(function () {
@@ -217,6 +230,34 @@
         $('.btnShowMoreFollow').click(function () {
             window.location.href = '/FollowSuggestion';
         });
+    @* console.log('Document ready!');
+            // Attach click event to follow buttons
+            $('.btnFollowSide').click(function () {
+            // Get the user id from the data attribute
+            var userId = $(this).data('user-id');
+            var button = $(this);
+            // Make an asynchronous request to the server
+            fetch('api/Follow/HandleFollow', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userId),
+            })
+            .then(response => response.json())
+            .then(data => {
+            // Handle success
+            console.log('Success:', data);
+            // Toggle between "Follow" and "Unfollow"
+            button.text(button.text() === 'Follow' ? 'Unfollow' : 'Follow');
+            // Optionally, you can also toggle classes based on the text content
+            button.toggleClass('btn-dark btn-secondary');
+            })
+            .catch(function (error) {
+            // Handle error
+            console.error(error);
+            });
+            }); *@
     });
 
 </script>

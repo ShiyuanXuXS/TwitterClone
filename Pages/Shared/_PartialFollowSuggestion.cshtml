@@ -20,7 +20,7 @@
                 }
             </div>
             <div class="ms-auto">
-                <button class="btn btn-dark btn-sm rounded rounded-pill fw-bold">Follow</button>
+                <button class="btnFollow btn btn-sm rounded rounded-pill fw-bold" data-user-id="@user.Id">Follow</button>
             </div>
         </li>
     }
@@ -29,3 +29,103 @@ else
 {
     <li>No users available.</li>
 }
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        console.log('Document ready!');
+        // Attach click event to follow buttons
+        $('.btnFollow').each(function () {
+            var button = $(this);
+            var userId = $(this).data('user-id');
+
+            // Make an asynchronous request to the server to get follow status
+            fetch(`/api/Follow/getFollowStatus?userId=${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle success
+                    console.log('Follow Status:', data);
+
+                    // Update button text and class based on the follow status
+                    if (data.followed) {
+                        button.text('Unfollow');
+                        button.addClass('btn-secondary');
+                    } else {
+                        button.text('Follow');
+                        button.addClass('btn-dark');
+                    }
+                    // Attach click event to handle follow/unfollow
+                    button.click(function () {
+                        // Toggle between "Follow" and "Unfollow"
+                        button.text(button.text() === 'Follow' ? 'Unfollow' : 'Follow');
+                        button.toggleClass('btn-dark btn-secondary');
+                        // Make an asynchronous request to the server to handle follow/unfollow
+                        fetch('/api/Follow/HandleFollow', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(userId),
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    // If the response status is not ok, handle the error
+                                    throw new Error(`HTTP error! Status: ${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                // Handle success
+                                console.log('Success:', data);
+                            })
+                            .catch(function (error) {
+                                // Handle error
+                                console.error(error);
+                                if (error instanceof TypeError && error.name === 'TypeError') {
+                                    console.error('Validation Errors:', error.errors);
+                                }
+                            });
+                    });
+                })
+                .catch(function (error) {
+                    // Handle error
+                    console.error(error);
+                });
+        });
+    });
+    @* // Attach click event to follow buttons
+        $('.btnFollow').click(function () {
+        // Get the user id from the data attribute
+        var userId = $(this).data('user-id');
+        var button = $(this);
+        // Make an asynchronous request to the server
+        fetch('api/Follow/HandleFollow', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userId),
+        })
+        .then(response => response.json())
+        .then(data => {
+        // Handle success
+        console.log('Success:', data);
+        // Toggle between "Follow" and "Unfollow"
+        button.text(button.text() === 'Follow' ? 'Unfollow' : 'Follow');
+        // Optionally, you can also toggle classes based on the text content
+        button.toggleClass('btn-dark btn-secondary');
+        })
+        .catch(function (error) {
+        // Handle error
+        console.error(error);
+        });
+        });
+
+
+        }); *@
+</script>

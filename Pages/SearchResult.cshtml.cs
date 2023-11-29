@@ -50,26 +50,27 @@ namespace TwitterClone.Pages
             this.userManager = userManager;
         }
 
-        private List<User> getUnFollowedUserList(User currentUser)
+        private void getUnFollowedUserList(User currentUser)
         {
             // get all users
             var allUsers = userManager.Users.ToList();
+            Console.WriteLine("=======1. All Users: " + allUsers.Count);
             // get all users that current user is following
             var followedUser = context.Follows.Where(f => f.User.Id == currentUser.Id).Select(f => f.Author).ToList();
-            List<User> followSuggestion;
+            Console.WriteLine("=======2. Followed User: " + followedUser.Count);
             if (followedUser.Count > 0)
             {  // if current user is following someone, show users that current user is not following
                 FollowedUser = followedUser;
                 var excludeFollowed = allUsers.Except(FollowedUser).ToList();
-                followSuggestion = excludeFollowed.Where(user => user.Id != currentUser.Id).ToList();
-                Console.WriteLine("Follow Suggestion: " + FollowSuggestion.Count);
+                FollowSuggestion = excludeFollowed.Where(user => user.Id != currentUser.Id).ToList();
+                Console.WriteLine("==========3.Follow Suggestion: " + FollowSuggestion.Count);
             }
             else
             {  // if current user is not following anyone, show all users
-                followSuggestion = allUsers.Where(user => user.Id != currentUser.Id).ToList();
+                FollowSuggestion = allUsers.Where(user => user.Id != currentUser.Id).ToList();
+                Console.WriteLine("==========4.Follow Suggestion: " + FollowSuggestion.Count);
             }
-
-            return followSuggestion;
+            // return FollowSuggestion;
         }
 
 
@@ -86,11 +87,11 @@ namespace TwitterClone.Pages
                    (u.Description != null && u.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                    (u.UserName != null && u.UserName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))))
                .ToList();
-            var followedUser = context.Follows.Where(f => f.User.Id == currentUser.Id).Select(f => f.Author).ToList();
-            if (followedUser.Count > 0)
-            {  // if current user is following someone, show users that current user is not following
-                return res.Except(followedUser).ToList();
-            }
+            // var followedUser = context.Follows.Where(f => f.User.Id == currentUser.Id).Select(f => f.Author).ToList();
+            // if (followedUser.Count > 0)
+            // {  // if current user is following someone, show users that current user is not following
+            //     return res.Except(followedUser).ToList();
+            // }
             return res;
         }
 
@@ -101,7 +102,7 @@ namespace TwitterClone.Pages
            context.Tweets
                .AsEnumerable() // Switch to client-side evaluation
                .Where(t =>
-                   t.Author.Id != currentUser.Id && // Exclude the current user
+                    t.Author != null && t.Author.Id != currentUser.Id && // Exclude the current user
                    t.Body != null && t.Body.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
                    || t.Author.NickName != null && t.Author.NickName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
                    || t.Author.UserName != null && t.Author.UserName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
@@ -126,7 +127,7 @@ namespace TwitterClone.Pages
                 var resTweet = PerformTweetSearch(SearchTerm, currentUser);
                 SearchedTweet = resTweet.OrderBy(x => Guid.NewGuid()).Take(5).ToList();
                 Console.WriteLine("=======Searched Tweet=========: " + SearchedTweet.Count);
-                FollowSuggestion = getUnFollowedUserList(currentUser);
+                getUnFollowedUserList(currentUser);
             }
             else
             {
@@ -136,14 +137,19 @@ namespace TwitterClone.Pages
             }
         }
 
-        public async Task<IActionResult> OnPostShowAllPeople()
+        public async Task<IActionResult> OnPostShowAllPeople(string searchOptionValue)
         {
             indexPeople = 0;
             indexTweet = 0;
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            getUnFollowedUserList(currentUser);
             var searchTerm = Request.Form["searchTerm"].ToString();
-            SearchedUser = PerformUserSearch(searchTerm, currentUser);
-            FollowSuggestion = getUnFollowedUserList(currentUser);
+            if (searchOptionValue == "anyone") { SearchedUser = PerformUserSearch(searchTerm, currentUser); }
+            else
+            {
+                SearchedUser = PerformUserSearch(searchTerm, currentUser).Except(FollowSuggestion).ToList();
+            }
+
 
             return Page();
         }
@@ -158,17 +164,19 @@ namespace TwitterClone.Pages
             // Console.WriteLine("Current User: " + currentUser.Id);
             SearchedUser = PerformUserSearch(searchTerm, currentUser).OrderBy(x => Guid.NewGuid()).Take(3).ToList();
             SearchedTweet = PerformTweetSearch(searchTerm, currentUser).OrderBy(x => Guid.NewGuid()).Take(5).ToList(); ;
-            FollowSuggestion = getUnFollowedUserList(currentUser);
+            getUnFollowedUserList(currentUser);
             return Page();
         }
         public async Task<IActionResult> OnPostShowAllTweet()
         {
+
             indexPeople = 0;
             indexTweet = 1;
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
             var searchTerm = Request.Form["searchTerm"].ToString();
+            SearchedUser = PerformUserSearch(searchTerm, currentUser);
             SearchedTweet = PerformTweetSearch(searchTerm, currentUser);
-            FollowSuggestion = getUnFollowedUserList(currentUser);
+            getUnFollowedUserList(currentUser);
             return Page();
         }
     }
