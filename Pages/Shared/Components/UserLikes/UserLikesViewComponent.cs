@@ -28,32 +28,33 @@ namespace TwitterClone.Pages.Shared.Components.UserLikes
 
             List<Like> likes = await db.Likes
                 .Where(l => l.User.Id == user.Id)
-                .OrderByDescending(t => t.CreatedAt)
+                .Include(l => l.Tweet)
+                .OrderByDescending(l => l.CreatedAt)
                 .ToListAsync();
                 
-             return View(likes);
-
-            // List<Tweet> tweets = new List<Tweet>();
-
-            // if (likes != null) {
-            // foreach (Like like in likes) {
-
-            //     //FIXME NULL ERRORS
-            //     var likedTweet = await db.Tweets.Where(t => t.Id == like.Tweet.Id).FirstOrDefaultAsync();
 
 
-            //     if (likedTweet != null) {
-            //     tweets.Add(likedTweet);
+            List<Tweet> tweets = new List<Tweet>();
 
-            //     }
-            // }
-            // }
+            if (likes != null) {
+            foreach (Like like in likes) {
+
+                //FIXME NULL ERRORS
+                var likedTweet = await db.Tweets.Where(t => t.Id == like.Tweet.Id)                
+                .Include(t => t.Author)
+                .Include(t => t.ParentTweet)
+                .FirstOrDefaultAsync();
+
+                if (likedTweet != null) {
+                tweets.Add(likedTweet);
+
+                }
+            }
+            }
 
 
 
-            // return View(tweets);
-
-                        // return View(tweets);
+            return View(tweets);
 
         }
     }

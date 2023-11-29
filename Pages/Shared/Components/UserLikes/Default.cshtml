@@ -1,16 +1,14 @@
 ﻿@using TwitterClone.Models
-@model List<Like>
+@model List<Tweet>
 
 @if (Model != null && Model.Any() == true)
 {
-        <div class="row m-5">Coming soon</div>
 
-    @foreach (var like in Model) {
-    
-    <div>@like.User.UserName liked a post at @DateOnly.FromDateTime(like.CreatedAt)</div>
+    @foreach (var tweet in Model) {
 
-    @* //FIXME broken association *@
-    @* @await Html.PartialAsync("_TweetCard", new {Tweet=Like.Tweet, BodyContainerId=""}) *@
+<div class="row my-5">
+     @await Html.PartialAsync("_TweetCard", new {Tweet=tweet, BodyContainerId=""})
+</div>
 }
 } else {
 
