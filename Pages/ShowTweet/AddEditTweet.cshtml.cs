@@ -141,7 +141,7 @@ namespace TwitterClone.Pages.UserPortal
             string pattern = @"#([a-zA-Z][a-zA-Z0-9_-]*)";
             Regex regex = new Regex(pattern);
 
-            string result = regex.Replace(bodyString, match => $"<a href='../SearchResult/?term={match.Groups[1].Value}'>#{match.Groups[1].Value}</a>");
+            string result = regex.Replace(bodyString, match => $"#<a href='../SearchResult/?term={match.Groups[1].Value}'>{match.Groups[1].Value}</a>");
 
             return result;
         }
