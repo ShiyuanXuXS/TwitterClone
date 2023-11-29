@@ -13,8 +13,9 @@
 <div class="">
     <div class="card tweetCard border-0">
         <div class="card-body p-2">
-            <!-- Avatar -->
+            <!-- Author and follow button-->
             <div class="d-flex align-items-center mb-2">
+                <!-- Avatar -->
                 @if (!string.IsNullOrEmpty(tweet.Author.Avatar))
                 {
                     <img src="@tweet.Author.Avatar" alt="Author Avatar" class="rounded-circle" width="32" height="32">
@@ -33,6 +34,7 @@
                     <i id="followIcon-@tweet.Author.Id" class="bi bi-person-plus-fill"></i>
                 </button>
             </div>
+            <!-- Tweet body and buttons -->
             <div class="border fs-6">
                 <!-- Tweet Body -->
                 @{
@@ -65,14 +67,22 @@
                     }
                 </div>
             </div>
-                
-                <!-- CreatedAt -->
-                <p class="card-text"><small class="text-muted">@Html.DisplayFor(modelItem => tweet.CreatedAt)</small></p>
-                <div class="btn-group" role="group" aria-label="">
+            <!-- CreatedAt -->
+            <p class="card-text"><small class="text-muted">@Html.DisplayFor(modelItem => tweet.CreatedAt)</small></p>
+            <div class="btn-group" role="group" aria-label="">
                     <!-- reply Button -->
-                    <button type="button" class="btn btn-light mx-2 rounded">
+                    <button id="replyButton-@bodyId" type="button" class="btn btn-light mx-2 rounded">
                         <i class="bi bi-chat"></i>
                     </button>
+                    <script>
+                        // click reply button
+                        document.getElementById(`replyButton-@bodyId`).addEventListener('click', function () {
+                            var replySection = document.getElementById('replySection-@bodyId');
+                            replySection.style.display = replySection.style.display === 'none' ? 'block' : 'none';
+                        });
+                    </script>
+
+
                     <!-- Retweet Button -->
                     <a href="/ShowTweet/AddEditTweet?reTweetId=@tweet.Id" class="btn btn-light mx-2 rounded">
                         <i class="bi bi-arrow-repeat"></i>
@@ -119,9 +129,9 @@
                                     }
                                 })
                             })
-                    })
+                        })
 
-                </script>
+                    </script>
 
                 @if (isCurrentUserAuthor)
                 {
@@ -134,6 +144,35 @@
                         <i class="bi bi-trash"></i>
                     </a>
                 }
+            </div>
+            <!-- Replies -->
+            <div id="replySection-@bodyId" class="tweet-card-reply border fs-6" style="display: none;">
+                <input type="text" id="replyInput-@bodyId" class="form-control mb-2" placeholder="Your reply">
+                <button id="replyConfirm-@bodyId" class="btn btn-primary">Confirm</button>
+                <script>
+                    // reply confirm
+                        document.getElementById('replyConfirm-@bodyId').addEventListener('click', function () {
+                            var replyBody = document.getElementById('replyInput-@bodyId').value.trim();
+                            if (!replyBody) {return}
+                            fetch('/api/Reply/addReply', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    tweetId: @tweet.Id,  
+                                    replyBody: replyBody
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Reply added successfully:', data);
+                            })
+                            .catch(error => {
+                                console.error('Error adding reply:', error);
+                            });
+                        });
+                </script>
             </div>
 
         </div>

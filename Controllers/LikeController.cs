@@ -56,7 +56,7 @@ namespace TwitterClone.Controllers
 
             if (liked != null)
             {
-                _logger.LogInformation("+++++++++++++++++++++++++++++likeId:"+liked.Id.ToString());
+                // _logger.LogInformation("+++++++++++++++++++++++++++++likeId:"+liked.Id.ToString());
                 // Record exists
                 try{
                     _context.Likes.RemoveRange(liked);
@@ -72,7 +72,7 @@ namespace TwitterClone.Controllers
             else
             {
                 // Record doesn't exist
-                _logger.LogInformation("+++++++++++++++++++++++++++++ new Like: UserId:"+currentUser.Id+" TweetId: "+tweetId.ToString());
+                // _logger.LogInformation("+++++++++++++++++++++++++++++ new Like: UserId:"+currentUser.Id+" TweetId: "+tweetId.ToString());
                 try{
                     Like newLike=new Like{
                         User=_context.Users.FirstOrDefault(u=>u.Id==currentUser.Id),

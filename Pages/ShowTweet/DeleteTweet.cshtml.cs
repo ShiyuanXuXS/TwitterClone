@@ -37,7 +37,7 @@ namespace TwitterClone.Pages.UserPortal
             }
 
             var tweet = await _context.Tweets.FirstOrDefaultAsync(t => t.Id == id);
-            _logger.LogInformation("-----------------------------------id:" +tweet.Id);
+            // _logger.LogInformation("-----------------------------------id:" +tweet.Id);
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
 
             if (tweet == null || tweet.Author.Id!=currentUser.Id)
@@ -58,7 +58,9 @@ namespace TwitterClone.Pages.UserPortal
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
             if (tweet != null && tweet.Author.Id==currentUser.Id)
             {
-                Tweet = tweet;
+                
+                await _context.Database.ExecuteSqlInterpolatedAsync($"UPDATE Tweets SET ParentTweetId = NULL WHERE ParentTweetId = {tweet.Id}");
+                // Tweet = tweet;
                 _context.Tweets.Remove(tweet);
                 await _context.SaveChangesAsync();
                 TempData["Message"] = "Tweet deleted successfully!";
