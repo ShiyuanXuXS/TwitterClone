@@ -9,7 +9,7 @@
 @if (user != null)
 {
     <div class="row">
-    <div class="col-12">
+    <div class="col-12 col-lg-11 col-xl-10 col-xxl-9">
     <div class="row mt-5 ps-4 position-relative">
         <div class="row mb-5" id="bannerImg"></div>
         <div class="row m-3"></div>
@@ -48,15 +48,15 @@
             </ul>
         </div>
 
-        <div id="listPosts">
+        <div class="col" id="listPosts">
             @await Component.InvokeAsync("UserTweets", user.UserName)
 
         </div>
-        <div id="listReplies" style="display: none;">
+        <div class="col" id="listReplies" style="display: none;">
             @await Component.InvokeAsync("UserReplies", user.UserName)
 
         </div>
-        <div id="listLikes" style="display: none;">
+        <div class="col" id="listLikes" style="display: none;">
             @await Component.InvokeAsync("UserLikes", user.UserName)
 
         </div>

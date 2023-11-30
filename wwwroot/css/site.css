@@ -48,7 +48,8 @@ body {
   color: #1DA1F2;
 }
 
-.bg-brand-color, .bg-brand-msg {
+.bg-brand-color,
+.bg-brand-msg {
   background-color: #1DA1F2;
 }
 
@@ -79,7 +80,7 @@ body {
 
 #acctMenu:hover,
 #acctMenuSm:hover,
-.msgCard:hover {
+.msgRow:hover {
   background-color: rgb(242, 242, 242);
 }
 
@@ -130,15 +131,15 @@ body {
 
 .outer3 {
   align-items: stretch;
-    display: flex;
-    flex-direction: column;
-    list-style: none;
-    margin: 0px;
-    min-height: 0px;
-    min-width: 0px;
-    padding: 0px;
-    position: relative;
-    text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+  position: relative;
+  text-decoration: none;
 }
 
 .outer4 {
@@ -162,7 +163,6 @@ body {
 }
 
 .sidebarContainerOuter {
-  width: 100px;
   align-items: stretch;
   display: flex;
   flex-basis: auto;
@@ -190,7 +190,6 @@ body {
 }
 
 .sidebar {
-  width: 100px;
   height: 100%;
   justify-content: space-between;
   overflow-y: auto;
@@ -198,69 +197,45 @@ body {
   flex-direction: column;
   flex-shrink: 0;
   position: relative;
-  padding-left: 8px;
-  padding-right: 8px;
   align-items: stretch;
   display: flex;
   flex-basis: auto;
-  flex-direction: column;
-  flex-shrink: 0;
   margin: 0px;
   min-height: 0px;
   min-width: 0px;
   padding: 0px;
 
 }
-.sidebarRightContainerOuter {
-  width: 200px;
-  align-items: stretch;
-  display: flex;
-  flex-basis: auto;
-  flex-direction: column;
-  flex-shrink: 0;
-  position: relative;
 
-}
-
-.sidebarRightContainerInner {
-  top: 0px;
-  position: fixed;
-  height: 100%;
-  align-items: stretch;
-  display: flex;
-  flex-basis: auto;
-  flex-direction: column;
-  flex-shrink: 0;
-  list-style: none;
-  margin: 0px;
-  min-height: 0px;
-  min-width: 0px;
-  padding: 0px;
-  padding-top: 50px;
-
-
+.sidebarLeft {
+  width: 100px;
 }
 
 .sidebarRight {
-  width: 200px;
-  height: 100%;
-  justify-content: space-between;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  position: relative;
-  padding-left: 8px;
-  padding-right: 8px;
-  align-items: stretch;
+  width: 275px;
+  padding-top: 50px;
+
+}
+
+.msgBar {
+  width: 400px;
+  max-width: 600px;
+  padding-top: 70px;
+}
+
+.msgList {
+  /* width: 200px;
+  max-width: 500px; */
+  width: inherit;
+  padding-top: 70px;
+  flex-shrink: 2;
+  align-items: flex-start;
+  flex-grow: 2;
+  box-sizing: border-box;
   display: flex;
   flex-basis: auto;
   flex-direction: column;
-  flex-shrink: 0;
-  margin: 0px;
-  min-height: 0px;
-  min-width: 0px;
-  padding: 0px;
+  position: relative;
 
 }
 
@@ -287,7 +262,7 @@ body {
   display: flex;
   flex-basis: auto;
   flex-direction: column;
-    position: relative;
+  position: relative;
 
 }
 
@@ -297,11 +272,53 @@ body {
   padding: 0px;
 }
 
+.msgRow {
+  width: inherit;
+  /* margin-left: auto; */
+}
+
+
+
+
+.composeMsg {
+  position: fixed;
+  bottom: 0px;
+  width: inherit;
+  margin-left: auto;
+}
+
+.searchBar {
+  position: fixed;
+  top: 20px;
+}
+
+#msgViewHeader {
+  position: fixed;
+  top: 0px;
+  width: inherit;
+  margin-left: auto;
+}
+
+#msgListHeader {
+  position: fixed;
+  top: 0px;
+  width: inherit;
+  margin-left: auto;
+}
+
 
 @media (min-width: 768px) {
 
   .mainInner {
     width: 600px;
+  }
+
+  .msgBar {
+    width: 400px;
+  }
+
+  .msgList {
+    width: 200px;
   }
 }
 
@@ -310,83 +327,41 @@ body {
   .mainInner {
     width: 900px;
   }
+
+  .msgBar {
+    width: 600px;
+  }
+
+  .msgList {
+    width: 300px;
+  }
+
 }
 
 
 @media (min-width: 1200px) {
 
-  .sidebarContainerOuter, .sidebar,  .sidebarRightContainerOuter, .sidebarRight {
+  .sidebarLeft,
+  .sidebarRight {
     width: 275px;
   }
+  .msgBar {
+    width: 600px;
+  }
+
+  .msgList {
+    width: 300px;
+  }
+
 }
 
 @media (min-width: 1400px) {
 
   .mainInner {
-    width: 1050px;
+    width: 1200px;
   }
-}
 
-.msgColumnContainer {
-  flex-shrink: 1;
-  align-items: flex-end;
-  flex-grow: 2;
-  box-sizing: border-box;
-  display: flex;
-  flex-basis: auto;
-  flex-direction: column;
-    position: relative;
-    max-width: 600px;
-
-}
-
-.msgBarContainer {
-  top: 0px;
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  max-width: 600px;
-  align-items: flex-end;
-  display: flex;
-  flex-basis: auto;
-  flex-direction: column;
-  flex-shrink: 0;
-  list-style: none;
-  margin: 0px;
-  min-height: 0px;
-  min-width: 0px;
-  padding: 0px;
-}
-
-.msgBar {
-  height: 100%;
-  width: inherit;
-  justify-content: space-between;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  position: relative;
-  padding-left: 8px;
-  padding-right: 8px;
-  align-items: stretch;
-  display: flex;
-  flex-basis: auto;
-  flex-direction: column;
-  flex-shrink: 0;
-}
-
-.msgConvList {
-  max-width: 400px;
-}
-
-.composeMsg {
-  width: 100%;
-  margin-left: auto;
-
-}
-
-.searchBar {
-  position: fixed;
-  top: 20px;
+  .msgList {
+    width: 500px;
+  }
 }

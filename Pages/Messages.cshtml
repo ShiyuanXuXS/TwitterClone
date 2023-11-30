@@ -6,62 +6,77 @@
 
 
 
-<div class="row m-2">
-    <div class="col-5 col-xl-6 p-3 border-end vh-100 me-3 msgConvList">
-        <div class="row fs-4 fw-bold mb-5 px-3">Messages</div>
-        @if (Model.Conversations != null && Model.Conversations.Any() == true)
-        {
-            @foreach (var conv in Model.Conversations)
-            {
-                var user = conv.Contact;
-                var msg = conv.Messages.LastOrDefault();
+<div class="row m-0 p-0 w-100">
+    <div class="col-4 col-xxl-5 p-0 msgConvList">
+        <div class="msgList sidebarContainerOuter">
+            <div class="sidebarContainerInner ">
+                <div class="msgList sidebar">
+                    <div class="row fs-4 fw-bold mb-5 px-3" id="msgListHeader">Messages</div>
+                    <div class="msgList px-0">
+ @if (Model.Conversations != null && Model.Conversations.Any() == true)
+                    {
+                        @foreach (var conv in Model.Conversations)
+                        {
+                            var user = conv.Contact;
+                            var msg = conv.Messages.LastOrDefault();
 
-                <div class="row">
-                    <div class="card msgCard">
-                        <div class="row fs-6 py-3">
-                            <a class="stretched-link selectMsg" data-user-id="@user.Id" href="#"></a>
-                            <div class="col-2">
-                                <img src="@user.Avatar" alt="@user.UserName avatar" height="60px" width="60px"
-                                    class="rounded-circle avatar">
-                            </div>
-                            <div class="col-10">
-
-                                <div class="fw-bold d-md-inline">@user.NickName </div>
-                                <div class="text-secondary d-md-inline">&#64;@user.UserName &#183;
-                                    @DateOnly.FromDateTime(msg.SentAt)
+                            <div class="row fs-6 py-2 m-0 msgRow border-top border-bottom">
+                                <a class="stretched-link selectMsg" data-user-id="@user.Id" href="#"></a>
+                                <div class="col-2">
+                                    <img src="@user.Avatar" alt="@user.UserName avatar" height="40px" width="40px"
+                                        class="rounded-circle avatar">
                                 </div>
-                                <div class="msgPreview">@msg.Content</div>
+                                <div class="col-10">
 
+                                    <div class="fw-bold d-md-inline">@user.NickName </div>
+                                    <div class="text-secondary d-md-inline">&#64;@user.UserName &#183;
+                                        @DateOnly.FromDateTime(msg.SentAt)
+                                    </div>
+                                    <div class="msgPreview">@msg.Content</div>
+
+                                </div>
                             </div>
-                        </div>
+
+                        }
+                    }
                     </div>
+                   
                 </div>
-            }
-        }
+            </div>
+        </div>
     </div>
-    <div class="col-6 msgColumnContainer">
-        <div class="row mt-5" id="msgView"></div>
+    <div class="col-8 col-xxl-7 p-0">
+        <div class="msgBar sidebarContainerOuter">
+            <div class="sidebarContainerInner border-start border-end">
 
-        <div class="msgBarContainer border-start border-end">
+                <div class="msgBar sidebar">
+                    <div class="row ms-3" id="msgView"></div>
 
-            <div class="msgBar">
-                <div class="fw-bold" id="msgViewHeader"></div>
-                <div>
-                    <div class="composeMsg row justify-content-end" style="display: none;">
-                        <div class="form-group mb-2">
-                            <textarea class="form-control" id="msgBox" rows="6"
+                    <div class="row bg-white border-bottom py-3" id="msgViewHeader" style="display: none;">
+                        <div class="col-1" id="headerImg"></div>
+                        <div class="col-auto fw-bold" id="headerName"></div>
+                    </div>
+
+
+
+                    <div class="composeMsg row justify-content-end my-0 ps-0 py-3 bg-white border-top"
+                        style="display: none;">
+                        <div class="form-group col-10 col-xl-11">
+                            <textarea class="form-control" id="msgBox" rows="2"
                                 placeholder="Compose message"></textarea>
                         </div>
-                        <div class="col-auto mx-3 mb-3">
+                        <div class="col-2 col-xl-1 ps-0 ms-0 align-self-center">
+                            <div class="btn brand-color rounded rounded-pill border" id="btnSend">&#10148;</div>
+                        </div>
+                        <div class="col-auto mx-3">
                             <div id="errMsg" class="text-danger"></div>
                         </div>
-              <div class="col-auto mx-e mb-3">
-                            <div class="btn bg-brand-color rounded rounded-pill text-white" id="btnSend">Send</div>
-                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -82,6 +97,7 @@
                 }
             }).done(function (data) {
                 var msgList = data.msgList;
+                var user = msgList[0].sender;
                 var result = '';
                 for (var i = 0; i < msgList.length; i++) {
                     var msg = msgList[i];
@@ -118,6 +134,16 @@
                     }
                 }
                 $("#msgView").html(result);
+
+                var imgElem = `
+                 <img src="${user.avatar}" alt="${user.userName} avatar" height="35px" width="35px"
+                                    class="rounded-circle avatar">
+                `;
+
+                $("#headerImg").html(imgElem);
+                $("#headerName").html(user.nickName);
+                $('.composeMsg').show();
+                $('#msgViewHeader').show();
             });
         }
 
@@ -125,7 +151,6 @@
 
             var userId = $(this).data('user-id');
             updateMsgView(userId);
-            $('.composeMsg').show();
             $('#btnSend').data('user-id', userId);
         });
 
