@@ -74,15 +74,6 @@
                     <button id="replyButton-@bodyId" type="button" class="btn btn-light mx-2 rounded">
                         <i class="bi bi-chat"></i>
                     </button>
-                    <script>
-                        // click reply button
-                        document.getElementById(`replyButton-@bodyId`).addEventListener('click', function () {
-                            var replySection = document.getElementById('replySection-@bodyId');
-                            replySection.style.display = replySection.style.display === 'none' ? 'block' : 'none';
-                        });
-                    </script>
-
-
                     <!-- Retweet Button -->
                     <a href="/ShowTweet/AddEditTweet?reTweetId=@tweet.Id" class="btn btn-light mx-2 rounded">
                         <i class="bi bi-arrow-repeat"></i>
@@ -147,8 +138,9 @@
             </div>
             <!-- Replies -->
             <div id="replySection-@bodyId" class="tweet-card-reply border fs-6" style="display: none;">
-                <input type="text" id="replyInput-@bodyId" class="form-control mb-2" placeholder="Your reply">
+                <input type="text" id="replyInput-@bodyId" class="form-control mb-2 my-2" placeholder="Your reply">
                 <button id="replyConfirm-@bodyId" class="btn btn-primary">Confirm</button>
+                <ul id="replyList-@bodyId" class="my-2"></ul>
                 <script>
                     // reply confirm
                         document.getElementById('replyConfirm-@bodyId').addEventListener('click', function () {
@@ -166,6 +158,62 @@
                             })
                             .then(response => response.json())
                             .then(data => {
+                                // Access the reply data from the response
+                                var replyData = data.replyData;
+
+                                // Add the replyData to the ul element
+                                var replyList = document.getElementById(`replyList-@bodyId`);
+                                var replyItem = document.createElement('li');
+
+                                // Create elements for author's information
+                                var commenterInfo = document.createElement('div');
+                                commenterInfo.className = 'd-flex align-items-center mb-2';
+
+                                // Avatar
+                                if (replyData.commenter.avatar) {
+                                    var avatar = document.createElement('img');
+                                    avatar.src = replyData.commenter.avatar;
+                                    avatar.alt = 'Author Avatar';
+                                    avatar.className = 'rounded-circle';
+                                    avatar.width = 32;
+                                    avatar.height = 32;
+                                    commenterInfo.appendChild(avatar);
+                                } else {
+                                    var defaultAvatar = document.createElement('i');
+                                    defaultAvatar.className = 'bi bi-person-fill fs-4 text-muted';
+                                    commenterInfo.appendChild(defaultAvatar);
+                                }
+
+                                // Commenter Name and UserName
+                                var commenterDetails = document.createElement('div');
+                                commenterDetails.className = 'ms-2';
+                                var nickName = document.createElement('h6');
+                                nickName.className = 'mb-0 fs-6';
+                                nickName.textContent = replyData.commenter.nickName;
+                                var userName = document.createElement('p');
+                                userName.className = 'text-muted fs-6 mb-0';
+                                userName.textContent = replyData.commenter.userName;
+                                commenterDetails.appendChild(nickName);
+                                commenterDetails.appendChild(userName);
+                                commenterInfo.appendChild(commenterDetails);
+
+                                // Append commenter's information and reply text to the list item
+                                replyItem.appendChild(commenterInfo);
+                                var replyText = document.createElement('p');
+                                replyText.textContent = replyData.body;
+                                replyItem.appendChild(replyText);
+
+                                // CreatedAt information
+                                var createdAtInfo = document.createElement('p');
+                                createdAtInfo.className = 'card-text';
+                                var small = document.createElement('small');
+                                small.className = 'text-muted';
+                                small.textContent = replyData.createdAt; 
+                                createdAtInfo.appendChild(small);
+                                replyItem.appendChild(createdAtInfo);
+
+                                // Append the list item to the reply list
+                                replyList.appendChild(replyItem);
                                 console.log('Reply added successfully:', data);
                             })
                             .catch(error => {
@@ -173,7 +221,81 @@
                             });
                         });
                 </script>
+                
             </div>
+            <script>
+                // click reply button
+                document.getElementById(`replyButton-@bodyId`).addEventListener('click', function () {
+                    var replySection = document.getElementById('replySection-@bodyId');
+                    if (replySection.style.display=='block'){
+                        replySection.style.display='none'
+                        return
+                    }
+                    fetch(`/api/Reply/getReplies?tweetId=@tweet.Id`)
+                        .then(response=>response.json())
+                        .then(replies=>{
+                            var replyList=document.getElementById(`replyList-@bodyId`)
+                            replyList.innerHTML=""
+                            replies.forEach(reply=>{
+                                console.log(reply)
+                                var replyItem=document.createElement('li')// Create elements for author's information
+                                var commenterInfo = document.createElement('div');
+                                commenterInfo.className = 'd-flex align-items-center mb-2';
+
+                                // Avatar
+                                if (reply.commenter.avatar) {
+                                    var avatar = document.createElement('img');
+                                    avatar.src = reply.commenter.avatar;
+                                    avatar.alt = 'Author Avatar';
+                                    avatar.className = 'rounded-circle';
+                                    avatar.width = 32;
+                                    avatar.height = 32;
+                                    commenterInfo.appendChild(avatar);
+                                } else {
+                                    var defaultAvatar = document.createElement('i');
+                                    defaultAvatar.className = 'bi bi-person-fill fs-4 text-muted';
+                                    commenterInfo.appendChild(defaultAvatar);
+                                }
+
+                                // commenter nickName and userName
+                                var commenterDetails = document.createElement('div');
+                                commenterDetails.className = 'ms-2';
+                                var nickName = document.createElement('h6');
+                                nickName.className = 'mb-0 fs-6';
+                                nickName.textContent = reply.commenter.nickName;
+                                var userName = document.createElement('p');
+                                userName.className = 'text-muted fs-6 mb-0';
+                                userName.textContent = reply.commenter.userName;
+                                commenterDetails.appendChild(nickName);
+                                commenterDetails.appendChild(userName);
+                                commenterInfo.appendChild(commenterDetails);
+                                replyItem.appendChild(commenterInfo);
+
+                                // reply text
+                                var replyText = document.createElement('p');
+                                replyText.textContent = reply.body;
+                                replyItem.appendChild(replyText);
+
+                                // CreatedAt 
+                                var createdAtInfo = document.createElement('p');
+                                createdAtInfo.className = 'card-text';
+                                var small = document.createElement('small');
+                                small.className = 'text-muted';
+                                small.textContent = reply.createdAt; 
+                                createdAtInfo.appendChild(small);
+                                replyItem.appendChild(createdAtInfo);
+
+                                replyList.appendChild(replyItem)
+                            })
+                        })
+                        .then(()=>{
+                            replySection.style.display = 'block'
+                        })
+                        .catch(err=>{
+                            console.log("error fetching replies: ",err)
+                        })
+                });
+            </script>
 
         </div>
     </div>

@@ -30,7 +30,18 @@ namespace TwitterClone.Controllers
             if (currentUser==null){
                 return StatusCode(400,"not authorized!");
             }
-            var replies = _context.Comments.Where(c => c.Tweet.Id ==  tweetId).ToList();
+            var replies = _context.Comments
+                .Where(c => c.Tweet.Id ==  tweetId)
+                .Select(c=>new{
+                    Commenter=new{
+                        Avatar=c.Commenter.Avatar,
+                        NickName=c.Commenter.NickName,
+                        UserName=c.Commenter.UserName
+                    },
+                    Body=c.Body,
+                    CreatedAt=c.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")
+                })
+                .ToList();
             return Ok(replies);
         }
         [HttpPost("addReply")]
@@ -55,7 +66,23 @@ namespace TwitterClone.Controllers
             try{
                 _context.Comments.Add(reply);
                 _context.SaveChanges();
-                return Ok(new{success=true});
+                var responseData = new
+                {
+                    Success = true,
+                    ReplyData = new
+                    {
+                        Commenter = new
+                        {
+                            Avatar = reply.Commenter.Avatar,
+                            NickName = reply.Commenter.NickName,
+                            UserName = reply.Commenter.UserName
+                        },
+                        CreatedAt = reply.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"), // 格式化 CreatedAt 字段
+                        Body = reply.Body
+                    }
+                };
+
+                return Ok(responseData);
 
             }catch(Exception ex){
                 _logger.LogError(ex.Message);
