@@ -9,184 +9,188 @@
     int indexView = Model.indexView;
     ViewData["ShowDescription"] = Model.ShowDescription;
 }
-
-<div class="col-8">
-    <div class="p-2 px-3 border-end border-start">
-        <div class="d-flex align-items-center p-2 mb-3">
-            <div class="">
-                <a class="btnBackToMain" asp-page="/Home">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black"
-                        class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-                        <path
-                            d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
-                    </svg>
-                </a>
+<div class="row">
+    <div class="col-8">
+        <div class="p-2 px-3">
+            <div class="d-flex align-items-center p-2 mb-3">
+                <div class="">
+                    <a class="btnBackToMain" asp-page="/Home">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black"
+                            class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
+                        </svg>
+                    </a>
+                </div>
+                <partial name="_PartialSearch" />
             </div>
-            <partial name="_PartialSearch" />
-        </div>
-        <div>
-            <ul class="nav nav-tabs">
-                <input type="hidden" name="viewIndex" value=@indexView />
-                <li class="nav-item">
-                    <form method="post" asp-page-handler="ShowTweetAndUser" name="showTweetAndUserForm">
-                        <input type="hidden" value="@ViewData["SearchTerm"]" />
-                        <input type="hidden" name="searchOptionValue" />
-                        <button type="submit" style="display:none;"></button>
-                        <a class="nav-link fs-5" onclick="submitShowTweetAndUserForm()">Top</a>
-                    </form>
-                </li>
-                <li class="nav-item">
-                    <form method="post" asp-page-handler="ShowAllPeople" name="showAllPeopleForm">
-                        <input type="hidden" value="@ViewData["SearchTerm"]" />
-                        <input type="hidden" name="searchOptionValue" />
-                        <button type="submit" style="display:none;"></button>
-                        <a class="nav-link fs-5" onclick="submitShowAllPeopleForm()">People</a>
-                    </form>
-                </li>
-                </li>
-                <li class="nav-item">
-                    <form method="post" asp-page-handler="ShowAllTweet" name="showAllTweetForm">
-                        <input type="hidden" value="@ViewData["SearchTerm"]" />
-                        <input type="hidden" name="searchOptionValue" />
-                        <button type="submit" style="display:none;"></button>
-                        <a class="nav-link fs-5" onclick="submitShowAllTweetForm()">Media</a>
-                    </form>
+            <div>
+                <ul class="nav nav-tabs">
+                    <input type="hidden" name="viewIndex" value=@indexView />
+                    <li class="nav-item">
+                        <form method="post" asp-page-handler="ShowTweetAndUser" name="showTweetAndUserForm">
+                            <input type="hidden" value="@ViewData["SearchTerm"]" />
+                            <input type="hidden" name="searchOptionValue" />
+                            <button type="submit" style="display:none;"></button>
+                            <a class="nav-link fs-5" onclick="submitShowTweetAndUserForm()">Top</a>
+                        </form>
+                    </li>
+                    <li class="nav-item">
+                        <form method="post" asp-page-handler="ShowAllPeople" name="showAllPeopleForm">
+                            <input type="hidden" value="@ViewData["SearchTerm"]" />
+                            <input type="hidden" name="searchOptionValue" />
+                            <button type="submit" style="display:none;"></button>
+                            <a class="nav-link fs-5" onclick="submitShowAllPeopleForm()">People</a>
+                        </form>
+                    </li>
+                    </li>
+                    <li class="nav-item">
+                        <form method="post" asp-page-handler="ShowAllTweet" name="showAllTweetForm">
+                            <input type="hidden" value="@ViewData["SearchTerm"]" />
+                            <input type="hidden" name="searchOptionValue" />
+                            <button type="submit" style="display:none;"></button>
+                            <a class="nav-link fs-5" onclick="submitShowAllTweetForm()">Media</a>
+                        </form>
 
-                </li>
-            </ul>
-        </div>
-        @if (indexTweet == 0 || indexPeople == 1)
-        {
-            <div class="p-2">
-                <p class="fs-5 fw-bold mt-3 mb-0">People</p>
-                @if (displayUser != null && displayUser.Any())
-                {
-                    <ul class="nav flex-column">
-                        <partial name="_PartialFollowSuggestion" model="Model.SearchedUser" />
-                        <li class="mt-2">
-                            @if (indexPeople == 1)
-                            {
-                                <button type="button" class="btn btn-link fs-6 no-underline ps-0" id="BtnShowMorePeople"
-                                    onclick="submitShowAllPeopleForm()">Show
-                                    more </button>
-                            }
-                        </li>
-                    </ul>
-                }
-                else
-                {
-                    <partial name="_PartialNoSearchResult" />
-
-                }
+                    </li>
+                </ul>
             </div>
-            <hr>
-        }
-        @if (indexPeople == 1 || indexTweet == 1)
-        {
-            <div class="p-2">
-                <p class="fs-5 fw-bold mt-3 mb-0">Tweets</p>
-                @if (Model.SearchedTweet != null && Model.SearchedTweet.Any())
-                {
-                    <div class="d-flex flex-column">
-                        @foreach (var item in Model.SearchedTweet)
-                        {
-                            @await Html.PartialAsync("_TweetCard", new { Tweet = item, BodyContainerId = "" })
-                        }
-                    </div>
-                    @if (indexPeople == 1)
+            @if (indexTweet == 0 || indexPeople == 1)
+            {
+                <div class="p-2">
+                    <p class="fs-5 fw-bold mt-3 mb-0">People</p>
+                    @if (displayUser != null && displayUser.Any())
                     {
-                        <div>
-                            <button type="button" class="btn btn-link fs-6 no-underline ps-0" id="BtnShowMoreTweet"
-                                onclick="submitShowAllTweetForm()">Show
-                                more </button>
-                        </div>
-                    }
-                }
-                else
-                {
-                    <partial name="_PartialNoSearchResult" />
-                }
-            </div>
-        }
-    </div>
-</div>
-
-<div class="col-4">
-    <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary">
-        <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
-            <li class="mb-3">
-                <div class="border rounded px-3">
-                    <p class="fs-5 fw-bold mb-0 py-2">Search Filters</p>
-                </div>
-
-            </li>
-            <li class="mb-3 ">
-                <div class="border rounded px-3">
-                    <p class="fs-6 fw-bold mb-0 pt-2">Pepole</p>
-                    <div class="py-2">
-                        <div class="d-flex">
-                            <label class="fs-6">From anyone</label>
-                            <input type="radio" class="ms-auto" name="searchOption" value="anyone" />
-                        </div>
-                        <div class="d-flex">
-                            <label class="fs-6">People you follow</label>
-                            <input type="radio" class="ms-auto" name="searchOption" value="followed" />
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="mb-3">
-                <div class="bg-light rounded p-2 px-3">
-                    <p class="fs-5 mb-4 fw-bold">What's happening</p>
-                    <ul class="nav flex-column">
-                        <li class="mb-2">
-                            <a asp-page="#" class="text-dark text-decoration-none fs-6">
-                                <strong>Hot tags</strong>
-                            </a>
-                            <p class="fs-6 mb-0 fw-lighter"><span class="fw-lighter">No.</span> Posts</p>
-                        </li>
-                        <li class="mt-2">
-                            <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
-                                more</button>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="mb-3">
-                <div class="bg-light rounded p-2 px-3">
-                    <p class="fs-5 mb-4 fw-bold">Who to follow</p>
-                    <ul class="nav flex-column">
-                        @foreach (var user in Model.FollowSuggestion.OrderBy(x => Guid.NewGuid()).Take(3).ToList())
-                        {
-                            <li class="mb-2 d-flex align-items-center p-2 ps-0">
-                                <div class="fs-6"> <img src="@user.Avatar" alt="avatar" width="32" height="32"
-                                        class="rounded-circle"></div>
-                                <div class="names fs-6 ps-2">
-                                    <div class="fw-bold">@user.NickName</div>
-                                    <div>&#64;@user.UserName</div>
-                                </div>
-                                <div class="ms-auto">
-                                    <button class="btnFollowSide btn-dark btn-sm rounded rounded-pill fw-bold"
-                                        data-user-id="@user.Id">Follow</button>
-                                </div>
+                        <ul class="nav flex-column">
+                            <partial name="_PartialFollowSuggestion" model="Model.SearchedUser" />
+                            <li class="mt-2">
+                                @if (indexPeople == 1)
+                                {
+                                    <button type="button" class="btn btn-link fs-6 no-underline ps-0" id="BtnShowMorePeople"
+                                        onclick="submitShowAllPeopleForm()">Show
+                                        more </button>
+                                }
                             </li>
-                        }
-                        <li class=" mt-2">
-                            <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
-                                more</button>
-                        </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <partial name="_PartialNoSearchResult" />
 
-                    </ul>
+                    }
                 </div>
-            </li>
-            <li class="mb-3 fs-6 p-2 text-center">
-                &copy; 2023 - Y - ShiYuan Xu, Meredith White, Xiaoxing Pan, All rights
-                reserved.
-            </li>
-        </ul>
+                <hr>
+            }
+            @if (indexPeople == 1 || indexTweet == 1)
+            {
+                <div class="p-2">
+                    <p class="fs-5 fw-bold mt-3 mb-0">Tweets</p>
+                    @if (Model.SearchedTweet != null && Model.SearchedTweet.Any())
+                    {
+                        <div class="d-flex flex-column">
+                            @foreach (var item in Model.SearchedTweet)
+                            {
+                                @await Html.PartialAsync("_TweetCard", new { Tweet = item, BodyContainerId = "" })
+                            }
+                        </div>
+                        @if (indexPeople == 1)
+                        {
+                            <div>
+                                <button type="button" class="btn btn-link fs-6 no-underline ps-0" id="BtnShowMoreTweet"
+                                    onclick="submitShowAllTweetForm()">Show
+                                    more </button>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <partial name="_PartialNoSearchResult" />
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-4 sidebarRightContainerOuter">
+        <div class="sidebarRightContainerInner border-start ps-3">
+            <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary vh-100 justify-content-between sidebarRight">
+                <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
+                    <li class="mb-3">
+                        <div class="border rounded px-3">
+                            <p class="fs-5 fw-bold mb-0 py-2">Search Filters</p>
+                        </div>
+
+                    </li>
+                    <li class="mb-3 ">
+                        <div class="border rounded px-3">
+                            <p class="fs-6 fw-bold mb-0 pt-2">Pepole</p>
+                            <div class="py-2">
+                                <div class="d-flex">
+                                    <label class="fs-6">From anyone</label>
+                                    <input type="radio" class="ms-auto" name="searchOption" value="anyone" />
+                                </div>
+                                <div class="d-flex">
+                                    <label class="fs-6">People you follow</label>
+                                    <input type="radio" class="ms-auto" name="searchOption" value="followed" />
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mb-3">
+                        <div class="bg-light rounded p-2 px-3">
+                            <p class="fs-5 mb-4 fw-bold">What's happening</p>
+                            <ul class="nav flex-column">
+                                <li class="mb-2">
+                                    <a asp-page="#" class="text-dark text-decoration-none fs-6">
+                                        <strong>Hot tags</strong>
+                                    </a>
+                                    <p class="fs-6 mb-0 fw-lighter"><span class="fw-lighter">No.</span> Posts</p>
+                                </li>
+                                <li class="mt-2">
+                                    <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
+                                        more</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-3">
+                        <div class="bg-light rounded p-2 px-3">
+                            <p class="fs-5 mb-4 fw-bold">Who to follow</p>
+                            <ul class="nav flex-column">
+                                @foreach (var user in Model.FollowSuggestion.OrderBy(x =>
+                                Guid.NewGuid()).Take(3).ToList())
+                                {
+                                    <li class="mb-2 d-flex align-items-center p-2 ps-0">
+                                        <div class="fs-6"> <img src="@user.Avatar" alt="avatar" width="32" height="32"
+                                                class="rounded-circle"></div>
+                                        <div class="names fs-6 ps-2">
+                                            <div class="fw-bold">@user.NickName</div>
+                                            <div>&#64;@user.UserName</div>
+                                        </div>
+                                        <div class="ms-auto">
+                                            <button class="btnFollowSide btn-dark btn-sm rounded rounded-pill fw-bold"
+                                                data-user-id="@user.Id">Follow</button>
+                                        </div>
+                                    </li>
+                                }
+                                <li class=" mt-2">
+                                    <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
+                                        more</button>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-3 fs-6 p-2 text-center">
+                        &copy; 2023 - Y - ShiYuan Xu, Meredith White, Xiaoxing Pan, All rights
+                        reserved.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
     </div>
 </div>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     function submitShowAllPeopleForm() {

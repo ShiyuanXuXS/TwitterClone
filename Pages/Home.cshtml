@@ -8,14 +8,15 @@
 }
 <div class="row">
 
-<div class="col-8">
-
+    <div class="col-12 col-lg-8 ">
+tweet feed here
 </div>
 
-<div class="col-4">
-    <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary">
-        <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
-            <li class="mb-3">
+ <div class="d-none d-lg-flex col-4 sidebarRightContainerOuter">
+        <div class="sidebarRightContainerInner border-start ps-3">
+            <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary vh-100 justify-content-between sidebarRight">
+                    <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
+            <li class="mb-3 searchBar">
                 <partial name="_PartialSearch" />
             </li>
             <li class="mb-3">
@@ -59,6 +60,7 @@
                 &copy; 2023 - Y - ShiYuan Xu, Meredith White, Xiaoxing Pan, All rights reserved.
             </li>
         </ul>
+    </div>
     </div>
 
 </div>
