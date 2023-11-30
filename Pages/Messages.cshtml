@@ -7,14 +7,14 @@
 
 
 <div class="row m-2">
-    <div class="col-6 p-3 border-end vh-100 msgConvList">
+    <div class="col-5 col-xl-6 p-3 border-end vh-100 me-3 msgConvList">
         <div class="row fs-4 fw-bold mb-5 px-3">Messages</div>
         @if (Model.Conversations != null && Model.Conversations.Any() == true)
         {
             @foreach (var conv in Model.Conversations)
             {
                 var user = conv.Contact;
-                var msg = conv.Messages.FirstOrDefault();
+                var msg = conv.Messages.LastOrDefault();
 
                 <div class="row">
                     <div class="card msgCard">
@@ -42,17 +42,24 @@
     <div class="col-6 msgColumnContainer">
         <div class="row mt-5" id="msgView"></div>
 
-        <div class="msgBarContainer">
+        <div class="msgBarContainer border-start border-end">
 
             <div class="msgBar">
                 <div class="fw-bold" id="msgViewHeader"></div>
                 <div>
-                                    <div class="">compose messages here</div>
-
-    <div id="errMsg" class="text-danger"></div>
-    <div id="success"></div>
-    <div class="btn btn-light" id="btnSend">Send test message to Jerry2</div>
-</div>
+                    <div class="composeMsg row justify-content-end" style="display: none;">
+                        <div class="form-group mb-2">
+                            <textarea class="form-control" id="msgBox" rows="6"
+                                placeholder="Compose message"></textarea>
+                        </div>
+                        <div class="col-auto mx-3 mb-3">
+                            <div id="errMsg" class="text-danger"></div>
+                        </div>
+              <div class="col-auto mx-e mb-3">
+                            <div class="btn bg-brand-color rounded rounded-pill text-white" id="btnSend">Send</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -63,7 +70,7 @@
     $(document).ready(function () {
 
         function updateMsgView(userId) {
-            
+
             $.ajax({
                 url: `/api/Message?userId=${userId}`,
                 type: "GET",
@@ -117,17 +124,19 @@
         $('.selectMsg').click(function () {
 
             var userId = $(this).data('user-id');
-
             updateMsgView(userId);
+            $('.composeMsg').show();
+            $('#btnSend').data('user-id', userId);
         });
 
 
         $('#btnSend').click(function () {
 
-            //TEST ONLY
+            var userId = $(this).data('user-id');
+
             var msg = {
-                Recipient: "ed3aa39d-8e44-4834-88d4-41b21c6a4a01",
-                Content: "Hello!"
+                Recipient: userId,
+                Content: $('#msgBox').val()
             };
 
             $.ajax({
@@ -142,7 +151,8 @@
                     $('#errMsg').text(jqxhr.responseText);
                 }
             }).done(function () {
-                $('#success').text('success');
+
+                $('#msgBox').val("");
                 updateMsgView(msg.Recipient);
 
             });

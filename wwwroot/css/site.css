@@ -211,6 +211,56 @@ body {
   padding: 0px;
 
 }
+.sidebarRightContainerOuter {
+  width: 200px;
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+
+}
+
+.sidebarRightContainerInner {
+  top: 0px;
+  position: fixed;
+  height: 100%;
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  list-style: none;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+
+}
+
+.sidebarRight {
+  width: 200px;
+  height: 100%;
+  justify-content: space-between;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+  padding-left: 8px;
+  padding-right: 8px;
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+
+}
 
 .topMenu {
   align-items: flex-start;
@@ -263,7 +313,7 @@ body {
 
 @media (min-width: 1200px) {
 
-  .sidebarContainerOuter, .sidebar {
+  .sidebarContainerOuter, .sidebar,  .sidebarRightContainerOuter, .sidebarRight {
     width: 275px;
   }
 }
@@ -284,6 +334,7 @@ body {
   flex-basis: auto;
   flex-direction: column;
     position: relative;
+    max-width: 600px;
 
 }
 
@@ -291,7 +342,8 @@ body {
   top: 0px;
   position: fixed;
   height: 100%;
-  /* max-width: 600px; */
+  width: 100%;
+  max-width: 600px;
   align-items: flex-end;
   display: flex;
   flex-basis: auto;
@@ -306,7 +358,7 @@ body {
 
 .msgBar {
   height: 100%;
-  width: 100%;
+  width: inherit;
   justify-content: space-between;
   overflow-y: auto;
   display: flex;
@@ -324,4 +376,10 @@ body {
 
 .msgConvList {
   max-width: 400px;
+}
+
+.composeMsg {
+  width: 100%;
+  margin-left: auto;
+
 }
