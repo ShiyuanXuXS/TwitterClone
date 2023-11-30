@@ -2,8 +2,10 @@
 @model TwitterClone.Pages.FollowSuggestionModel
 @{
     ViewData["ShowDescription"] = Model.ShowDescription;
+    ViewData["IndexDropdown"] = Model.IndexDropDown;
+
 }
-@* <div class="row">
+<div class="row">
     <div class="col-12 col-lg-8 ">
         <div class="p-2 px-3">
                 <div class="d-flex align-items-center p-2">
@@ -33,10 +35,12 @@
                 <hr />
                 <p class="fs-5 fw-bold ps-2">Suggested for you</p>
                 <ul class="nav flex-column">
+                    <div class="px-2">
                 <partial name="_PartialFollowSuggestion" model="Model.FollowSuggestion" />
+                </div>
             </ul>
         </div>
-    </div> *@
+    </div>
 
     <div class="d-none d-lg-flex col-4 sidebarRightContainerOuter">
         <div class="sidebarRightContainerInner border-start ps-3">
@@ -68,50 +72,14 @@
                             </ul>
                         </div>
                     </li>
-                </ul>
-                <ul class="nav nav-pills nav-flush flex-column mt-4">
+                @* </ul>
+                <ul class="nav nav-pills nav-flush flex-column mt-4"> *@
                     <li class="mb-3 fs-6 p-2 text-center">
                         &copy; 2023 - Y - ShiYuan Xu, Meredith White, Xiaoxing Pan, All rights reserved.
                     </li>
-                </ul>
+                @* </ul> *@
                 </ul>
             </div>
         </div>
     </div>
-    @* <div class="col-4">
-        <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary">
-            <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
-                <li class="mb-3">
-                    <partial name="_PartialSearch" />
-                </li>
-                <li class="mb-3">
-                    <div class="bg-light rounded p-2 px-3">
-                        <p class="fs-5 mb-2 fw-bold">Subscribe to Premium</p>
-                        <p class="fs-6 mb-2">Subscribe to unlock new features and, if eligible, receive a share of ads
-                            revenue.
-                        </p>
-                        <button class="btn btn-dark btn-sm rounded rounded-pill fw-bold">Subscribe</button>
-                    </div>
-                </li>
-                <li class="mb-3">
-                    <div class="bg-light rounded p-2 px-3">
-                        <p class="fs-5 mb-4 fw-bold">What's happening</p>
-                        <ul class="nav flex-column">
-                            <partial name="_PartialWhatsHappening"
-                                model="@Model.ShowTrend.OrderBy(x => Guid.NewGuid()).Take(5).ToList()" />
-                            <li class="mt-2">
-                                <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
-                                    more</button>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="mb-3 fs-6 p-2 text-center">
-
-                    &copy; 2023 - Y - ShiYuan Xu, Meredith White, Xiaoxing Pan, All rights reserved.
-                </li>
-            </ul>
-        </div>
-
-    </div> *@
-
+    
