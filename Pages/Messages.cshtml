@@ -1,0 +1,152 @@
+﻿@page
+@model TwitterClone.Pages.MessagesModel
+@{
+    ViewData["Title"] = "Messages / Y";
+}
+
+
+
+<div class="row m-2">
+    <div class="col-6 p-3 border-end vh-100 msgConvList">
+        <div class="row fs-4 fw-bold mb-5 px-3">Messages</div>
+        @if (Model.Conversations != null && Model.Conversations.Any() == true)
+        {
+            @foreach (var conv in Model.Conversations)
+            {
+                var user = conv.Contact;
+                var msg = conv.Messages.FirstOrDefault();
+
+                <div class="row">
+                    <div class="card msgCard">
+                        <div class="row fs-6 py-3">
+                            <a class="stretched-link selectMsg" data-user-id="@user.Id" href="#"></a>
+                            <div class="col-2">
+                                <img src="@user.Avatar" alt="@user.UserName avatar" height="60px" width="60px"
+                                    class="rounded-circle avatar">
+                            </div>
+                            <div class="col-10">
+
+                                <div class="fw-bold d-md-inline">@user.NickName </div>
+                                <div class="text-secondary d-md-inline">&#64;@user.UserName &#183;
+                                    @DateOnly.FromDateTime(msg.SentAt)
+                                </div>
+                                <div class="msgPreview">@msg.Content</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    <div class="col-6 msgColumnContainer">
+        <div class="row mt-5" id="msgView"></div>
+
+        <div class="msgBarContainer">
+
+            <div class="msgBar">
+                <div class="fw-bold" id="msgViewHeader"></div>
+                <div>
+                                    <div class="">compose messages here</div>
+
+    <div id="errMsg" class="text-danger"></div>
+    <div id="success"></div>
+    <div class="btn btn-light" id="btnSend">Send test message to Jerry2</div>
+</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        function updateMsgView(userId) {
+            
+            $.ajax({
+                url: `/api/Message?userId=${userId}`,
+                type: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                error: function (jqxhr, status, errorThrown) {
+                    $('#errMsg').text(jqxhr.responseText);
+                }
+            }).done(function (data) {
+                var msgList = data.msgList;
+                var result = '';
+                for (var i = 0; i < msgList.length; i++) {
+                    var msg = msgList[i];
+                    if (msg.sender.id == userId) {
+                        result +=
+                            `<div class="row fs-6 py-3">
+                                <div class="col-auto">
+                                    <div class="card border-0 rounded-3 bg-light"> 
+                                        <div class="card-body">                    
+                                            <div class="msg">${msg.content}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <small class="text-secondary">${msg.sentAt}</small>
+                                    </div>
+                                </div>
+                            </div>`
+                    }
+                    else {
+                        result +=
+                            `<div class="row fs-6 py-3 justify-content-end">
+                                <div class="col-auto">
+                                    <div class="card border-0 rounded-3 bg-brand-msg text-white"> 
+                                        <div class="card-body">                    
+                                            <div class="msg">${msg.content}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row text-end">
+                                    <small class="text-secondary">${msg.sentAt}</small>
+                                    </div>
+                                </div>
+                            </div>`
+                    }
+                }
+                $("#msgView").html(result);
+            });
+        }
+
+        $('.selectMsg').click(function () {
+
+            var userId = $(this).data('user-id');
+
+            updateMsgView(userId);
+        });
+
+
+        $('#btnSend').click(function () {
+
+            //TEST ONLY
+            var msg = {
+                Recipient: "ed3aa39d-8e44-4834-88d4-41b21c6a4a01",
+                Content: "Hello!"
+            };
+
+            $.ajax({
+                url: "/api/Message",
+                type: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                dataType: "json",
+                data: JSON.stringify(msg),
+                error: function (jqxhr, status, errorThrown) {
+                    $('#errMsg').text(jqxhr.responseText);
+                }
+            }).done(function () {
+                $('#success').text('success');
+                updateMsgView(msg.Recipient);
+
+            });
+        });
+    });
+
+</script>

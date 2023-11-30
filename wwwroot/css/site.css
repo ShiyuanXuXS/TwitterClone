@@ -48,7 +48,7 @@ body {
   color: #1DA1F2;
 }
 
-.bg-brand-color {
+.bg-brand-color, .bg-brand-msg {
   background-color: #1DA1F2;
 }
 
@@ -77,9 +77,12 @@ body {
   background-color: rgb(242, 242, 242);
 }
 
-#acctMenu:hover {
+#acctMenu:hover,
+#acctMenuSm:hover,
+.msgCard:hover {
   background-color: rgb(242, 242, 242);
 }
+
 
 #bannerImg {
   background-color: silver;
@@ -92,4 +95,233 @@ body {
 
 #trendList:hover {
   background-color: rgb(242, 242, 242);
+}
+
+.msgPreview {
+  text-wrap: break-word;
+  white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
+
+}
+
+
+.outermost {
+  height: 100%;
+  display: flex;
+}
+
+.outer2 {
+  flex: 1;
+
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  list-style: none;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+  position: relative;
+  text-decoration: none;
+}
+
+.outer3 {
+  align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin: 0px;
+    min-height: 0px;
+    min-width: 0px;
+    padding: 0px;
+    position: relative;
+    text-decoration: none;
+}
+
+.outer4 {
+  flex-direction: row;
+  width: 100%;
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.headerContainer {
+  align-items: flex-end;
+  flex-grow: 1;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.sidebarContainerOuter {
+  width: 100px;
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+
+}
+
+.sidebarContainerInner {
+  top: 0px;
+  position: fixed;
+  height: 100%;
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  list-style: none;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+
+}
+
+.sidebar {
+  width: 100px;
+  height: 100%;
+  justify-content: space-between;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+  padding-left: 8px;
+  padding-right: 8px;
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+
+}
+
+.topMenu {
+  align-items: flex-start;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+  position: relative;
+  text-decoration: none;
+
+}
+
+.mainContainer {
+  flex-shrink: 1;
+  align-items: flex-start;
+  flex-grow: 2;
+  box-sizing: border-box;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+    position: relative;
+
+}
+
+.mainInner {
+  align-items: flex-start;
+  margin: 0px;
+  padding: 0px;
+}
+
+
+@media (min-width: 768px) {
+
+  .mainInner {
+    width: 600px;
+  }
+}
+
+@media (min-width: 1000px) {
+
+  .mainInner {
+    width: 900px;
+  }
+}
+
+
+@media (min-width: 1200px) {
+
+  .sidebarContainerOuter, .sidebar {
+    width: 275px;
+  }
+}
+
+@media (min-width: 1400px) {
+
+  .mainInner {
+    width: 1050px;
+  }
+}
+
+.msgColumnContainer {
+  flex-shrink: 1;
+  align-items: flex-end;
+  flex-grow: 2;
+  box-sizing: border-box;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+    position: relative;
+
+}
+
+.msgBarContainer {
+  top: 0px;
+  position: fixed;
+  height: 100%;
+  /* max-width: 600px; */
+  align-items: flex-end;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  list-style: none;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+}
+
+.msgBar {
+  height: 100%;
+  width: 100%;
+  justify-content: space-between;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+  padding-left: 8px;
+  padding-right: 8px;
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.msgConvList {
+  max-width: 400px;
 }
