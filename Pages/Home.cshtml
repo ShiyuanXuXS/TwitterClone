@@ -30,8 +30,9 @@
                 <div class="bg-light rounded p-2 px-3">
                     <p class="fs-5 mb-4 fw-bold">What's happening</p>
                     <ul class="nav flex-column">
-                        @await Component.InvokeAsync("WhatsHappening")
-
+                        @* @await Component.InvokeAsync("WhatsHappening") *@
+                        <partial name="_PartialWhatsHappening"
+                            model="@Model.ShowTrend.OrderBy(x => Guid.NewGuid()).Take(5).ToList()" />
                         <li class="mt-2">
                             <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
                                 more</button>
