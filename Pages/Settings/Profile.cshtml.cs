@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using TwitterClone.Models;
 using TwitterClone.Utils;
-using TwitterClone.Data;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 
@@ -18,8 +17,6 @@ namespace TwitterClone.Pages.Settings
     {
         private readonly UserManager<User> userManager;
         private readonly ILogger<ProfileModel> logger;
-        private readonly TwitterCloneDbContext db;
-
         private readonly BlobServiceClient blobClient;
 
         public User ModelUser { get; set; }

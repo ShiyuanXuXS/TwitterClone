@@ -5,8 +5,11 @@
 {
     @foreach (var tweet in Model) {
     
-    
+    <div class="row my-5">
+
     @await Html.PartialAsync("_TweetCard", new {Tweet=tweet,BodyContainerId=""})
+
+    </div>
 }
 } else {
 
