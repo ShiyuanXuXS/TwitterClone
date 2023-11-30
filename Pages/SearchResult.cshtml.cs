@@ -89,11 +89,6 @@ namespace TwitterClone.Pages
                    (u.Description != null && u.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                    (u.UserName != null && u.UserName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))))
                .ToList();
-            // var followedUser = context.Follows.Where(f => f.User.Id == currentUser.Id).Select(f => f.Author).ToList();
-            // if (followedUser.Count > 0)
-            // {  // if current user is following someone, show users that current user is not following
-            //     return res.Except(followedUser).ToList();
-            // }
             return res;
         }
 

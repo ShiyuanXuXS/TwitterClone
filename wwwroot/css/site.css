@@ -68,6 +68,10 @@ body {
   text-decoration: none;
 }
 
+.no-underline .hashtag-link .nav-link {
+  color: black;
+}
+
 
 .tweetCard:hover {
   background-color: rgb(242, 242, 242);
