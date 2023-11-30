@@ -13,33 +13,37 @@ namespace TwitterClone.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ReplyController:ControllerBase
+    public class ReplyController : ControllerBase
     {
-        private readonly TwitterCloneDbContext _context;
-        private readonly ILogger<LikeController> _logger;
-        private readonly UserManager<User> _userManager;
-        public ReplyController(TwitterCloneDbContext context,ILogger<LikeController> logger,UserManager<User> userManager){
-            _context=context;
-            _logger=logger;
-            _userManager=userManager;
+        private readonly TwitterCloneDbContext context;
+        private readonly ILogger<LikeController> logger;
+        private readonly UserManager<User> userManager;
+        public ReplyController(TwitterCloneDbContext context, ILogger<LikeController> logger, UserManager<User> userManager)
+        {
+            this.context = context;
+            this.logger = logger;
+            this.userManager = userManager;
         }
         [HttpGet("getReplies")]
         public async Task<ActionResult<string>> getReplyAsync(int tweetId)
         {
-            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-            if (currentUser==null){
-                return StatusCode(400,"not authorized!");
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            if (currentUser == null)
+            {
+                return StatusCode(400, "not authorized!");
             }
-            var replies = _context.Comments
-                .Where(c => c.Tweet.Id ==  tweetId)
-                .Select(c=>new{
-                    Commenter=new{
-                        Avatar=c.Commenter.Avatar,
-                        NickName=c.Commenter.NickName,
-                        UserName=c.Commenter.UserName
+            var replies = context.Comments
+                .Where(c => c.Tweet.Id == tweetId)
+                .Select(c => new
+                {
+                    Commenter = new
+                    {
+                        Avatar = c.Commenter.Avatar,
+                        NickName = c.Commenter.NickName,
+                        UserName = c.Commenter.UserName
                     },
-                    Body=c.Body,
-                    CreatedAt=c.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")
+                    Body = c.Body,
+                    CreatedAt = c.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")
                 })
                 .ToList();
             return Ok(replies);
@@ -50,22 +54,27 @@ namespace TwitterClone.Controllers
             int tweetId = replyDto.TweetId;
             string replyBody = replyDto.ReplyBody;
             Comment reply;
-            try{
-                var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-                reply=new Comment{
-                    Commenter=currentUser,
-                    Tweet=_context.Tweets.FirstOrDefault(t=>t.Id==tweetId),
-                    CreatedAt=DateTime.Now,
-                    Body=replyBody
+            try
+            {
+                var currentUser = await userManager.GetUserAsync(HttpContext.User);
+                reply = new Comment
+                {
+                    Commenter = currentUser,
+                    Tweet = context.Tweets.FirstOrDefault(t => t.Id == tweetId),
+                    CreatedAt = DateTime.Now,
+                    Body = replyBody
                 };
-            }catch(Exception ex){
-                _logger.LogError(ex.Message);
-                return StatusCode(400,"Request error");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
+                return StatusCode(400, "Request error");
             };
-            
-            try{
-                _context.Comments.Add(reply);
-                _context.SaveChanges();
+
+            try
+            {
+                context.Comments.Add(reply);
+                context.SaveChanges();
                 var responseData = new
                 {
                     Success = true,
@@ -84,11 +93,13 @@ namespace TwitterClone.Controllers
 
                 return Ok(responseData);
 
-            }catch(Exception ex){
-                _logger.LogError(ex.Message);
-                return StatusCode(500,"Internal server error.");
             }
-            
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
+                return StatusCode(500, "Internal server error.");
+            }
+
         }
         public class ReplyDto
         {

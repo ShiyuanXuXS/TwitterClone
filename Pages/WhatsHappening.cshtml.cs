@@ -7,12 +7,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.RegularExpressions;
 
 
-
 namespace TwitterClone.Pages
 {
-    public class FollowSuggestionModel : PageModel
+    public class WhatsHappeningModel : PageModel
     {
-
         private readonly UserManager<User> userManager;
         private readonly ILogger<HomeModel> logger;
         private readonly TwitterCloneDbContext context;
@@ -24,9 +22,11 @@ namespace TwitterClone.Pages
         [BindProperty]
         public User? CurrentUser { get; set; }
 
-        public int ShowDescription { get; set; } = 1;  // 0: hide, 1: show
+        public int ShowDescription { get; set; } = 0;  // 0: hide, 1: show
 
-        public FollowSuggestionModel(UserManager<User> userManager, ILogger<HomeModel> logger, TwitterCloneDbContext context)
+        public int IndexDropDown { get; set; } = 2;
+
+        public WhatsHappeningModel(UserManager<User> userManager, ILogger<HomeModel> logger, TwitterCloneDbContext context)
         {
             this.userManager = userManager;
             this.logger = logger;
@@ -34,7 +34,6 @@ namespace TwitterClone.Pages
         }
 
         public List<ShowTrendModel>? ShowTrend { get; set; }
-
         private List<ShowTrendModel> getTrend(User currentUser)
         {
             var randomTweets = context.Tweets
@@ -64,33 +63,51 @@ namespace TwitterClone.Pages
             }
             return trendList;
         }
-        public async Task OnGetAsync()
+
+        private void getUnFollowedUserList(User currentUser)
         {
             // get all users
             var allUsers = userManager.Users.ToList();
+            Console.WriteLine("=======1. All Users: " + allUsers.Count);
+            // get all users that current user is following
+            var followedUser = context.Follows.Where(f => f.User.Id == currentUser.Id).Select(f => f.Author).ToList();
+            Console.WriteLine("=======2. Followed User: " + followedUser.Count);
+            if (followedUser.Count > 0)
+            {  // if current user is following someone, show users that current user is not following
+                FollowedUser = followedUser;
+                var excludeFollowed = allUsers.Except(FollowedUser).ToList();
+                FollowSuggestion = excludeFollowed.Where(user => user.Id != currentUser.Id).ToList();
+                Console.WriteLine("==========3.Follow Suggestion: " + FollowSuggestion.Count);
+            }
+            else
+            {  // if current user is not following anyone, show all users
+                FollowedUser = new List<User>();
+                FollowSuggestion = allUsers.Where(user => user.Id != currentUser.Id).ToList();
+                Console.WriteLine("==========4.Follow Suggestion: " + FollowSuggestion.Count);
+            }
+            // return FollowSuggestion;
+        }
+
+        public async Task OnGetAsync()
+        {
+
             // get current user
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            getUnFollowedUserList(currentUser);
+            // get trend
+            ShowTrend = getTrend(currentUser);
 
-            if (currentUser != null)
-            {
-                CurrentUser = currentUser;
-                ShowTrend = getTrend(CurrentUser);
-                Console.WriteLine("Current User: " + CurrentUser.UserName);
-                // get all users that current user is following
-                var followedUser = await context.Follows.Where(f => f.User.Id == currentUser.Id).Select(f => f.Author).ToListAsync();
-
-                if (followedUser.Count > 0)
-                {  // if current user is following someone, show users that current user is not following
-                    FollowedUser = followedUser;
-                    var excludeFollowed = allUsers.Except(FollowedUser).ToList();
-                    FollowSuggestion = excludeFollowed.Where(user => user.Id != currentUser.Id).ToList();
-                }
-                else
-                {  // if current user is not following anyone, show all users
-                    FollowSuggestion = allUsers.Where(user => user.Id != currentUser.Id).ToList();
-                }
-            }
+        }
+        public async Task<IActionResult> OnPostSearchTrend(string searchTerm)
+        {
+            string term = searchTerm;
+            Console.WriteLine("=======Search Term: " + term);
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            getUnFollowedUserList(currentUser);
+            ShowTrend = getTrend(currentUser)
+    .Where(t => t.Hashtag.Any(tag => tag.Contains(searchTerm)))
+    .ToList();
+            return Page();
         }
     }
-
 }

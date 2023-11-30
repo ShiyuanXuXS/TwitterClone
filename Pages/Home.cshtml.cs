@@ -28,6 +28,7 @@ namespace TwitterClone.Pages
 
         [BindProperty]
         public User? CurrentUser { get; set; }
+        public int IndexDropDown { get; set; } = 1;
 
         public HomeModel(ILogger<HomeModel> logger, TwitterCloneDbContext context, UserManager<User> userManager)
         {
@@ -98,14 +99,12 @@ namespace TwitterClone.Pages
             return trendList;
         }
 
-        public async Task<IActionResult> OnPostUpdateTrend(int tweetId)
-        {
-            int tweetIdToRemove = tweetId;
-            var currentUser = await userManager.GetUserAsync(HttpContext.User);
-            var updatedTrendData = getTrend(currentUser).Where(item => item.Id != tweetIdToRemove).ToList(); ;
-            // Your logic here
-            return Partial("_PartialWhatsHappening", updatedTrendData);
-        }
+        // public PartialViewResult OnGetPartialWhatHappening(int tweetId)
+        // {
+        //     var updatedTrendData = getTrend(CurrentUser).Where(item => item.Id != tweetId).ToList();
+        //     return Partial("_PartialWhatsHappening", updatedTrendData);
+        // }
+
 
         public async Task OnGetAsync()
         {

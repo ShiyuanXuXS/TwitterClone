@@ -9,26 +9,26 @@ namespace TwitterClone.Controllers
     [ApiController]
     public class LikeController : ControllerBase
     {
-        private readonly TwitterCloneDbContext _context;
-        private readonly ILogger<LikeController> _logger;
-        private readonly UserManager<User> _userManager;
+        private readonly TwitterCloneDbContext context;
+        private readonly ILogger<LikeController> logger;
+        private readonly UserManager<User> userManager;
         public LikeController(TwitterCloneDbContext context, ILogger<LikeController> logger, UserManager<User> userManager)
         {
-            _context = context;
-            _logger = logger;
-            _userManager = userManager;
+            this.context = context;
+            this.logger = logger;
+            this.userManager = userManager;
         }
 
         [HttpGet("getLikeStatus")]
         public async Task<ActionResult<string>> getLikeStatusAsync(int tweetId)
         {
-            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
             if (currentUser == null)
             {
                 return StatusCode(400, "not authorized!");
             }
             var userId = currentUser.Id;
-            var liked = _context.Likes.FirstOrDefault(like => like.User.Id == userId && like.Tweet.Id == tweetId);
+            var liked = context.Likes.FirstOrDefault(like => like.User.Id == userId && like.Tweet.Id == tweetId);
 
             if (liked != null)
             {
@@ -46,13 +46,13 @@ namespace TwitterClone.Controllers
         [HttpPost("setLike")]
         public async Task<ActionResult<string>> setLikeAsync(int tweetId)
         {
-            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
             if (currentUser == null)
             {
                 return StatusCode(400, "not authorized!");
             }
             var userId = currentUser.Id;
-            var liked = _context.Likes.FirstOrDefault(like => like.User.Id == userId && like.Tweet.Id == tweetId);
+            var liked = context.Likes.FirstOrDefault(like => like.User.Id == userId && like.Tweet.Id == tweetId);
 
             if (liked != null)
             {
@@ -60,14 +60,14 @@ namespace TwitterClone.Controllers
                 // Record exists
                 try
                 {
-                    _context.Likes.RemoveRange(liked);
-                    _context.SaveChanges();
+                    context.Likes.RemoveRange(liked);
+                    context.SaveChanges();
                     var result = new { liked = false, TweetId = tweetId };
                     return Ok(result);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex.Message);
+                    logger.LogError(ex.Message);
                     return StatusCode(500, "Internal server error.");
                 }
 
@@ -76,20 +76,22 @@ namespace TwitterClone.Controllers
             {
                 // Record doesn't exist
                 // _logger.LogInformation("+++++++++++++++++++++++++++++ new Like: UserId:"+currentUser.Id+" TweetId: "+tweetId.ToString());
-                try{
-                    Like newLike=new Like{
-                        User=_context.Users.FirstOrDefault(u=>u.Id==currentUser.Id),
-                        Tweet=_context.Tweets.FirstOrDefault(t=>t.Id==tweetId),
-                        CreatedAt=DateTime.Now
+                try
+                {
+                    Like newLike = new Like
+                    {
+                        User = context.Users.FirstOrDefault(u => u.Id == currentUser.Id),
+                        Tweet = context.Tweets.FirstOrDefault(t => t.Id == tweetId),
+                        CreatedAt = DateTime.Now
                     };
-                    _context.Likes.Add(newLike);
-                    _context.SaveChanges();
+                    context.Likes.Add(newLike);
+                    context.SaveChanges();
                     var result = new { liked = true, TweetId = tweetId };
                     return Ok(result);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex.Message);
+                    logger.LogError(ex.Message);
                     return StatusCode(500, "Internal server error.");
                 }
 
