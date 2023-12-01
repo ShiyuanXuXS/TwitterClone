@@ -92,22 +92,27 @@
             <!-- Tweet body and buttons -->
             <div class="border fs-6">
                 <!-- Tweet Body -->
+                @if (!tweet.Suspended)
+                {
+                    <div id="@bodyId" class="CKEditor-noborder"></div>
+                    <script>
+                        ClassicEditor
+                            .create(document.querySelector('#@bodyId'), {
+                                isReadOnly: true,
+                                toolbar: [],
+                            })
+                            .then(editor => {
+                                editor.setData(`@Html.Raw(tweet.Body)`);
+                                editor.enableReadOnlyMode('#@bodyId');
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    </script>
+                }else{
+                    <p class="text-danger fs-5">This tweet has been suspended!</p>
+                }
                 
-                <div id="@bodyId" class="CKEditor-noborder"></div>
-                <script>
-                    ClassicEditor
-                        .create(document.querySelector('#@bodyId'), {
-                            isReadOnly: true,
-                            toolbar: [],
-                        })
-                        .then(editor => {
-                            editor.setData(`@Html.Raw(tweet.Body)`);
-                            editor.enableReadOnlyMode('#@bodyId');
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        });
-                </script>
                 <!-- ReTweet -->
 
                 <div class="fs-6">
@@ -186,6 +191,14 @@
                         <i class="bi bi-trash"></i>
                     </a>
                 }
+                <!-- Suspend Button -->
+                @if (User.IsInRole("Admin"))
+                {
+                    <a href="/ShowTweet/SuspendTweet?id=@tweet.Id" class="btn btn-danger mx-2 rounded">
+                        <i class="bi bi-ban-fill"></i>
+                    </a>
+                }
+                    
             </div>
             <!-- Replies -->
             <div id="replySection-@bodyId" class="tweet-card-reply border fs-6" style="display: none;">
