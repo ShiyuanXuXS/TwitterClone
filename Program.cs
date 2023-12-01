@@ -4,6 +4,7 @@ using TwitterClone.Data;
 using TwitterClone.Models;
 using TwitterClone;
 using Microsoft.Extensions.Azure;
+using TwitterClone.Pages.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -141,6 +142,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapRazorPages();
-app.MapHub<SignalrServer>("/signalrServer");
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();

@@ -16,6 +16,8 @@ namespace TwitterClone.Data
         public DbSet<Message> Messages { get; set; }
         public DbSet<Follow> Follows { get; set; }
         public DbSet<Like> Likes { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<HubConnection> HubConnections { get; set; }
         public TwitterCloneDbContext(DbContextOptions<TwitterCloneDbContext> options) : base(options) { }
 
 
