@@ -5,68 +5,129 @@
     ViewData["Title"] = "Home / Y";
     ViewData["ShowDescription"] = Model.ShowDescription;
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["IndexDropdown"] = Model.IndexDropDown;
 }
+<div class="row">
+    <div class="col-12 col-lg-8 ">tweet feed here
 
-<div class="col-8">
 
-</div>
-
-<div class="col-4">
-    <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary">
-        <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
-            <li class="mb-3">
-                <partial name="_PartialSearch" />
-            </li>
-            <li class="mb-3">
-                <div class="bg-light rounded p-2 px-3">
-                    <p class="fs-5 mb-2 fw-bold">Subscribe to Premium</p>
-                    <p class="fs-6 mb-2">Subscribe to unlock new features and, if eligible, receive a share of ads
-                        revenue.
-                    </p>
-                    <button class="btn btn-dark btn-sm rounded rounded-pill fw-bold">Subscribe</button>
-                </div>
-            </li>
-            <li class="mb-3">
-                <div class="bg-light rounded p-2 px-3">
-                    <p class="fs-5 mb-4 fw-bold">What's happening</p>
-                    <ul class="nav flex-column">
-                        @* @await Component.InvokeAsync("WhatsHappening") *@
-                        <partial name="_PartialWhatsHappening"
-                            model="@Model.ShowTrend.OrderBy(x => Guid.NewGuid()).Take(5).ToList()" />
-                        <li class="mt-2">
-                            <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
-                                more</button>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="mb-3">
-                <div class="bg-light rounded p-2 px-3">
-                    <p class="fs-5 mb-4 fw-bold">Who to follow</p>
-                    <ul class="nav flex-column">
-                        <partial name="_PartialFollowSuggestion"
-                            model="@Model.FollowSuggestion.OrderBy(x => Guid.NewGuid()).Take(3).ToList()" />
-                        <li class=" mt-2">
-                            <button type="button" class="btnShowMoreFollow btn btn-link fs-6 no-underline ps-0">Show
-                                more</button>
-                        </li>
-                    </ul>
-                </div>
-                @* @await Component.InvokeAsync("WhoToFollow") *@
-            </li>
-            <li class="mb-3 fs-6 p-2 text-center">
-                &copy; 2023 - Y - ShiYuan Xu, Meredith White, Xiaoxing Pan, All rights reserved.
-            </li>
-        </ul>
+    <div class="row p-1">
+        <div class="col-1">User</div>
+        <div class="col-5"><input type="text" id="userInput" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-1">Message</div>
+        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6 text-end">
+            <input type="button" id="sendButton" value="Send Message" />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <hr />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <ul id="messagesList"></ul>
+        </div>
     </div>
 
-</div>
 
+    </div>
+    <div class="d-none d-lg-flex col-4 sidebarRight sidebarContainerOuter">
+        <div class="sidebarContainerInner border-start ps-3">
+            <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary vh-100 justify-content-between sidebar sidebarRight">
+                <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
+                    <li class="mb-3 searchBar">
+                        <partial name="_PartialSearch" />
+                    </li>
+                    <li class="mb-3">
+                        <div class="bg-light rounded p-2 px-3">
+                            <p class="fs-5 mb-2 fw-bold">Subscribe to Premium</p>
+                            <p class="fs-6 mb-2">Subscribe to unlock new features and, if eligible, receive a share of ads
+                                    revenue.
+                            </p>
+                            <button class="btn btn-dark btn-sm rounded rounded-pill fw-bold">Subscribe</button>
+                        </div>
+                    </li>
+                    <li class="mb-3">
+                        <div class="bg-light rounded p-2 px-3">
+                            <p class="fs-5 mb-4 fw-bold">What's happening</p>
+                            <ul class="nav flex-column">
+                                <partial name="_PartialWhatsHappening"
+                                        model="@Model.ShowTrend.OrderBy(x => Guid.NewGuid()).Take(5).ToList()" />
+                                <li class="mt-2">
+                                    <button type="button" class="btnShowMoreTrend btn btn-link fs-6 no-underline ps-0">Show
+                                            more</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-3">
+                        <div class="bg-light rounded p-2 px-3">
+                            <p class="fs-5 mb-4 fw-bold">Who to follow</p>
+                            <ul class="nav flex-column">
+                                <partial name="_PartialFollowSuggestion"
+                                        model="@Model.FollowSuggestion.OrderBy(x => Guid.NewGuid()).Take(3).ToList()" />
+                                <li class=" mt-2">
+                                    <button type="button" class="btnShowMoreFollow btn btn-link fs-6 no-underline ps-0">Show
+                                            more</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-3 fs-6 p-2 text-center">
+                            &copy; 2023 - Y - ShiYuan Xu, Meredith White, Xiaoxing Pan, All rights reserved.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/signal.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
         $('.btnShowMoreFollow').click(function () {
             window.location.href = '/FollowSuggestion';
         });
+        $('.btnShowMoreTrend').click(function () {
+            window.location.href = '/WhatsHappening';
+        });
+
+        // Handle the button click event
+        @* $('.btnRemoveTrend').click(function () {
+            console.log('clicked');
+            var tweetId = $(this).data('tweet-id'); *@
+            // Make an asynchronous request to the server using Fetch API
+            @* fetch(`/api/Tweet/updateTrend?tweetId=${tweetId}`, {
+                method: 'GET',
+                headers: {
+                'Content-Type': 'text/html', // Set content type to text/html
+                },
+                }) *@
+                @* fetch(`/Home?handler=OnGetPartialWhatHappening&tweetId=${tweetId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/html',
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.text(); // Expecting HTML content
+                    })
+                    .then(data => {
+                        // Update the container with the new data
+                        $('#updatedTrendDataContainer').html(data);
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                    });
+        }); *@
     });
 </script>

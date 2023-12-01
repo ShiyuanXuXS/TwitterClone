@@ -298,3 +298,40 @@ Meredith
 - admin login
 3. Need assistance / figure things out
 - troubleshooting tweet card and likes
+
+
+2023-11-30
+
+Shiyuan
+1.  Done / not done since last scrum:
+-  reply function,reply controller, reply list
+2. To do until next Scrum:
+- add follow function to tweet card
+- admin suspend tweets
+- debug tweet card
+3. Need assistance / figure things out
+- 
+
+Xiaoxing
+1.  Done / not done since last scrum:
+- what's happening search trends/show trends, click to search with tag
+2. To do until next Scrum:
+- notification(signalR)
+- click not interesting to update the trendlist
+- show trendlist in search/home/full follow list page
+3. Need assistance / figure things out
+- dropdown list in partial view Cannot read properties of undefined (reading 'classList')
+- right sidebar move with mouse when scroll down
+
+Meredith
+1. Done since last scrum
+- debugging on user likes and tweets
+- messages page
+- css
+2. Plan until next Scrum
+- continue messages
+- admin login
+- continue css (right sidebar)
+3. Need assistance / figure things out
+- 
+

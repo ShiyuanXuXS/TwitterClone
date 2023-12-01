@@ -1,0 +1,187 @@
+﻿@page
+@model TwitterClone.Pages.MessagesModel
+@{
+    ViewData["Title"] = "Messages / Y";
+}
+
+
+
+<div class="row m-0 p-0 w-100">
+    <div class="col-4 col-xxl-5 p-0 msgConvList">
+        <div class="msgList sidebarContainerOuter">
+            <div class="sidebarContainerInner ">
+                <div class="msgList sidebar">
+                    <div class="row fs-4 fw-bold mb-5 px-3" id="msgListHeader">Messages</div>
+                    <div class="msgList px-0">
+ @if (Model.Conversations != null && Model.Conversations.Any() == true)
+                    {
+                        @foreach (var conv in Model.Conversations)
+                        {
+                            var user = conv.Contact;
+                            var msg = conv.Messages.LastOrDefault();
+
+                            <div class="row fs-6 py-2 m-0 msgRow border-top border-bottom">
+                                <a class="stretched-link selectMsg" data-user-id="@user.Id" href="#"></a>
+                                <div class="col-2">
+                                    <img src="@user.Avatar" alt="@user.UserName avatar" height="40px" width="40px"
+                                        class="rounded-circle avatar">
+                                </div>
+                                <div class="col-10">
+
+                                    <div class="fw-bold d-md-inline">@user.NickName </div>
+                                    <div class="text-secondary d-md-inline">&#64;@user.UserName &#183;
+                                        @DateOnly.FromDateTime(msg.SentAt)
+                                    </div>
+                                    <div class="msgPreview">@msg.Content</div>
+
+                                </div>
+                            </div>
+
+                        }
+                    }
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-8 col-xxl-7 p-0">
+        <div class="msgBar sidebarContainerOuter">
+            <div class="sidebarContainerInner border-start border-end">
+
+                <div class="msgBar sidebar">
+                    <div class="row ms-3" id="msgView"></div>
+
+                    <div class="row bg-white border-bottom py-3" id="msgViewHeader" style="display: none;">
+                        <div class="col-1" id="headerImg"></div>
+                        <div class="col-auto fw-bold" id="headerName"></div>
+                    </div>
+
+
+
+                    <div class="composeMsg row justify-content-end my-0 ps-0 py-3 bg-white border-top"
+                        style="display: none;">
+                        <div class="form-group col-10 col-xl-11">
+                            <textarea class="form-control" id="msgBox" rows="2"
+                                placeholder="Compose message"></textarea>
+                        </div>
+                        <div class="col-2 col-xl-1 ps-0 ms-0 align-self-center">
+                            <div class="btn brand-color rounded rounded-pill border" id="btnSend">&#10148;</div>
+                        </div>
+                        <div class="col-auto mx-3">
+                            <div id="errMsg" class="text-danger"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        function updateMsgView(userId) {
+
+            $.ajax({
+                url: `/api/Message?userId=${userId}`,
+                type: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                error: function (jqxhr, status, errorThrown) {
+                    $('#errMsg').text(jqxhr.responseText);
+                }
+            }).done(function (data) {
+                var msgList = data.msgList;
+                var user = msgList[0].sender;
+                var result = '';
+                for (var i = 0; i < msgList.length; i++) {
+                    var msg = msgList[i];
+                    if (msg.sender.id == userId) {
+                        result +=
+                            `<div class="row fs-6 py-3">
+                                <div class="col-auto">
+                                    <div class="card border-0 rounded-3 bg-light"> 
+                                        <div class="card-body">                    
+                                            <div class="msg">${msg.content}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <small class="text-secondary">${msg.sentAt}</small>
+                                    </div>
+                                </div>
+                            </div>`
+                    }
+                    else {
+                        result +=
+                            `<div class="row fs-6 py-3 justify-content-end">
+                                <div class="col-auto">
+                                    <div class="card border-0 rounded-3 bg-brand-msg text-white"> 
+                                        <div class="card-body">                    
+                                            <div class="msg">${msg.content}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row text-end">
+                                    <small class="text-secondary">${msg.sentAt}</small>
+                                    </div>
+                                </div>
+                            </div>`
+                    }
+                }
+                $("#msgView").html(result);
+
+                var imgElem = `
+                 <img src="${user.avatar}" alt="${user.userName} avatar" height="35px" width="35px"
+                                    class="rounded-circle avatar">
+                `;
+
+                $("#headerImg").html(imgElem);
+                $("#headerName").html(user.nickName);
+                $('.composeMsg').show();
+                $('#msgViewHeader').show();
+            });
+        }
+
+        $('.selectMsg').click(function () {
+
+            var userId = $(this).data('user-id');
+            updateMsgView(userId);
+            $('#btnSend').data('user-id', userId);
+        });
+
+
+        $('#btnSend').click(function () {
+
+            var userId = $(this).data('user-id');
+
+            var msg = {
+                Recipient: userId,
+                Content: $('#msgBox').val()
+            };
+
+            $.ajax({
+                url: "/api/Message",
+                type: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                dataType: "json",
+                data: JSON.stringify(msg),
+                error: function (jqxhr, status, errorThrown) {
+                    $('#errMsg').text(jqxhr.responseText);
+                }
+            }).done(function () {
+
+                $('#msgBox').val("");
+                updateMsgView(msg.Recipient);
+
+            });
+        });
+    });
+
+</script>

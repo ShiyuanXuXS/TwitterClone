@@ -10,28 +10,28 @@ namespace TwitterClone.Controllers
     [ApiController]
     public class FollowController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly TwitterCloneDbContext _context;
+        private readonly UserManager<User> userManager;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly TwitterCloneDbContext context;
 
         public FollowController(UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, TwitterCloneDbContext context)
         {
-            _userManager = userManager;
-            _httpContextAccessor = httpContextAccessor;
-            _context = context;
+            this.userManager = userManager;
+            this.httpContextAccessor = httpContextAccessor;
+            this.context = context;
         }
 
         [HttpGet("getFollowStatus")]
         public async Task<ActionResult<string>> getFollowStatusAsync(string userId)
         {
             Console.WriteLine("--------getFollowStatus--------");
-            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
             if (currentUser == null)
             {
                 return StatusCode(400, "not authorized!");
             }
             var currentUserId = currentUser.Id;
-            var followed = _context.Follows.FirstOrDefault(f => f.User.Id == currentUserId && f.Author.Id == userId);
+            var followed = context.Follows.FirstOrDefault(f => f.User.Id == currentUserId && f.Author.Id == userId);
 
             if (followed != null)
             {
@@ -52,8 +52,8 @@ namespace TwitterClone.Controllers
         [Route("HandleFollow")]
         public async Task<IActionResult> HandleFollow([FromBody] string userId)
         {
-            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-            var userToFollow = await _userManager.FindByIdAsync(userId);
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            var userToFollow = await userManager.FindByIdAsync(userId);
             if (currentUser == null)
             {
                 return StatusCode(400, "not authorized!");
@@ -61,7 +61,7 @@ namespace TwitterClone.Controllers
             if (userToFollow != null)
             {
                 // Check if the follow relationship already exists
-                var existingFollow = await _context.Follows
+                var existingFollow = await context.Follows
                     .FirstOrDefaultAsync(f => f.User.Id == currentUser.Id && f.Author.Id == userToFollow.Id);
 
                 if (existingFollow == null)
@@ -73,15 +73,15 @@ namespace TwitterClone.Controllers
                         Author = userToFollow,
                         CreatedAt = DateTime.Now
                     };
-                    _context.Follows.Add(follow);
-                    await _context.SaveChangesAsync();
+                    context.Follows.Add(follow);
+                    await context.SaveChangesAsync();
                     return Json(new { success = true, message = "Follow request sent successfully" });
                 }
                 else
                 {
                     // If so, remove the follow relationship
-                    _context.Follows.Remove(existingFollow);
-                    await _context.SaveChangesAsync();
+                    context.Follows.Remove(existingFollow);
+                    await context.SaveChangesAsync();
                     return Json(new { success = true, message = "UnFollow request sent successfully" });
                 }
             }

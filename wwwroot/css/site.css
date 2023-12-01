@@ -48,7 +48,8 @@ body {
   color: #1DA1F2;
 }
 
-.bg-brand-color {
+.bg-brand-color,
+.bg-brand-msg {
   background-color: #1DA1F2;
 }
 
@@ -77,9 +78,12 @@ body {
   background-color: rgb(242, 242, 242);
 }
 
-#acctMenu:hover {
+#acctMenu:hover,
+#acctMenuSm:hover,
+.msgRow:hover {
   background-color: rgb(242, 242, 242);
 }
+
 
 #bannerImg {
   background-color: silver;
@@ -92,4 +96,272 @@ body {
 
 #trendList:hover {
   background-color: rgb(242, 242, 242);
+}
+
+.msgPreview {
+  text-wrap: break-word;
+  white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
+
+}
+
+
+.outermost {
+  height: 100%;
+  display: flex;
+}
+
+.outer2 {
+  flex: 1;
+
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  list-style: none;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+  position: relative;
+  text-decoration: none;
+}
+
+.outer3 {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+  position: relative;
+  text-decoration: none;
+}
+
+.outer4 {
+  flex-direction: row;
+  width: 100%;
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.headerContainer {
+  align-items: flex-end;
+  flex-grow: 1;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.sidebarContainerOuter {
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+
+}
+
+.sidebarContainerInner {
+  top: 0px;
+  position: fixed;
+  height: 100%;
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  list-style: none;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+
+}
+
+.sidebar {
+  height: 100%;
+  justify-content: space-between;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+  align-items: stretch;
+  display: flex;
+  flex-basis: auto;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+
+}
+
+.sidebarLeft {
+  width: 100px;
+}
+
+.sidebarRight {
+  width: 275px;
+  padding-top: 50px;
+
+}
+
+.msgBar {
+  width: 400px;
+  max-width: 600px;
+  padding-top: 70px;
+}
+
+.msgList {
+  /* width: 200px;
+  max-width: 500px; */
+  width: inherit;
+  padding-top: 70px;
+  flex-shrink: 2;
+  align-items: flex-start;
+  flex-grow: 2;
+  box-sizing: border-box;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  position: relative;
+
+}
+
+.topMenu {
+  align-items: flex-start;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+  position: relative;
+  text-decoration: none;
+
+}
+
+.mainContainer {
+  flex-shrink: 1;
+  align-items: flex-start;
+  flex-grow: 2;
+  box-sizing: border-box;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  position: relative;
+
+}
+
+.mainInner {
+  align-items: flex-start;
+  margin: 0px;
+  padding: 0px;
+}
+
+.msgRow {
+  width: inherit;
+  /* margin-left: auto; */
+}
+
+
+
+
+.composeMsg {
+  position: fixed;
+  bottom: 0px;
+  width: inherit;
+  margin-left: auto;
+}
+
+.searchBar {
+  position: fixed;
+  top: 20px;
+}
+
+#msgViewHeader {
+  position: fixed;
+  top: 0px;
+  width: inherit;
+  margin-left: auto;
+}
+
+#msgListHeader {
+  position: fixed;
+  top: 0px;
+  width: inherit;
+  margin-left: auto;
+}
+
+
+@media (min-width: 768px) {
+
+  .mainInner {
+    width: 600px;
+  }
+
+  .msgBar {
+    width: 400px;
+  }
+
+  .msgList {
+    width: 200px;
+  }
+}
+
+@media (min-width: 1000px) {
+
+  .mainInner {
+    width: 900px;
+  }
+
+  .msgBar {
+    width: 600px;
+  }
+
+  .msgList {
+    width: 300px;
+  }
+
+}
+
+
+@media (min-width: 1200px) {
+
+  .sidebarLeft,
+  .sidebarRight {
+    width: 275px;
+  }
+  .msgBar {
+    width: 600px;
+  }
+
+  .msgList {
+    width: 300px;
+  }
+
+}
+
+@media (min-width: 1400px) {
+
+  .mainInner {
+    width: 1200px;
+  }
+
+  .msgList {
+    width: 500px;
+  }
 }

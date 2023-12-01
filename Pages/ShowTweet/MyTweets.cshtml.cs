@@ -18,24 +18,24 @@ namespace TwitterClone.Pages.UserPortal
     [Authorize]
     public class MyTweets : PageModel
     {
-        private readonly ILogger<MyTweets> _logger;
-        private readonly TwitterCloneDbContext _context;
-        private readonly UserManager<User> _userManager;
-        public MyTweets(ILogger<MyTweets> logger,TwitterCloneDbContext context,UserManager<User> userManager)
+        private readonly ILogger<MyTweets> logger;
+        private readonly TwitterCloneDbContext context;
+        private readonly UserManager<User> userManager;
+        public MyTweets(ILogger<MyTweets> logger, TwitterCloneDbContext context, UserManager<User> userManager)
         {
-            _logger = logger;
-            _context = context;
-            _userManager=userManager;
+            this.logger = logger;
+            this.context = context;
+            this.userManager = userManager;
         }
-        public IList<Tweet> Tweets { get;set; } = default!;
+        public IList<Tweet> Tweets { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
-            // User user=_context.Users.Where(u=>u.UserName=="AAA222").FirstOrDefault();
-            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            // User user=context.Users.Where(u=>u.UserName=="AAA222").FirstOrDefault();
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
             //Todo get logged user
-            Tweets = await _context.Tweets
-                .Where(t=>t.Author.Id==currentUser.Id)
+            Tweets = await context.Tweets
+                .Where(t => t.Author.Id == currentUser.Id)
                 .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync();
         }

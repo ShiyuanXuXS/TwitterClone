@@ -1,11 +1,19 @@
 ﻿@{
+    int indexDropDown = (int)ViewData["IndexDropDown"];
 }
 
 <div class="input-group d-flex align-items-center px-2">
     <input type="search" class="searchInput form-control rounded rounded-pill bg-light" data-bs-toggle="dropdown"
         aria-expanded="false" placeholder="Search" aria-label="Search" aria-describedby="search-addon">
     <div class="dropdown-menu text-center" style="max-width: 245px;">
-        <p class="fs-6 p-1 fw-lighter mb-0">Try searching for people, lists, or keywords</p>
+        @if (indexDropDown == 1)
+        {
+            <p class="fs-6 p-1 fw-lighter mb-0">Try searching for people, lists, or keywords</p>
+        }
+        else
+        {
+            <p class="fs-6 p-1 fw-lighter mb-0">Try searching for tags</p>
+        }
     </div>
     <a type="button" class="btnSearch ps-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black" class="bi bi-search-heart"
@@ -23,8 +31,10 @@
     $(document).ready(function () {
         $('.btnSearch').click(function () {
             // Get the value from the search input
-            var searchTerm = $('.searchInput').val();
-            window.location.href = '/SearchResult/?term=' + encodeURIComponent(searchTerm);
+            if (@ViewData["IndexDropdown"] == 1) {
+                var searchTerm = $('.searchInput').val();
+                window.location.href = '/SearchResult/?term=' + encodeURIComponent(searchTerm);
+            }
         });
     });
 </script>

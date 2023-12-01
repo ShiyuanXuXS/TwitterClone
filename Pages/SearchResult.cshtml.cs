@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using TwitterClone.Data;
 using TwitterClone.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.VisualBasic;
-using System.Text.Json;
+using System.Text.RegularExpressions;
+
 
 
 namespace TwitterClone.Pages
@@ -44,6 +42,8 @@ namespace TwitterClone.Pages
         public int ShowDescription { get; set; } = 1;  // 0: hide, 1: show
         public int indexView { get; set; } = 1;  // 1: top, 2: people, 3: tweet
 
+        public int IndexDropDown { get; set; } = 1;  // 1: search/home page, 2: what'shapppening page
+
         public SearchResultModel(ILogger<SearchResultModel> logger, TwitterCloneDbContext context, UserManager<User> userManager)
         {
             this.logger = logger;
@@ -51,6 +51,38 @@ namespace TwitterClone.Pages
             this.userManager = userManager;
         }
 
+        public List<ShowTrendModel>? ShowTrend { get; set; }
+
+        private List<ShowTrendModel> getTrend(User currentUser)
+        {
+            var randomTweets = context.Tweets
+        .AsEnumerable() // Switch to client-side evaluation
+        .Where(t => t.Author.Id != currentUser.Id)
+        .ToList();
+
+            var trendList = new List<ShowTrendModel>();
+            foreach (var tweet in randomTweets)
+            {
+                // count retweets for this tweet
+                int countRetweets = context.Tweets.Count(t => t.ParentTweet.Id == tweet.Id);
+                // count likes for this tweet
+                int countLikes = context.Likes.Count(t => t.Tweet.Id == tweet.Id);
+                var hashtag = Regex.Matches(tweet.Body, @"<a[^>]*?>(.*?)</a>")
+            .Cast<Match>()
+            .Select(match => match.Groups[1].Value)
+            .ToList();
+                if (hashtag.Count > 0)
+                {
+                    trendList.Add(new ShowTrendModel { Hashtag = hashtag, CountLikes = countLikes, CountRetweets = countRetweets, Id = tweet.Id });
+                }
+                else
+                {
+                    trendList.Add(new ShowTrendModel { Hashtag = new List<string> { "new", "trend" }, CountLikes = countLikes, CountRetweets = countRetweets, Id = tweet.Id });
+                }
+
+            }
+            return trendList;
+        }
         private void getUnFollowedUserList(User currentUser)
         {
             // get all users
@@ -146,6 +178,7 @@ namespace TwitterClone.Pages
                 var resTweet = PerformTweetSearch(SearchTerm, currentUser);
                 SearchedTweet = resTweet.OrderBy(x => Guid.NewGuid()).Take(5).ToList();
                 getUnFollowedUserList(currentUser);
+                ShowTrend = getTrend(currentUser);
             }
             else
             {
@@ -164,6 +197,7 @@ namespace TwitterClone.Pages
             indexView = 2;
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
             getUnFollowedUserList(currentUser);
+            ShowTrend = getTrend(currentUser);
             var searchTerm = Request.Form["searchTerm"].ToString();
             if (searchOptionValue == "anyone" || searchOptionValue == null) { SearchedUser = PerformUserSearch(searchTerm, currentUser); }
             else
@@ -183,6 +217,7 @@ namespace TwitterClone.Pages
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
             var searchTerm = Request.Form["searchTerm"].ToString();
             getUnFollowedUserList(currentUser);
+            ShowTrend = getTrend(currentUser);
             if (searchOptionValue == "anyone" || searchOptionValue == null)
             {
                 SearchedUser = PerformUserSearch(searchTerm, currentUser);
@@ -221,6 +256,7 @@ namespace TwitterClone.Pages
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
             var searchTerm = Request.Form["searchTerm"].ToString();
             getUnFollowedUserList(currentUser);
+            ShowTrend = getTrend(currentUser);
             if (searchOptionValue == "anyone" || searchOptionValue == null)
             {
                 SearchedUser = PerformUserSearch(searchTerm, currentUser);
@@ -250,5 +286,13 @@ namespace TwitterClone.Pages
             return Page();
         }
     }
+    public class ShowTrendModel
+    {
+        public int Id { get; set; }
+        public List<string>? Hashtag { get; set; }
+        public int CountLikes { get; set; }
+        public int CountRetweets { get; set; }
+    }
+
 }
 

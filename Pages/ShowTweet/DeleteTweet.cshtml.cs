@@ -16,53 +16,53 @@ namespace TwitterClone.Pages.UserPortal
     [Authorize]
     public class DeleteTweet : PageModel
     {
-        private readonly ILogger<DeleteTweet> _logger;
-        private readonly TwitterCloneDbContext _context;
-        private readonly UserManager<User> _userManager;
+        private readonly ILogger<DeleteTweet> logger;
+        private readonly TwitterCloneDbContext context;
+        private readonly UserManager<User> userManager;
 
-        public DeleteTweet(ILogger<DeleteTweet> logger,TwitterCloneDbContext context,UserManager<User> userManager)
+        public DeleteTweet(ILogger<DeleteTweet> logger, TwitterCloneDbContext context, UserManager<User> userManager)
         {
-            _logger = logger;
-            _context=context;
-            _userManager=userManager;
+            this.logger = logger;
+            this.context = context;
+            this.userManager = userManager;
         }
 
         [BindProperty]
-        public Tweet Tweet{get;set;}= default!;
-         public async Task<IActionResult> OnGetAsync(int? id)
+        public Tweet Tweet { get; set; } = default!;
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var tweet = await _context.Tweets.FirstOrDefaultAsync(t => t.Id == id);
+            var tweet = await context.Tweets.FirstOrDefaultAsync(t => t.Id == id);
             // _logger.LogInformation("-----------------------------------id:" +tweet.Id);
-            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
 
-            if (tweet == null || tweet.Author.Id!=currentUser.Id)
+            if (tweet == null || tweet.Author.Id != currentUser.Id)
             {
                 return NotFound();
             }
-                Tweet = tweet;
+            Tweet = tweet;
             return Page();
         }
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null )
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var tweet = await _context.Tweets.FindAsync(id);
-            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-            if (tweet != null && tweet.Author.Id==currentUser.Id)
+            var tweet = await context.Tweets.FindAsync(id);
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            if (tweet != null && tweet.Author.Id == currentUser.Id)
             {
-                
-                await _context.Database.ExecuteSqlInterpolatedAsync($"UPDATE Tweets SET ParentTweetId = NULL WHERE ParentTweetId = {tweet.Id}");
+
+                await context.Database.ExecuteSqlInterpolatedAsync($"UPDATE Tweets SET ParentTweetId = NULL WHERE ParentTweetId = {tweet.Id}");
                 // Tweet = tweet;
-                _context.Tweets.Remove(tweet);
-                await _context.SaveChangesAsync();
+                context.Tweets.Remove(tweet);
+                await context.SaveChangesAsync();
                 TempData["Message"] = "Tweet deleted successfully!";
             }
 
