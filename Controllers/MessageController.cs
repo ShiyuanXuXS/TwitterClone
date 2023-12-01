@@ -51,6 +51,26 @@ namespace TwitterClone.Controllers
                 return Json(new { msgList });
         }
 
+        [HttpGet("New")]
+        public async Task<ActionResult<string>> getUser(string username)
+        {
+           var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            var contact = await userManager.FindByNameAsync(username);
+
+            if (currentUser == null)
+            {
+                return StatusCode(401, "You must be logged in to send messages.");
+            }
+            if (contact == null)
+            {
+                return StatusCode(400, "User not found.");
+            }
+            
+
+            //FIXME exclude private user data
+                return Json(new { contact });
+        }
+
         [HttpGet("Inbox")]
         public async Task<ActionResult<string>> getInbox()
         {

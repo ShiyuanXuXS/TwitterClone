@@ -11,7 +11,16 @@
         <div class="msgList sidebarContainerOuter">
             <div class="sidebarContainerInner ">
                 <div class="msgList sidebar">
-                    <div class="row fs-4 fw-bold mb-5 px-3" id="msgListHeader">Messages</div>
+                    <div class="row fs-4 fw-bold mb-5 px-3 justify-content-between" id="msgListHeader">
+                        <div class="col">
+                        Messages
+                        </div>
+                        <div class="col-auto">
+                                <div id="navBtnNewMsg"  class="btn rounded-pill bg-brand-color text-white fs-6 fw-bold">
+                                &#10000;
+                                </div>
+                        </div>
+                        </div>
                     <div class="msgList px-0">
  @if (Model.Conversations != null && Model.Conversations.Any() == true)
                     {
@@ -19,10 +28,10 @@
                         {
                             var user = conv.Contact;
                             var msg = conv.Messages.LastOrDefault();
-
+<div class="card p-0 m-0 border-0 w-100">
                             <div class="row fs-6 py-2 m-0 msgRow border-top border-bottom">
                                 <a class="stretched-link selectMsg" data-user-id="@user.Id" href="#"></a>
-                                <div class="col-2">
+                                <div class="col-auto col-lg-2">
                                     <img src="@user.Avatar" alt="@user.UserName avatar" height="40px" width="40px"
                                         class="rounded-circle avatar">
                                 </div>
@@ -36,7 +45,7 @@
 
                                 </div>
                             </div>
-
+</div>
                         }
                     }
                     </div>
@@ -50,7 +59,36 @@
             <div class="sidebarContainerInner border-start border-end">
 
                 <div class="msgBar sidebar">
-                    <div class="row ms-3" id="msgView"></div>
+                                        <div class="row ms-3" id="newMsgView" data-username="@Model.User.Identity.Name">
+                                                                    <div class="col-10">
+                         <div id="newMsgTop">                                              
+                        <div class="row m-5 fw-bold fs-4">Select a message</div>
+                        <div class="text-secondary fs-6 m-5">
+                            Choose from your existing conversations, start a new one, or just keep swimming.
+                            </div>
+                                            <div class="row m-5">
+                                                <div id="btnNewMsg" class="col-auto btn rounded-pill bg-brand-color text-white fs-6 fw-bold p-2">
+                                                    New message
+                                                </div>
+                                            </div>
+                         </div>
+                                                                                       <div class="row mx-5 form-group" id="userSearch" style="display: none;">
+                                                                                        <div class="col-10">
+                                                   <input type="text" id="inputSearch" class="form-control" placeholder="Enter username"/>
+
+                                                                                        </div>
+
+                                                <div id="btnSearch" class="col-2">
+                                                    <div class=" btn rounded-pill bg-light border bg-secondary fs-6">
+                                                   <small class="align-top">Search</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="searchErrMsg" class="text-secondary fs-6 text-center"></div>
+                    </div>
+                                        </div>
+                    <div class="row ms-3" id="msgView" data-username="@Model.User.Identity.Name">
+                    </div>
 
                     <div class="row bg-white border-bottom py-3" id="msgViewHeader" style="display: none;">
                         <div class="col-1" id="headerImg"></div>
@@ -97,22 +135,30 @@
                 }
             }).done(function (data) {
                 var msgList = data.msgList;
-                var user = msgList[0].sender;
+                var user;
+                if (msgList.length > 0) {
+                   var currentUsername = $('#msgView').data('username');
+                   if (msgList[0].Sender.UserName == currentUsername) {
+                        user = msgList[0].Receiver;
+                   } else {
+                         user = msgList[0].Sender;
+                   }
+                }
                 var result = '';
                 for (var i = 0; i < msgList.length; i++) {
                     var msg = msgList[i];
-                    if (msg.sender.id == userId) {
+                    if (msg.Sender.Id == userId) {
                         result +=
                             `<div class="row fs-6 py-3">
                                 <div class="col-auto">
                                     <div class="card border-0 rounded-3 bg-light"> 
                                         <div class="card-body">                    
-                                            <div class="msg">${msg.content}</div>
+                                            <div class="msg">${msg.Content}</div>
                                         </div>
                                     </div>
 
                                     <div class="row">
-                                        <small class="text-secondary">${msg.sentAt}</small>
+                                        <small class="text-secondary">${msg.SentAt}</small>
                                     </div>
                                 </div>
                             </div>`
@@ -123,25 +169,26 @@
                                 <div class="col-auto">
                                     <div class="card border-0 rounded-3 bg-brand-msg text-white"> 
                                         <div class="card-body">                    
-                                            <div class="msg">${msg.content}</div>
+                                            <div class="msg">${msg.Content}</div>
                                         </div>
                                     </div>
                                     <div class="row text-end">
-                                    <small class="text-secondary">${msg.sentAt}</small>
+                                    <small class="text-secondary">${msg.SentAt}</small>
                                     </div>
                                 </div>
                             </div>`
                     }
                 }
                 $("#msgView").html(result);
-
-                var imgElem = `
-                 <img src="${user.avatar}" alt="${user.userName} avatar" height="35px" width="35px"
+     if (msgList.length > 0) {
+                let imgElem = `
+                 <img src="${user.Avatar}" alt="${user.UserName} avatar" height="35px" width="35px"
                                     class="rounded-circle avatar">
                 `;
-
+     
                 $("#headerImg").html(imgElem);
-                $("#headerName").html(user.nickName);
+                $("#headerName").html(user.NickName);
+     }
                 $('.composeMsg').show();
                 $('#msgViewHeader').show();
             });
@@ -150,8 +197,58 @@
         $('.selectMsg').click(function () {
 
             var userId = $(this).data('user-id');
+            $('#newMsgView').hide();
             updateMsgView(userId);
             $('#btnSend').data('user-id', userId);
+        });
+
+        $('#btnNewMsg').click(function () {
+            $('#btnNewMsg').hide();
+              $('#userSearch').show();
+        });
+
+        $('#navBtnNewMsg').click(function () {
+            $('#msgView').html('');
+            $('#msgViewHeader').hide();
+            $('.composeMsg').hide();
+            $('#newMsgView').show();
+            $('#newMsgTop').hide();
+            $('#userSearch').show();
+        });
+
+        $('#btnSearch').click(function () {
+
+            var username = $('#inputSearch').val();
+
+            if (username.length < 1 ) {
+
+                $('#searchErrMsg').text('Enter a username to send a new message.');
+
+            } else {
+            $.ajax({
+                url: `/api/Message/New?username=${username}`,
+                type: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                error: function (jqxhr, status, errorThrown) {
+                    $('#searchErrMsg').text(jqxhr.responseText);
+                }
+            }).done(function (data) {
+                                let imgElem = `
+                 <img src="${data.contact.Avatar}" alt="${data.contact.UserName} avatar" height="35px" width="35px"
+                                    class="rounded-circle avatar">
+                `;
+                $("#headerImg").html(imgElem);
+                $("#headerName").html(data.contact.NickName);
+                $('#btnSend').data('user-id', data.contact.Id);
+                $('#newMsgView').hide();
+
+                updateMsgView(data.contact.Id);
+
+
+            });
+            }
         });
 
 

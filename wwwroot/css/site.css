@@ -91,6 +91,8 @@ body {
 }
 
 .avatar {
+
+  border-radius: 50%;
   object-fit: cover;
 }
 
@@ -301,7 +303,7 @@ body {
 
 #msgListHeader {
   position: fixed;
-  top: 0px;
+  top: 10px;
   width: inherit;
   margin-left: auto;
 }
@@ -315,6 +317,7 @@ body {
 
   .msgBar {
     width: 400px;
+    padding-bottom: 100px;
   }
 
   .msgList {
