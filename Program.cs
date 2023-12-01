@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TwitterClone.Data;
 using TwitterClone.Models;
+using TwitterClone;
 using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,12 +22,12 @@ builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.Requi
 .AddEntityFrameworkStores<TwitterCloneDbContext>()
 .AddDefaultTokenProviders();
 
-// builder.Services.AddSession(options =>
-// {
-//     options.IdleTimeout = TimeSpan.FromMinutes(25);
-//     options.Cookie.HttpOnly = true;
-//     options.Cookie.IsEssential = true;
-// });
+builder.Services.AddControllers();
+builder.Services.AddSignalR();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+});
 
 //blob storage config
 var blobStorageConn = builder.Configuration.GetConnectionString("BlobStorageConnection");
@@ -65,12 +66,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/AccessDenied";
     options.SlidingExpiration = true;
 });
-
-
-
-
-
-
 
 var app = builder.Build();
 
@@ -146,5 +141,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapRazorPages();
+app.MapHub<SignalrServer>("/signalrServer");
 
 app.Run();
