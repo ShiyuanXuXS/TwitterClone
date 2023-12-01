@@ -75,8 +75,6 @@
                             var followIcons=document.querySelectorAll(`[id^="followIcon-"][id$="-Author-@tweet.Author.Id"]`);
                             followIcons.forEach(fIcon=>{
                                 if (data.success) {
-                                    console.log(followIcon)
-                                    console.log(data)
                                     if (fIcon.getAttribute('fill')!='red'){
                                         fIcon.setAttribute('fill', 'red');
                                     }else{
