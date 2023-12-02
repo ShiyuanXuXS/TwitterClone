@@ -2,11 +2,11 @@
 
 @if (Model != null)
 {
-    <div class="mt-5 rounded rounded-pill align-items-center fs-5 mb-2 dropup-center dropup pe-0" id="acctMenu"
-    data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="mt-5 rounded rounded-pill align-items-center fs-5 mb-2 dropup-center dropup pe-0" id="acctMenu">
 
-    <div class="d-flex align-items-center p-2">
-        <div class=""> <img src="@Model.Avatar" alt="avatar" width="50" height="50" class="rounded-circle">
+    <div class="d-flex align-items-center p-2" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="">
+            <img src="@Model.Avatar" alt="avatar" width="50" height="50" class="rounded-circle">
         </div>
         <div class="names ps-2 fs-6 d-none d-xl-block">
             <div class="fw-bold">@Model.NickName</div>
@@ -16,17 +16,15 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-three-dots"
                 viewBox="0 0 16 16">
                 <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0
-                            3zm5
-                            0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                3zm5
+                                0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
             </svg>
         </div>
     </div>
     <ul class="dropdown-menu fs-5" id="dropdownAcct">
         <li><a class="dropdown-item" asp-page="#">Add an existing account</a></li>
-        <li id="logout"><a class="dropdown-item" asp-page="Logout">Log out &#64;@Model.UserName
-            </a></li>
+        <li id="logout"><a class="dropdown-item" asp-page="Logout">Log out &#64;@Model.UserName</a></li>
     </ul>
-
 </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

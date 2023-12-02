@@ -335,3 +335,41 @@ Meredith
 3. Need assistance / figure things out
 - 
 
+2023-12-01
+
+Shiyuan
+1.  Done / not done since last scrum:
+- admin suspend tweets
+- add follow function to tweet card
+- debug tweet card
+2. To do until next Scrum:
+- pagination to my tweet list
+- tweet/reply/like tab in user profile
+3. Need assistance / figure things out
+- 
+
+Xiaoxing
+1.  Done / not done since last scrum:
+- show trendlist in search/home/full follow list page
+- introduce the signalR
+- debug dropdown list
+- add notification/HubConnection models
+2. To do until next Scrum:
+- set signalR to send notification to certain user
+3. Need assistance / figure things out
+- 
+
+Meredith
+1. Done since last scrum
+- progress on messages
+- navmenu/ narbar
+- fix right sidebar css
+2. Plan until next Scrum
+- update image upload file types
+- change password
+- debug layout navbar links
+- update message part
+3. Need assistance / figure things out
+- 
+
+
