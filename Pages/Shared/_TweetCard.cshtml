@@ -221,7 +221,8 @@
                             .then(response => response.json())
                             .then(data => {
                                 // Access the reply data from the response
-                                var replyData = data.replyData;
+                                var replyData = data.ReplyData;
+                                console.log(replyData)
 
                                 // Add the replyData to the ul element
                                 var replyList = document.getElementById(`replyList-@bodyId`);
@@ -232,9 +233,9 @@
                                 commenterInfo.className = 'd-flex align-items-center mb-2';
 
                                 // Avatar
-                                if (replyData.commenter.avatar) {
+                                if (replyData.Commenter.Avatar) {
                                     var avatar = document.createElement('img');
-                                    avatar.src = replyData.commenter.avatar;
+                                    avatar.src = replyData.Commenter.Avatar;
                                     avatar.alt = 'Author Avatar';
                                     avatar.className = 'rounded-circle';
                                     avatar.width = 32;
@@ -251,10 +252,10 @@
                                 commenterDetails.className = 'ms-2';
                                 var nickName = document.createElement('h6');
                                 nickName.className = 'mb-0 fs-6';
-                                nickName.textContent = replyData.commenter.nickName;
+                                nickName.textContent = replyData.Commenter.NickName;
                                 var userName = document.createElement('p');
                                 userName.className = 'text-muted fs-6 mb-0';
-                                userName.textContent = replyData.commenter.userName;
+                                userName.textContent = replyData.Commenter.UserName;
                                 commenterDetails.appendChild(nickName);
                                 commenterDetails.appendChild(userName);
                                 commenterInfo.appendChild(commenterDetails);
@@ -262,7 +263,7 @@
                                 // Append commenter's information and reply text to the list item
                                 replyItem.appendChild(commenterInfo);
                                 var replyText = document.createElement('p');
-                                replyText.textContent = replyData.body;
+                                replyText.textContent = replyData.Body;
                                 replyItem.appendChild(replyText);
 
                                 // CreatedAt information
@@ -270,7 +271,7 @@
                                 createdAtInfo.className = 'card-text';
                                 var small = document.createElement('small');
                                 small.className = 'text-muted';
-                                small.textContent = replyData.createdAt; 
+                                small.textContent = replyData.CreatedAt; 
                                 createdAtInfo.appendChild(small);
                                 replyItem.appendChild(createdAtInfo);
 
@@ -305,9 +306,10 @@
                                 commenterInfo.className = 'd-flex align-items-center mb-2';
 
                                 // Avatar
-                                if (reply.commenter.avatar) {
+                                console.log(reply.Commenter.Avatar)
+                                if (reply.Commenter.Avatar) {
                                     var avatar = document.createElement('img');
-                                    avatar.src = reply.commenter.avatar;
+                                    avatar.src = reply.Commenter.Avatar;
                                     avatar.alt = 'Author Avatar';
                                     avatar.className = 'rounded-circle';
                                     avatar.width = 32;
@@ -324,10 +326,10 @@
                                 commenterDetails.className = 'ms-2';
                                 var nickName = document.createElement('h6');
                                 nickName.className = 'mb-0 fs-6';
-                                nickName.textContent = reply.commenter.nickName;
+                                nickName.textContent = reply.Commenter.NickName;
                                 var userName = document.createElement('p');
                                 userName.className = 'text-muted fs-6 mb-0';
-                                userName.textContent = reply.commenter.userName;
+                                userName.textContent = reply.Commenter.UserName;
                                 commenterDetails.appendChild(nickName);
                                 commenterDetails.appendChild(userName);
                                 commenterInfo.appendChild(commenterDetails);
@@ -335,7 +337,7 @@
 
                                 // reply text
                                 var replyText = document.createElement('p');
-                                replyText.textContent = reply.body;
+                                replyText.textContent = reply.Body;
                                 replyItem.appendChild(replyText);
 
                                 // CreatedAt 
@@ -343,7 +345,7 @@
                                 createdAtInfo.className = 'card-text';
                                 var small = document.createElement('small');
                                 small.className = 'text-muted';
-                                small.textContent = reply.createdAt; 
+                                small.textContent = reply.CreatedAt; 
                                 createdAtInfo.appendChild(small);
                                 replyItem.appendChild(createdAtInfo);
 

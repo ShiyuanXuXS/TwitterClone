@@ -66,7 +66,8 @@ namespace TwitterClone.Pages.UserPortal
                 TempData["Message"] = "Tweet deleted successfully!";
             }
 
-            return RedirectToPage("./MyTweets");
+            // return RedirectToPage("MyTweets");
+            return RedirectToPage("/User/"+currentUser.UserName);
         }
     }
 }

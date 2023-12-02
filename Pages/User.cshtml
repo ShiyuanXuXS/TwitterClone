@@ -37,57 +37,81 @@
         <div class="row mt-5 mx-1 fs-6">
             <ul class="nav nav-tabs justify-content-around text-dark">
                 <li class="nav-item">
-                    <a id="tabPosts" class="nav-link">Posts</a>
+                    <a href="/User/@User.Identity.Name?pageNumber=1&listOption=0" id="tabPosts" class="nav-link">Posts</a>
                 </li>
                 <li class="nav-item">
-                    <a id="tabReplies" class="nav-link">Replies</a>
+                    <a href="/User/@User.Identity.Name?pageNumber=1&listOption=1" id="tabReplies" class="nav-link">Replies</a>
                 </li>
                 <li class="nav-item">
-                    <a id="tabLikes" class="nav-link">Likes</a>
+                    <a href="/User/@User.Identity.Name?pageNumber=1&listOption=2" id="tabLikes" class="nav-link">Likes</a>
                 </li>
             </ul>
         </div>
 
-        <div class="col" id="listPosts">
-            @await Component.InvokeAsync("UserTweets", user.UserName)
+        <div>
+            <div>
+                @if (TempData["Message"] != null)
+                {
+                    <div id="flash-message" class="alert alert-success" role="alert">
+                        @TempData["Message"]
+                    </div>
+                }
+                    @foreach (var item in Model.Tweets) {
+                    
+                    @await Html.PartialAsync("_TweetCard", new {Tweet=item,BodyContainerId=""})
+                }
+            </div>
+            <!-- current page number and total pages -->
+            <div class="row mt-5 mx-1 fs-6">
+                <span>Page @Model.CurrentPage of @Model.TotalPages</span>
+            </div>
+
+            <!-- pagenate -->
+            <div class="row mt-5 mx-1 fs-6">
+                <ul class="pagination">
+                    <li class="page-item @((Model.CurrentPage == 1) ? "disabled" : "")">
+                        <a class="page-link" href="/User/@User.Identity.Name?pageNumber=1&listOption=@Model.CurrentListOption" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item @((Model.CurrentPage == 1) ? "disabled" : "")">
+                        <a class="page-link" href="/User/@User.Identity.Name?pageNumber=@(Model.CurrentPage - 1)&listOption=@Model.CurrentListOption" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item @((Model.CurrentPage == Model.TotalPages) ? "disabled" : "")">
+                        <a class="page-link" href="/User/@User.Identity.Name?pageNumber=@(Model.CurrentPage + 1)&listOption=@Model.CurrentListOption" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item @((Model.CurrentPage == Model.TotalPages) ? "disabled" : "")">
+                        <a class="page-link" href="/User/@User.Identity.Name?pageNumber=@Model.TotalPages&listOption=@Model.CurrentListOption" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- flash-message -->
+            @section Scripts {
+                <script>
+                    var displayTime = 3000; 
+                    document.addEventListener("DOMContentLoaded", function () {
+                        var messageElement = document.getElementById("flash-message");
+                        if (messageElement) {
+                            setTimeout(function () {
+                                messageElement.style.display = 'none';
+                            }, displayTime);
+                        }
+                    });
+                </script>
+            }
 
         </div>
-        <div class="col" id="listReplies" style="display: none;">
-            @await Component.InvokeAsync("UserReplies", user.UserName)
 
-        </div>
-        <div class="col" id="listLikes" style="display: none;">
-            @await Component.InvokeAsync("UserLikes", user.UserName)
-
-        </div>
+        
 
     </div>
 </div>
 
 }
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-
-        $('#tabPosts').click(function () {
-            $('#listPosts').show();
-            $('#listReplies').hide();
-            $('#listLikes').hide();
-        });
-
-        $('#tabReplies').click(function () {
-            $('#listPosts').hide();
-            $('#listReplies').show();
-            $('#listLikes').hide();
-        });
-
-        $('#tabLikes').click(function () {
-            $('#listPosts').hide();
-            $('#listReplies').hide();
-            $('#listLikes').show();
-        });
-    });
-
-</script>

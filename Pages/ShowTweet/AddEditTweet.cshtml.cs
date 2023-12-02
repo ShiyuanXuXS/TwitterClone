@@ -136,7 +136,8 @@ namespace TwitterClone.Pages.UserPortal
                 logger.LogError(e.Message);
                 return Page();
             };
-            return RedirectToPage("MyTweets");
+            // return RedirectToPage("MyTweets");
+            return RedirectToPage("/User/"+currentUser.UserName);
         }
 
         private Tweet? GetFullReTweet(int reTweetId)

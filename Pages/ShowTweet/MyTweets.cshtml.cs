@@ -31,9 +31,7 @@ namespace TwitterClone.Pages.UserPortal
 
         public async Task OnGetAsync()
         {
-            // User user=context.Users.Where(u=>u.UserName=="AAA222").FirstOrDefault();
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
-            //Todo get logged user
             Tweets = await context.Tweets
                 .Where(t => t.Author.Id == currentUser.Id)
                 .OrderByDescending(t => t.CreatedAt)
