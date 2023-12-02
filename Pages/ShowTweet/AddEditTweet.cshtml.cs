@@ -49,6 +49,7 @@ namespace TwitterClone.Pages.UserPortal
                 // Tweet tweet=await context.Tweets.FirstOrDefaultAsync(t=>t.Id==id);
                 Tweet tweet = await context.Tweets
                     .Include(t => t.ParentTweet)
+                        .ThenInclude(pt => pt.ParentTweet)
                     .ThenInclude(pt => pt.Author)
                     .FirstOrDefaultAsync(t => t.Id == id && t.Author.Id == currentUser.Id);
                 //  _logger.LogInformation("---------------------"+tweet.ParentTweet.Author);
@@ -64,7 +65,7 @@ namespace TwitterClone.Pages.UserPortal
                     if (tweet.ParentTweet != null)
                     {
                         ReTweet = tweet.ParentTweet;
-                        logger.LogInformation("---------------------" + ReTweet.ParentTweet.Id);
+                        // logger.LogInformation("---------------------" + ReTweet.ParentTweet.Id);
                     }
 
                 }
@@ -136,8 +137,8 @@ namespace TwitterClone.Pages.UserPortal
                 logger.LogError(e.Message);
                 return Page();
             };
-            // return RedirectToPage("MyTweets");
-            return RedirectToPage("/User/"+currentUser.UserName);
+            return RedirectToPage("/User", new { username = currentUser.UserName });
+
         }
 
         private Tweet? GetFullReTweet(int reTweetId)

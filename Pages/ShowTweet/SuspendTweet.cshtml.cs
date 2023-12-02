@@ -29,6 +29,7 @@ namespace TwitterClone.Pages.ShowTweet
 
         [BindProperty]
         public Tweet Tweet { get; set; } = default!;
+        public string btnName{get;set;}
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -45,6 +46,7 @@ namespace TwitterClone.Pages.ShowTweet
                 return NotFound();
             }
             Tweet = tweet;
+            btnName=Tweet.Suspended?"UnSuspend":"Suspend";
             return Page();
         }
         public async Task<IActionResult> OnPostAsync(int? id)

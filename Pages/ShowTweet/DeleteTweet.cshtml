@@ -4,11 +4,11 @@
     ViewData["Title"] = "DeleteTweet";
 }
 
-<h2>@ViewData["Title"]</h2>
 
-<div>
 
-    <div class="col-md-6 mb-4">
+<div class="mx-5">
+    <h2>@ViewData["Title"]</h2>
+    @* <div class="col-md-6 mb-4">
             <div class="card tweetCard border-0" >
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center mb-2">
@@ -35,11 +35,12 @@
                         console.error(error);
                     });
             </script>
-    </div>
+    </div> *@
+    @await Html.PartialAsync("_TweetCard", new {Tweet=@Model.Tweet,BodyContainerId=""})
     <form method="post">
         <input type="hidden" asp-for="Tweet.Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="./MyTweets">Back to List</a>
+        <a href="/User/@User.Identity.Name">Back to List</a>
     </form>
 </div>
 

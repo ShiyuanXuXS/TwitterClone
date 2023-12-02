@@ -4,9 +4,10 @@
     ViewData["Title"] = "AddEditTweet";
 }
 
-<h1>@ViewData["Title"]</h1>
 
-<div class="row">
+
+<div class="row mx-5">
+    <h2>@ViewData["Title"]</h2>
     <div class="col-md-12">
         <form method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
@@ -74,8 +75,7 @@
             </div>
         </form>
     </div>
-    
-</div>
-<div>
-    <a asp-page="MyTweets">Back to List</a>
+    <div>
+        <a href="/User/@User.Identity.Name">Back to List</a>
+    </div>
 </div>

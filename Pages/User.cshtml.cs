@@ -36,7 +36,7 @@ namespace TwitterClone.Pages
         public async Task<IActionResult> OnGetAsync(int? pageNumber,int? listOption)
         {
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
-            var numberPerPage=3;
+            var numberPerPage=4;
             CurrentPage= (int)(pageNumber.HasValue?pageNumber:1);
             CurrentListOption=(int)(listOption.HasValue?listOption:0);
             IQueryable<Tweet> query = db.Tweets
@@ -65,12 +65,15 @@ namespace TwitterClone.Pages
                     
             }
             TotalPages = (int)Math.Ceiling(query.Count() / (double)numberPerPage);
+
             Tweets = await query
                 .OrderByDescending(t => t.CreatedAt)
-                .Skip((pageNumber - 1) * numberPerPage ?? 0)
-                .Take(numberPerPage)
                 .ToListAsync();
 
+            Tweets = Tweets
+                .Skip((pageNumber - 1) * numberPerPage ?? 0)
+                .Take(numberPerPage)
+                .ToList();
             if (currentUser != null)
             {
                 Profile = currentUser;

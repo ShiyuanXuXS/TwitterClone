@@ -35,10 +35,13 @@ namespace TwitterClone.Pages.UserPortal
             {
                 return NotFound();
             }
-
-            var tweet = await context.Tweets.FirstOrDefaultAsync(t => t.Id == id);
-            // _logger.LogInformation("-----------------------------------id:" +tweet.Id);
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
+
+            Tweet tweet = await context.Tweets
+                    .Include(t => t.ParentTweet)
+                        .ThenInclude(pt => pt.ParentTweet)
+                    .ThenInclude(pt => pt.Author)
+                    .FirstOrDefaultAsync(t => t.Id == id );
 
             if (tweet == null || tweet.Author.Id != currentUser.Id)
             {
@@ -67,7 +70,7 @@ namespace TwitterClone.Pages.UserPortal
             }
 
             // return RedirectToPage("MyTweets");
-            return RedirectToPage("/User/"+currentUser.UserName);
+            return RedirectToPage("/User", new { username = currentUser.UserName });
         }
     }
 }
