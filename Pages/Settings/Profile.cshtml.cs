@@ -52,6 +52,8 @@ namespace TwitterClone.Pages.Settings
 
             [BindProperty]
             public IFormFile? Avatar { get; set; }
+            
+
         }
 
         public async Task OnGetAsync()
@@ -99,8 +101,6 @@ namespace TwitterClone.Pages.Settings
 
                 }
 
-
-
                 ModelUser.NickName = Input.NickName;
 
                 if (Input.Description != null)
@@ -108,6 +108,11 @@ namespace TwitterClone.Pages.Settings
                     ModelUser.Description = Input.Description;
                 }
                 ModelUser.DateOfBirth = Input.DOB;
+
+                if (Input.Description != null)
+                {
+                    ModelUser.Description = Input.Description;
+                }
 
                 IdentityResult result = await userManager.UpdateAsync(ModelUser);
 

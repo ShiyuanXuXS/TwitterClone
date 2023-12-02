@@ -29,7 +29,7 @@
 
                                 <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
                                     <div class="mb-4 fs-5">
-                                        <a asp-page="Home"
+                                        <a asp-page="/Home"
                                             class="d-block align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none fw-bold display-5 link-dark">
 
                                             &#120144;
@@ -63,7 +63,7 @@
                                                 </a>
                                             </li>
                                             <li class="nav-item mb-2">
-                                                <a asp-page="Messages" class="nav-link link-body-emphasis p-2 text-dark">
+                                                <a asp-page="/Messages" class="nav-link link-body-emphasis p-2 text-dark">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
                                                         fill="currentColor" class="bi bi-envelope-heart me-3 mb-1"
                                                         viewBox="0 0 16 16">
@@ -86,7 +86,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a asp-page="User" asp-route-username="@User.Identity.Name"
+                                                <a asp-page="/User" asp-route-username="@User.Identity.Name"
                                                     class="nav-link link-body-emphasis p-2 text-dark">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
                                                         fill="currentColor" class="bi bi-person me-3 mb-1" viewBox="0 0 16 16">
