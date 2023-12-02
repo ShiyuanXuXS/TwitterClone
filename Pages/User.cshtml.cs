@@ -35,7 +35,13 @@ namespace TwitterClone.Pages
 
         public async Task<IActionResult> OnGetAsync(int? pageNumber,int? listOption)
         {
+            var user=db.Users.Where(u => u.UserName == Username).FirstOrDefault();
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            if (user.Id!=currentUser.Id){
+                Profile = user;
+                Tweets=[];
+                return Page();
+            }
             var numberPerPage=4;
             CurrentPage= (int)(pageNumber.HasValue?pageNumber:1);
             CurrentListOption=(int)(listOption.HasValue?listOption:0);
