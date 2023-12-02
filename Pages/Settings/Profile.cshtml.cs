@@ -39,9 +39,9 @@ namespace TwitterClone.Pages.Settings
             public string NickName { get; set; }
 
             [Display(Name = "Bio")]
-            [Required(AllowEmptyStrings = true)]
-            [DisplayFormat(ConvertEmptyStringToNull = false)]
-            //[StringLength(160, ErrorMessage = "Bio must not exceed 160 characters.", MinimumLength = 0)]
+            //[Required(AllowEmptyStrings = true)]
+            //[DisplayFormat(ConvertEmptyStringToNull = false)]
+            [StringLength(160, ErrorMessage = "Bio must not exceed 160 characters.", MinimumLength = 0)]
 
             public string? Description { get; set; }
 
@@ -103,16 +103,12 @@ namespace TwitterClone.Pages.Settings
 
                 ModelUser.NickName = Input.NickName;
 
-                if (Input.Description != null)
+                if (!String.IsNullOrEmpty(Input.Description))
                 {
                     ModelUser.Description = Input.Description;
                 }
-                ModelUser.DateOfBirth = Input.DOB;
 
-                if (Input.Description != null)
-                {
-                    ModelUser.Description = Input.Description;
-                }
+                ModelUser.DateOfBirth = Input.DOB;
 
                 IdentityResult result = await userManager.UpdateAsync(ModelUser);
 
