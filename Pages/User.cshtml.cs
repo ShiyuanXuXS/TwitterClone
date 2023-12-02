@@ -37,16 +37,16 @@ namespace TwitterClone.Pages
         {
             var user=db.Users.Where(u => u.UserName == Username).FirstOrDefault();
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
-            if (user.Id!=currentUser.Id){
-                Profile = user;
-                Tweets=[];
-                return Page();
-            }
+            // if (user.Id!=currentUser.Id){
+            //     Profile = user;
+            //     Tweets=[];
+            //     return Page();
+            // }
             var numberPerPage=4;
             CurrentPage= (int)(pageNumber.HasValue?pageNumber:1);
             CurrentListOption=(int)(listOption.HasValue?listOption:0);
             IQueryable<Tweet> query = db.Tweets
-                    .Where(t => t.Author.Id == currentUser.Id)
+                    .Where(t => t.Author.Id == user.Id)
                     .Include(t => t.ParentTweet)
                         .ThenInclude(pt => pt.ParentTweet);
             if (listOption.HasValue && pageNumber.HasValue){
@@ -56,12 +56,12 @@ namespace TwitterClone.Pages
                         break;
                     case 1:
                         query = db.Tweets
-                            .Where(t => db.Comments.Any(c => c.Tweet.Id == t.Id && c.Commenter.Id == currentUser.Id))
+                            .Where(t => db.Comments.Any(c => c.Tweet.Id == t.Id && c.Commenter.Id == user.Id))
                             .Include(t => t.ParentTweet)
                                 .ThenInclude(pt => pt.ParentTweet);
                         break;
                     case 2:
-                        query = db.Tweets.Where(t => db.Likes.Any(l => l.Tweet.Id == t.Id && l.User.Id == currentUser.Id))
+                        query = db.Tweets.Where(t => db.Likes.Any(l => l.Tweet.Id == t.Id && l.User.Id == user.Id))
                             .Include(t => t.ParentTweet)
                                 .ThenInclude(pt => pt.ParentTweet);
                         break;
@@ -80,9 +80,10 @@ namespace TwitterClone.Pages
                 .Skip((pageNumber - 1) * numberPerPage ?? 0)
                 .Take(numberPerPage)
                 .ToList();
-            if (currentUser != null)
+            if (user != null)
             {
-                Profile = currentUser;
+                // Profile = currentUser;
+                Profile = user;
                 return Page();
 
             }
