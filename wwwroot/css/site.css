@@ -227,6 +227,7 @@ body {
   padding-top: 70px;
   padding-bottom: 100px;
   flex-direction: column-reverse;
+  overflow-x: hidden;
 }
 
 .msgList {
@@ -282,7 +283,6 @@ body {
 
 #msgViewContainer * {
   overflow-anchor: none;
-
 }
 
 #anchor {

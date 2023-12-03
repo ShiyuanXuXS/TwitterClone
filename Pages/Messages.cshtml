@@ -11,18 +11,19 @@
         <div class="msgList sidebarContainerOuter">
             <div class="sidebarContainerInner msgListInner">
                 <div class="msgList sidebar">
-                    <div class="row fs-4 fw-bold mb-5 p-3 justify-content-between bg-white border-bottom" id="msgListHeader">
-                        <div class="col">
+                    <div class="row fs-4 fw-bold mb-1 py-3 px-0 px-lg-3 justify-content-between bg-white border-bottom"
+                        id="msgListHeader">
+                        <div class="col-auto py-0 px-1">
                             Messages
                         </div>
-                        <div class="col-auto">
+                        <div class="col-auto py-0 px-1">
                             <div id="navBtnNewMsg" class="btn rounded-pill bg-brand-color text-white fs-6 fw-bold py-0">
                                 &#10000;
                             </div>
                         </div>
                     </div>
                     <div id="errMsgLeft" class="text-secondary"></div>
-                    <div class="msgList px-0" id="msgListView">
+                    <div class="msgList  pt-3 px-0" id="msgListView">
 
 
                         @if (Model.Conversations != null && Model.Conversations.Any() == true)
@@ -65,7 +66,7 @@
             <div class="sidebarContainerInner border-start border-end">
 
                 <div class="msgBar sidebar">
-                    <div class="row ms-3" id="newMsgView" data-username="@Model.User.Identity.Name">
+                    <div class="row ms-2" id="newMsgView" data-username="@Model.User.Identity.Name">
                         <div class="col-10">
                             <div id="newMsgTop">
                                 <div class="row m-5 fw-bold fs-4">Select a message</div>
@@ -95,12 +96,13 @@
                             <div id="searchErrMsg" class="text-secondary fs-6 text-center"></div>
                         </div>
                     </div>
-                    <div class="row ms-3" id="msgViewContainer">
+                    <div class="row ms-1 pe-3" id="msgViewContainer">
                         <div id="msgView" data-username="@Model.User.Identity.Name">
                         </div>
                         <div id="anchor">
                         </div>
                     </div>
+
 
                     <div class="row bg-white border-bottom py-3" id="msgViewHeader">
                         <div class="col-auto">
@@ -138,6 +140,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+
         updateMsgListView();
 
         setInterval(refresh, 3000);
@@ -179,6 +182,7 @@
                 var result = '';
                 for (var i = 0; i < msgList.length; i++) {
                     var msg = msgList[i];
+                    var time = getTime(new Date(msg.SentAt));
                     if (msg.Sender.Id == userId && msg.Receiver.Id != userId) {
                         result +=
                             `<div class="row fs-6 py-3">
@@ -190,7 +194,7 @@
                                     </div>
 
                                     <div class="row">
-                                        <small class="text-secondary">${msg.SentAt}</small>
+                                        <small class="text-secondary">${time}</small>
                                     </div>
                                 </div>
                             </div>`
@@ -205,7 +209,7 @@
                                         </div>
                                     </div>
                                     <div class="row text-end">
-                                    <small class="text-secondary">${msg.SentAt}</small>
+                                    <small class="text-secondary">${time}</small>
                                     </div>
                                 </div>
                             </div>`
@@ -263,6 +267,7 @@
                     var item = list[i];
                     var user = item.Contact;
                     var msg = item.Msg;
+                    var time = getTime(new Date(msg.SentAt));
 
                     result += `
                                 <div class="card p-0 m-0 border-0 w-100">
@@ -279,7 +284,7 @@
                                             </div>
                                             <div class="text-secondary d-md-inline">
                                                 &#64;${user.UserName} &#183;
-                                                ${msg.SentAt}
+                                                ${time}
                                             </div>
                                         </div>
                                         <div class="col-1 brand-color ps-0 pe-2">
@@ -379,10 +384,19 @@
             }
         });
 
+        $(document).on('keypress', '#msgBox', function (e) {
+            if (e.which == 13) {
+                console.log('clicked enter');
+                sendMsg();
+            }
+        });
 
-        $('#btnSend').click(function () {
+        $('#btnSend').click(sendMsg);
 
-            var userId = $(this).data('user-id');
+
+        async function sendMsg() {
+
+            var userId = $('#btnSend').data('user-id');
 
             var msg = {
                 Recipient: userId,
@@ -406,7 +420,7 @@
                 updateMsgView(msg.Recipient);
 
             });
-        });
+        }
 
         $(window).on('resize', function (ev) {
             if ($(window).width() >= 768) {
@@ -422,6 +436,46 @@
             }
 
         });
+
+        function getTime(datetime) {
+            var millisec = Date.now() - datetime;
+
+            var min = Math.floor(millisec / 60000);
+            if (min == 0) {
+                return '1m';
+            }
+            if (min < 60) {
+                return min + 'm';
+            }
+            var hr = Math.floor(min / 60);
+            if (hr < 24) {
+                return hr + 'h';
+            }
+            var day = Math.floor(hr / 24);
+            if (day < 7) {
+                day = datetime.getDay();
+                switch (day) {
+                    case 0:
+                        return "Sun";
+                    case 1:
+                        return "Mon";
+                    case 2:
+                        return "Tue";
+                    case 3:
+                        return "Wed";
+                    case 4:
+                        return "Thu";
+                    case 5:
+                        return "Fri";
+                    case 6:
+                        return "Sat";
+                    default:
+                        return datetime.toLocaleDateString();
+                }
+            }
+            return datetime.toLocaleDateString();
+
+        }
 
     });
 
