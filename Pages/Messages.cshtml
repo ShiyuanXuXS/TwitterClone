@@ -438,7 +438,13 @@
         });
 
         function getTime(datetime) {
-            var millisec = Date.now() - datetime;
+            
+            console.log(datetime);
+            var diff = datetime.getTimezoneOffset();
+            console.log('offset: ' + diff);
+            var millisec = (Date.now() - datetime) + (diff * 60000);
+            console.log(datetime);
+
 
             var min = Math.floor(millisec / 60000);
             if (min == 0) {
