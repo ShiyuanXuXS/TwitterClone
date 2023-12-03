@@ -14,10 +14,18 @@ namespace TwitterClone.Controllers
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly TwitterCloneDbContext db;
 
-        public class Msg {
+        public class Msg
+        {
             public string Recipient { get; set; }
             public string Content { get; set; }
         }
+
+        public class Conversation
+        {
+            public User Contact { get; set; }
+            public Message Msg { get; set; }
+        }
+
         public MessageController(UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, TwitterCloneDbContext db)
         {
             this.userManager = userManager;
@@ -28,7 +36,7 @@ namespace TwitterClone.Controllers
         [HttpGet]
         public async Task<ActionResult<string>> getConversation(string userId)
         {
-           var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
             var contact = await userManager.FindByIdAsync(userId);
 
             if (currentUser == null)
@@ -39,22 +47,22 @@ namespace TwitterClone.Controllers
             {
                 return StatusCode(400, "User not found.");
             }
-            
+
             var msgList = await db.Messages
-            .Where(m =>(m.Receiver == contact & m.Sender == currentUser) || (m.Sender == contact & m.Receiver == currentUser))
+            .Where(m => (m.Receiver == contact & m.Sender == currentUser) || (m.Sender == contact & m.Receiver == currentUser))
             .Include(m => m.Receiver)
             .Include(m => m.Sender)
             .OrderBy(m => m.SentAt)
             .ToListAsync();
 
             //FIXME exclude private user data
-                return Json(new { msgList });
+            return Json(new { msgList });
         }
 
         [HttpGet("New")]
         public async Task<ActionResult<string>> getUser(string username)
         {
-           var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
             var contact = await userManager.FindByNameAsync(username);
 
             if (currentUser == null)
@@ -65,10 +73,10 @@ namespace TwitterClone.Controllers
             {
                 return StatusCode(400, "User not found.");
             }
-            
+
 
             //FIXME exclude private user data
-                return Json(new { contact });
+            return Json(new { contact });
         }
 
         [HttpGet("Inbox")]
@@ -80,28 +88,77 @@ namespace TwitterClone.Controllers
                 return StatusCode(401, "You must be logged in to send messages.");
             }
             var id = currentUser.Id;
-            var inbox = db.Messages
-            .Where(m => m.Receiver.Id == id)
+
+            // var sent = await db.Messages
+            // .Where(m => m.Sender.Id == id)
+            // .Include(m => m.Receiver)
+            // .OrderByDescending(m => m.SentAt)
+            // .ToListAsync();
+
+            // var received = await db.Messages
+            // .Where(m => m.Receiver.Id == id)
+            // .OrderByDescending(m => m.SentAt)
+            // .Include(m => m.Sender)
+            // .ToListAsync();
+
+            var sent = await db.Messages
+            .Where(m => m.Sender.Id == id)
+            .Include(m => m.Receiver)
             .OrderByDescending(m => m.SentAt)
             .ToListAsync();
 
-            //FIXME exclude private user data
-                return Json(new { inbox });
-        }
+            var received = await db.Messages
+            .Where(m => m.Receiver.Id == id)
+            .OrderByDescending(m => m.SentAt)
+            .Include(m => m.Sender)
+            .ToListAsync();
 
-        [HttpGet("Outbox")]
-        public async Task<ActionResult<string>> getOutbox()
-        {
-            var currentUser = await userManager.GetUserAsync(HttpContext.User);
-            if (currentUser == null)
+            var conversations = new List<Conversation>();
+            var contacts = new List<User>();
+            foreach (Message msg in sent)
             {
-                return StatusCode(401, "You must be logged in to send messages.");
-            }
-            var id = currentUser.Id;
-            var outbox = db.Messages.Where(m => m.Sender.Id == id).OrderByDescending(m => m.SentAt).ToListAsync();
+                if (!contacts.Contains(msg.Receiver))
+                {
+                    contacts.Add(msg.Receiver);
+                    Console.WriteLine("--------------");
+                    Console.WriteLine(msg.Receiver.UserName);
 
-                return Ok(outbox);
+                    Console.WriteLine("--------------");
+                }
+            }
+            foreach (Message msg in received)
+            {
+                if (!contacts.Contains(msg.Sender))
+                {
+                    contacts.Add(msg.Sender);
+                    Console.WriteLine("--------------");
+                    Console.WriteLine(msg.Sender.UserName);
+
+                    Console.WriteLine("--------------");
+
+                }
+            }
+
+            if (contacts.Any() == true)
+            {
+                foreach (User contact in contacts)
+                {
+                    Conversation convo = new Conversation();
+                    convo.Contact = contact;
+                    convo.Msg = await db.Messages
+                .Where(m => (m.Receiver == contact && m.Sender == currentUser) || (m.Sender == contact && m.Receiver == currentUser))
+                .Include(m => m.Receiver)
+                .Include(m => m.Sender)
+                .OrderBy(m => m.SentAt)
+                .LastOrDefaultAsync();
+
+                    conversations.Add(convo);
+                }
+            }
+            //FIXME exclude private user data
+            return Json(new {conversations});
         }
+
 
         //TODO validate msg body
         [HttpPost]
@@ -122,18 +179,40 @@ namespace TwitterClone.Controllers
                 return StatusCode(400, "Message body must not be empty.");
             }
 
-                    var newMsg = new Message
-                    {
-                        Sender = currentUser,
-                        Receiver = receiver,
-                        Content = msg.Content,
-                        SentAt = DateTime.Now
-                    };
-                    db.Messages.Add(newMsg);
-                    await db.SaveChangesAsync();
-                    return Json(new { success = true, message = "Message sent successfully" });
+            var newMsg = new Message
+            {
+                Sender = currentUser,
+                Receiver = receiver,
+                Content = msg.Content,
+                SentAt = DateTime.Now
+            };
+            db.Messages.Add(newMsg);
+            await db.SaveChangesAsync();
+            return Json(new { success = true, message = "Message sent successfully" });
+        }
 
+        [HttpPut]
+        public async Task<IActionResult> MarkRead(string userId)
+        {
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
+            var contact = await userManager.FindByIdAsync(userId);
+            if (currentUser == null)
+            {
+                return StatusCode(401, "You must be logged in to send messages.");
+            }
+            if (contact == null)
+            {
+                return StatusCode(400, "User not found.");
+            }
+            List<Message> read = await db.Messages
+                .Where(m => m.Receiver == currentUser && m.Sender == contact)
+                .ToListAsync();
+            foreach (Message message in read) {
+                message.IsRead = true;
+            }
 
+            await db.SaveChangesAsync();
+            return Json(new { success = true, message = "Messages marked as read" });
         }
     }
 }
