@@ -11,12 +11,12 @@
         <div class="msgList sidebarContainerOuter">
             <div class="sidebarContainerInner msgListInner">
                 <div class="msgList sidebar">
-                    <div class="row fs-4 fw-bold mb-5 px-3 justify-content-between" id="msgListHeader">
+                    <div class="row fs-4 fw-bold mb-5 p-3 justify-content-between bg-white border-bottom" id="msgListHeader">
                         <div class="col">
                             Messages
                         </div>
                         <div class="col-auto">
-                            <div id="navBtnNewMsg" class="btn rounded-pill bg-brand-color text-white fs-6 fw-bold">
+                            <div id="navBtnNewMsg" class="btn rounded-pill bg-brand-color text-white fs-6 fw-bold py-0">
                                 &#10000;
                             </div>
                         </div>
@@ -95,7 +95,11 @@
                             <div id="searchErrMsg" class="text-secondary fs-6 text-center"></div>
                         </div>
                     </div>
-                    <div class="row ms-3" id="msgView" data-username="@Model.User.Identity.Name">
+                    <div class="row ms-3" id="msgViewContainer">
+                        <div id="msgView" data-username="@Model.User.Identity.Name">
+                        </div>
+                        <div id="anchor">
+                        </div>
                     </div>
 
                     <div class="row bg-white border-bottom py-3" id="msgViewHeader">
@@ -136,16 +140,16 @@
     $(document).ready(function () {
         updateMsgListView();
 
-       //setInterval(refresh, 3000);
+        setInterval(refresh, 3000);
 
         async function refresh() {
 
             if ($('#btnSend').data('user-id')) {
-                
+
                 updateMsgView($('#btnSend').data('user-id'));
-            } 
-            if (!($('#msgColLeft').css('display') == 'none' || $('#msgColLeft').css("visibility") == "hidden")) {                
-                
+            }
+            if (!($('#msgColLeft').css('display') == 'none' || $('#msgColLeft').css("visibility") == "hidden")) {
+
                 updateMsgListView();
             }
         }

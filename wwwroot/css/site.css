@@ -226,6 +226,7 @@ body {
   max-width: 600px;
   padding-top: 70px;
   padding-bottom: 100px;
+  flex-direction: column-reverse;
 }
 
 .msgList {
@@ -279,6 +280,16 @@ body {
   /* margin-left: auto; */
 }
 
+#msgViewContainer * {
+  overflow-anchor: none;
+
+}
+
+#anchor {
+  overflow-anchor: auto;
+  height: 2px;
+}
+
 
 
 
@@ -306,6 +317,7 @@ body {
   top: 10px;
   width: inherit;
   margin-left: auto;
+  z-index: 1;
 }
 @media (max-width: 768px) {
 
