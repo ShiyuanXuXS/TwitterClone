@@ -9,7 +9,7 @@ namespace TwitterClone.Models
     {
         public int Id { get; set; }
         public string? Message { get; set; }
-        public User? User { get; set; }
+        public string? Username { get; set; }
         public int Status { get; set; }  //0:unread, 1:read
     }
 }
