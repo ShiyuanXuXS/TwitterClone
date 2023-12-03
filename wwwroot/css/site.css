@@ -112,6 +112,8 @@ body {
 .outermost {
   height: 100%;
   display: flex;
+  overflow-x: hidden;
+
 }
 
 .outer2 {
@@ -223,12 +225,10 @@ body {
   width: 400px;
   max-width: 600px;
   padding-top: 70px;
+  padding-bottom: 100px;
 }
 
 .msgList {
-  /* width: 200px;
-  max-width: 500px; */
-  width: inherit;
   padding-top: 70px;
   flex-shrink: 2;
   align-items: flex-start;
@@ -307,7 +307,23 @@ body {
   width: inherit;
   margin-left: auto;
 }
+@media (max-width: 768px) {
 
+  .sidebarLeft {
+    width: 75px;
+  }
+
+  .msgList {
+    min-width: 700px;
+  }
+}
+
+@media (max-width: 1000px) {
+
+  .headerContainer {
+    flex-grow: 0;
+  }
+}
 
 @media (min-width: 768px) {
 
@@ -317,7 +333,6 @@ body {
 
   .msgBar {
     width: 400px;
-    padding-bottom: 100px;
   }
 
   .msgList {
