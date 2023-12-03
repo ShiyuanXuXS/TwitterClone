@@ -25,6 +25,9 @@ namespace TwitterClone.Pages
         public Message NewMessage { get; set; } = null!;
         public List<User> Admins { get; set; } = null!;
 
+        [BindProperty]
+        public ReportInputModel Input { get; set; } = null!;
+
         public class ReportInputModel
         {
             [Required]
@@ -32,14 +35,13 @@ namespace TwitterClone.Pages
             public string Content { get; set; }
 
         }
-        public ReportInputModel Input
-        { get; set; }
 
         public ReportModel(ILogger<SearchResultModel> logger, TwitterCloneDbContext context, UserManager<User> userManager)
         {
             this.logger = logger;
             this.context = context;
             this.userManager = userManager;
+            Input = new ReportInputModel();
         }
 
         public async Task OnGetAsync(int Id)
@@ -50,14 +52,12 @@ namespace TwitterClone.Pages
             {
                 Console.WriteLine("ReportTweetId is null");
             }
-            var tweet = await context.Tweets.FindAsync(reportTweetId);
+            var tweet = await context.Tweets.Include(t => t.Author).FirstOrDefaultAsync(t => t.Id == reportTweetId);
             if (tweet == null)
             {
                 Console.WriteLine("Tweet is null");
             }
             ReportTweet = tweet;
-            Console.WriteLine("ReportTweetId: " + ReportTweet.Id);
-
         }
 
 
@@ -73,31 +73,30 @@ namespace TwitterClone.Pages
             IList<User> admins = await userManager.GetUsersInRoleAsync("Admin");
             Console.WriteLine("admins: " + admins.Count);
             Console.WriteLine("here is good");
-            if (currentUser == null)
+            if (Input.Content == null)
             {
-                Console.WriteLine("currentUser is null");
+                Console.WriteLine("Input.Content is null");
                 return Page();
             }
-            Console.WriteLine("currentUser: " + currentUser.UserName);
-            Console.WriteLine("ReportTweetId: " + ReportTweet.Id);
-            Console.WriteLine("Input.Content: " + Input.Content);
-            Console.WriteLine("SendAt: " + DateTime.Now);
-            // foreach (var admin in admins)
-            // {
-            //     // Create a new message for each admin user
-            //     var newMessage = new Message
-            //     {
-            //         Sender = currentUser,
-            //         Receiver = admin,
-            //         Content = Input.Content + "Tweet: " + ReportTweet.Id,
-            //         SentAt = DateTime.Now,
-            //         IsRead = false,
-            //     };
-            //     context.Messages.Add(newMessage);
-            // }
-            // await context.SaveChangesAsync();
-            // return RedirectToPage("./Home");
-            return Page();
+            Console.WriteLine(Input.Content + " Report For Tweet: " + ReportTweet.Id);
+
+            foreach (var admin in admins)
+            {
+                // Create a new message for each admin user
+                var newMessage = new Message
+                {
+                    Sender = currentUser,
+                    Receiver = admin,
+                    Content = Input.Content + " Report For Tweet: " + ReportTweet.Id,
+                    SentAt = DateTime.Now,
+                    IsRead = false,
+                };
+                context.Messages.Add(newMessage);
+            }
+            await context.SaveChangesAsync();
+            logger.LogInformation($"User {currentUser.UserName} has report a tweet {ReportTweet.Id}.");
+            TempData["FlashMessage"] = "Thank you for your report. Please wait for our response.";
+            return RedirectToPage("./Home");
         }
     }
 }

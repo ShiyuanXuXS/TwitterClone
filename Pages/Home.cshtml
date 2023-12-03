@@ -8,8 +8,15 @@
     ViewData["IndexDropdown"] = Model.IndexDropDown;
 }
 <div class="row">
-    <div class="col-12 col-lg-8 col-xl-7 pe-0">
+
+     @if (TempData["FlashMessage"] != null)
+        { 
+            <div class="mt-4 mx-4 alert alert-success col-7">
+                @TempData["FlashMessage"] 
+            </div>
+        } 
         
+    <div class="col-12 col-lg-8 col-xl-7 pe-0">        
 
         @* TWEET FEED *@
 

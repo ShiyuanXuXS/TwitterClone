@@ -72,7 +72,8 @@ namespace TwitterClone.Pages
         {
             var randomTweets = context.Tweets
         .AsEnumerable() // Switch to client-side evaluation
-        .Where(t => t.Author.Id != currentUser.Id)
+        .Where(t => t.Author.Id != currentUser.Id
+        && t.Suspended == false)
         .ToList();
 
             var trendList = new List<ShowTrendModel>();

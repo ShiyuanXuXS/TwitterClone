@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Report / Y";
     var item = Model.ReportTweet;
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
 <div class="row p-2 m-2 col-8">
@@ -16,11 +17,8 @@
         <p class="fs-5 fw-bold mt-3 mb-0">Tweets to Report</p>
         @if (Model.ReportTweet != null)
         {
-            <div class="d-flex flex-column">
-
-
-                @* @await Html.PartialAsync("_TweetCard", new { Tweet = item, BodyContainerId = "" }) *@
-
+            <div class="border border-4 border-danger mt-3">
+                @await Html.PartialAsync("_TweetCard", new { Tweet = item, BodyContainerId = "" })
             </div>
         }
     </div>
@@ -37,7 +35,7 @@
             <span asp-validation-for="Input.Content" class="text-danger"></span>
         </div>
 
-        <div class="form-group row text-center pt-3">
+        <div class="form-group row text-center py-3">
             <div class="col-md-6 mx-auto"><input type="submit" value="Submit to Admin" class="btn btn-primary" />
             </div>
             <div class="col-md-6 mx-auto"><a class="btn btn-secondary" asp-page="/Home">Back to
