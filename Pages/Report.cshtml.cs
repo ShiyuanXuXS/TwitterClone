@@ -48,12 +48,12 @@ namespace TwitterClone.Pages
             Console.WriteLine("get id: " + reportTweetId);
             if (reportTweetId == 0)
             {
-
+                Console.WriteLine("ReportTweetId is null");
             }
             var tweet = await context.Tweets.FindAsync(reportTweetId);
             if (tweet == null)
             {
-
+                Console.WriteLine("Tweet is null");
             }
             ReportTweet = tweet;
             Console.WriteLine("ReportTweetId: " + ReportTweet.Id);
@@ -68,23 +68,36 @@ namespace TwitterClone.Pages
                 Console.WriteLine("ModelState is not valid");
                 return Page();
             }
-            var currentUser = await userManager.GetUserAsync(User);
+            var currentUser = await userManager.GetUserAsync(HttpContext.User);
+
             IList<User> admins = await userManager.GetUsersInRoleAsync("Admin");
-            foreach (var admin in admins)
+            Console.WriteLine("admins: " + admins.Count);
+            Console.WriteLine("here is good");
+            if (currentUser == null)
             {
-                // Create a new message for each admin user
-                var newMessage = new Message
-                {
-                    Sender = currentUser,
-                    Receiver = admin,
-                    Content = Input.Content + "Tweet: " + ReportTweet.Id,
-                    SentAt = DateTime.Now,
-                    IsRead = false,
-                };
-                context.Messages.Add(newMessage);
+                Console.WriteLine("currentUser is null");
+                return Page();
             }
-            await context.SaveChangesAsync();
-            return RedirectToPage("./Home");
+            Console.WriteLine("currentUser: " + currentUser.UserName);
+            Console.WriteLine("ReportTweetId: " + ReportTweet.Id);
+            Console.WriteLine("Input.Content: " + Input.Content);
+            Console.WriteLine("SendAt: " + DateTime.Now);
+            // foreach (var admin in admins)
+            // {
+            //     // Create a new message for each admin user
+            //     var newMessage = new Message
+            //     {
+            //         Sender = currentUser,
+            //         Receiver = admin,
+            //         Content = Input.Content + "Tweet: " + ReportTweet.Id,
+            //         SentAt = DateTime.Now,
+            //         IsRead = false,
+            //     };
+            //     context.Messages.Add(newMessage);
+            // }
+            // await context.SaveChangesAsync();
+            // return RedirectToPage("./Home");
+            return Page();
         }
     }
 }
