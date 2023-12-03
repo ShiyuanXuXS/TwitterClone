@@ -155,6 +155,8 @@ namespace TwitterClone.Controllers
                     conversations.Add(convo);
                 }
             }
+
+            conversations = conversations.OrderByDescending(c => c.Msg.SentAt).ToList();
             //FIXME exclude private user data
             return Json(new {conversations});
         }
