@@ -66,7 +66,11 @@ body {
 /* remove the underline from the button link */
 .btn-link,
 .no-underline {
-  text-decoration: none;
+  text-decoration: none !important;
+}
+
+.font-white {
+  color: black !important;
 }
 
 .no-underline .hashtag-link .nav-link {
@@ -319,6 +323,7 @@ body {
   margin-left: auto;
   z-index: 1;
 }
+
 @media (max-width: 768px) {
 
   .sidebarLeft {
