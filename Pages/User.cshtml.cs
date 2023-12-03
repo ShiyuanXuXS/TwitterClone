@@ -57,11 +57,13 @@ namespace TwitterClone.Pages
                     case 1:
                         query = db.Tweets
                             .Where(t => db.Comments.Any(c => c.Tweet.Id == t.Id && c.Commenter.Id == user.Id))
+                            .Include(t=>t.Author)
                             .Include(t => t.ParentTweet)
                                 .ThenInclude(pt => pt.ParentTweet);
                         break;
                     case 2:
                         query = db.Tweets.Where(t => db.Likes.Any(l => l.Tweet.Id == t.Id && l.User.Id == user.Id))
+                            .Include(t=>t.Author)
                             .Include(t => t.ParentTweet)
                                 .ThenInclude(pt => pt.ParentTweet);
                         break;
