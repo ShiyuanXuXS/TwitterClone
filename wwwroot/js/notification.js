@@ -13,5 +13,8 @@ connection.on("OnConnected", function () {
 });
 
 function OnConnected() {
-    var username = $("#username").val();
+    var username = $("#hfusername").val();
+    connection.invoke("SaveUserConnection", username).catch(function (err) {
+        return console.error(err.toString());
+    })
 }

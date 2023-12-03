@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            <div class="dropstart ms-auto">
+            <div class="dropdown ms-auto">
                 <div class="rounded rounded-pill align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="gray" class="bi bi-three-dots"
                         viewBox="0 0 16 16">
@@ -59,7 +59,7 @@
                         </a>
                     </li>
                     <li>
-                        <a type="button" class="dropdown-item" asp-page="">
+                        <a type="button" class="dropdown-item btnReport" data-tweet-id="@item.Id">
                             <div class="d-flex align-items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray"
                                     class="bi bi-emoji-frown me-2" stroke-width="2" viewBox="0 0 16 16">
@@ -93,7 +93,11 @@ else
                 window.location.href = '/SearchResult/?term=' + encodeURIComponent(term);
             });
         });
-
+        $('.btnReport').click(function () {
+            // Get the tweetId 
+            var tweetId = $(this).data('tweet-id');
+            window.location.href = '/Report/?Id=' + encodeURIComponent(tweetId);
+        });
     @* $('.btnRemoveTrend').click(function () {
             console.log('clicked');
             // Make an asynchronous request to the server

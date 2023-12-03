@@ -7,6 +7,12 @@
 
 <div class="container">
     <div class="row">
+        @if (TempData["FlashMessage"] != null)
+        {
+            <div class="mt-4 alert alert-success">
+                @TempData["FlashMessage"]
+            </div>
+        }
         <div class="col-3 col-lg-6">
             <div id="signupLogo" class="fw-bold">
                 &#120144;
@@ -23,7 +29,8 @@
             <div class="col-8">
                 <div class="row my-3">
                     <div class="row my-3">
-                        <a class="col btn btn-link rounded-pill bg-brand-color text-white fw-bold fs-5 py-2" asp-page="/Signup">Create account</a>
+                        <a class="col btn btn-link rounded-pill bg-brand-color text-white fw-bold fs-5 py-2"
+                            asp-page="/Signup">Create account</a>
                     </div>
                     <small>By signing up, you agree to the <a href="#" class="brand-color">Terms of Service</a> and <a
                             href="#" class="brand-color">Privacy Policy</a>, including <a href="#"
@@ -32,7 +39,8 @@
                         <div class="fw-bold fs-5">Already have an account?</div>
                     </div>
                     <div class="row my-3">
-                        <a class="col btn btn-link rounded-pill border-tertiary-gray fw-bold fs-5 brand-color py-2" asp-page="/Login">Sign in</a>
+                        <a class="col btn btn-link rounded-pill border-tertiary-gray fw-bold fs-5 brand-color py-2"
+                            asp-page="/Login">Sign in</a>
                     </div>
                 </div>
             </div>
