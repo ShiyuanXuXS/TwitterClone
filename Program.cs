@@ -5,7 +5,7 @@ using TwitterClone.Models;
 using TwitterClone;
 using Microsoft.Extensions.Azure;
 using TwitterClone.Pages.Hubs;
-
+using TwitterClone.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages(/*options => {
@@ -15,6 +15,11 @@ builder.Services.AddHttpClient();
 
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddJsonFile("appsettings.json");
+
+var emailServiceConfiguration = new EmailServiceConfiguration();
+builder.Configuration.GetSection("EmailService").Bind(emailServiceConfiguration);
+builder.Services.AddSingleton(emailServiceConfiguration);
+
 builder.Services.AddDbContext<TwitterCloneDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

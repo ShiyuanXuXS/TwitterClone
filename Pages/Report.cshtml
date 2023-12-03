@@ -1,0 +1,51 @@
+﻿@page
+@model TwitterClone.Pages.ReportModel
+@{
+    ViewData["Title"] = "Report / Y";
+}
+
+<div class="row p-2 m-2 col-8">
+    <div class="row fs-4 fw-bold mb-3 justify-content-between">
+        <div class="col p-2">
+            Report
+        </div>
+    </div>
+    </hr>
+    <div class="p-2">
+        <p class="fs-5 fw-bold mt-3 mb-0">Tweets to Report</p>
+        @* @if (Model.ReportTweet != null)
+        {
+        <div class="d-flex flex-column">
+
+
+        @await Html.PartialAsync("_TweetCard", new { Tweet = Model.ReportTweet, BodyContainerId = "" })
+
+        </div>
+        }
+        </div> *@
+
+        <p class="fs-5 fw-bold mt-3 mb-0">Details</p>
+        <form method="post">
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+
+            <div class="form-group pb-3">
+                <input class="form-control fs-6 custom-input" placeholder="Please describe the reason here"
+                    asp-for="Input.Content" />
+                <span asp-validation-for="Input.Content" class="text-danger"></span>
+            </div>
+
+            <div class="form-group row text-center pt-3">
+                <div class="col-md-6 mx-auto"><input type="submit" value="Submit to Admin" class="btn btn-primary" />
+                </div>
+                <div class="col-md-6 mx-auto"><a class="btn btn-secondary" asp-page="/Home">Back to
+                        Home</a></div>
+            </div>
+
+        </form>
+        <div>
+
+        </div>
+
+    </div>

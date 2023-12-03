@@ -375,6 +375,7 @@ body {
   .sidebarRight {
     width: 275px;
   }
+
   .msgBar {
     width: 600px;
   }
@@ -394,4 +395,8 @@ body {
   .msgList {
     width: 500px;
   }
+}
+
+.custom-input {
+  height: 200px;
 }
