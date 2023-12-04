@@ -55,14 +55,17 @@ namespace TwitterClone.Controllers
             .OrderBy(m => m.SentAt)
             .ToListAsync();
 
-            foreach (Message m in msgList)
-            {
-                m.SentAt = m.SentAt.ToUniversalTime();
-                Console.WriteLine("-------------------------------- ");
-                Console.WriteLine(m.SentAt);
-                Console.WriteLine("-------------------------------- ");
+            // foreach (Message m in msgList)
+            // {
 
-            }
+            //     m.SentAt = m.SentAt.ToUniversalTime();
+            //     Console.WriteLine("-------------------------------- ");
+            //     Console.WriteLine(m.SentAt);
+            //     Console.WriteLine("toUniveralTime: " + m.SentAt.ToUniversalTime());
+
+            //     Console.WriteLine("-------------------------------- ");
+
+            // }
             //FIXME exclude private user data
             return Json(new { msgList });
         }
@@ -175,14 +178,14 @@ namespace TwitterClone.Controllers
 
             conversations = conversations.OrderByDescending(c => c.Msg.SentAt).ToList();
 
-            foreach (Conversation c in conversations)
-            {
-                c.Msg.SentAt = c.Msg.SentAt.ToUniversalTime();
+            // foreach (Conversation c in conversations)
+            // {
+            //     c.Msg.SentAt = c.Msg.SentAt.ToUniversalTime();
 
-                Console.WriteLine("-------------------------------- ");
-                Console.WriteLine(c.Msg.SentAt);
-                Console.WriteLine("-------------------------------- ");
-            }
+            //     Console.WriteLine("-------------------------------- ");
+            //     Console.WriteLine(c.Msg.SentAt);
+            //     Console.WriteLine("-------------------------------- ");
+            // }
             //FIXME exclude private user data
             return Json(new { conversations });
         }

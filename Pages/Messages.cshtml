@@ -439,12 +439,16 @@
         });
 
         function getTime(datetime) {
-            
-            console.log(datetime);
-            var diff = datetime.getTimezoneOffset();
+            console.log('argument: ' + datetime);
+            var diff = new Date().getTimezoneOffset();
             console.log('offset: ' + diff);
-            var millisec = (Date.now() - datetime) + (diff * 60000);
-            console.log(datetime);
+            console.log('Date.now(): ' + Date.now());
+            var newDate = new Date(datetime);
+            console.log("newDate no offset: " + newDate);
+            newDate = new Date(newDate.getTime() - (diff * 60000));
+            console.log("newDate with offset: " + newDate)
+            var millisec = Date.now() - newDate;
+            console.log('millisec: ' + millisec);
 
 
             var min = Math.floor(millisec / 60000);
@@ -460,7 +464,7 @@
             }
             var day = Math.floor(hr / 24);
             if (day < 7) {
-                day = datetime.getDay();
+                day = newDate.getDay();
                 switch (day) {
                     case 0:
                         return "Sun";
@@ -477,10 +481,10 @@
                     case 6:
                         return "Sat";
                     default:
-                        return datetime.toLocaleDateString();
+                        return newDate.toDateString();
                 }
             }
-            return datetime.toLocaleDateString();
+            return newDate.toDateString();
 
         }
 
