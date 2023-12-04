@@ -71,6 +71,7 @@ namespace TwitterClone.Pages
         private List<ShowTrendModel> getTrend(User currentUser)
         {
             var randomTweets = context.Tweets
+            .Include(t => t.Author)
         .AsEnumerable() // Switch to client-side evaluation
         .Where(t => t.Author.Id != currentUser.Id
         && t.Suspended == false)
@@ -111,10 +112,10 @@ namespace TwitterClone.Pages
         public IList<Tweet> Tweets { get; set; } = default!;
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
-        public int CurrentListOption{get;set;}
-        
+        public int CurrentListOption { get; set; }
 
-        public async Task OnGetAsync(int? pageNumber,int? listOption)
+
+        public async Task OnGetAsync(int? pageNumber, int? listOption)
         {
             // get all users
             var allUsers = userManager.Users.ToList();
@@ -129,24 +130,25 @@ namespace TwitterClone.Pages
 
 
             // TWEET FEED
-            var numberPerPage=4;
-            CurrentPage= (int)(pageNumber.HasValue?pageNumber:1);
-            CurrentListOption=(int)(listOption.HasValue?listOption:0);
+            var numberPerPage = 4;
+            CurrentPage = (int)(pageNumber.HasValue ? pageNumber : 1);
+            CurrentListOption = (int)(listOption.HasValue ? listOption : 0);
 
             var followedUsers = await context.Follows.Where(f => f.User.Id == currentUser.Id).Select(f => f.Author).ToListAsync();
 
-            IQueryable<Tweet> query = context.Tweets
+            IQueryable<Tweet> query = context.Tweets.Include(t => t.Author)
                     .Where(t => t.Deleted == false && t.Suspended == false && followedUsers.Contains(t.Author))
                     .Include(t => t.ParentTweet)
                         //.ThenInclude(pt => pt.ParentTweet)
                         ;
-            if (listOption.HasValue && pageNumber.HasValue){
+            if (listOption.HasValue && pageNumber.HasValue)
+            {
                 switch (listOption)
                 {
                     case 0:
                         break;
                     case 1:
-                        query = context.Tweets
+                        query = context.Tweets.Include(t => t.Author)
                     .Where(t => t.Deleted == false && t.Suspended == false)
                     .Include(t => t.ParentTweet)
                       //  .ThenInclude(pt => pt.ParentTweet)
@@ -160,7 +162,7 @@ namespace TwitterClone.Pages
                     default:
                         break;
                 }
-                    
+
             }
             TotalPages = (int)Math.Ceiling(query.Count() / (double)numberPerPage);
 

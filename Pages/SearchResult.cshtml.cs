@@ -4,6 +4,7 @@ using TwitterClone.Data;
 using TwitterClone.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -56,7 +57,8 @@ namespace TwitterClone.Pages
         private List<ShowTrendModel> getTrend(User currentUser)
         {
             var randomTweets = context.Tweets
-        .AsEnumerable() // Switch to client-side evaluation
+        .Include(t => t.Author)
+        .AsEnumerable()
         .Where(t => t.Author.Id != currentUser.Id)
         .ToList();
 
@@ -131,6 +133,7 @@ namespace TwitterClone.Pages
             //query tweets that followed user username/nickname or body contain search term
             var res =
            context.Tweets
+            .Include(t => t.Author)
                .AsEnumerable() // Switch to client-side evaluation
                .Where(t =>
                     t.Author != null &&
@@ -149,6 +152,7 @@ namespace TwitterClone.Pages
             //query tweets that author username/nickname or body contain search term
             var res =
            context.Tweets
+           .Include(t => t.Author)
                .AsEnumerable() // Switch to client-side evaluation
                .Where(t =>
                     t.Author != null && t.Author.Id != currentUser.Id && // Exclude the current user

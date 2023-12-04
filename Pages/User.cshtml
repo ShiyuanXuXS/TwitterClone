@@ -9,93 +9,111 @@
 @if (user != null)
 {
     <div class="row">
-    <div class="col-12 col-lg-11 col-xl-10 col-xxl-9">
-    <div class="row mt-5 ps-4 position-relative">
-        <div class="row mb-5" id="bannerImg"></div>
-        <div class="row m-3"></div>
-        <div class="row position-absolute bottom-0">
-            <div class="col-4">
-                <img src="@user.Avatar" alt="@user.UserName avatar" height="150px" width="150px"
-                    class="rounded-circle border border-white border-5 avatar">
+    @if (TempData["FlashMessage"] != null)
+        {
+            <div class="mt-4 mx-4 alert alert-success col-7">
+                @TempData["FlashMessage"]
             </div>
-        </div>
-        @if (user.UserName == User.Identity.Name)
-            {
-                <div class="position-absolute bottom-0 end-0 text-end fs-6">
-                    <a class="col btn btn-link rounded-pill border-tertiary-gray fw-bold text-dark p-2 px-4 me-3"
-                asp-page="Settings/Profile">Edit profile</a>
+        }
+        <div class="col-12 col-lg-11 col-xl-10 col-xxl-9">
+            <div class="row mt-5 ps-4 position-relative">
+                <div class="row mb-5" id="bannerImg"></div>
+                <div class="row m-3"></div>
+                <div class="row position-absolute bottom-0">
+                    <div class="col-4">
+                        <img src="@user.Avatar" alt="@user.UserName avatar" height="150px" width="150px"
+                            class="rounded-circle border border-white border-5 avatar">
+                    </div>
                 </div>
-            }
-        </div>
-
-    <div class="row mt-5 px-4 ms-1">
-        <div class="row fs-5 fw-bold mt-3">@user.NickName</div>
-        <div class="row fs-6 text-secondary">&#64;@user.UserName</div>
-        <div class="row fs-6 mt-3">@user.Description</div>
-    </div>
-
-        <div class="row mt-5 mx-1 fs-6">
-            <ul class="nav nav-tabs justify-content-around text-dark">
-                <li class="nav-item">
-                    <a href="/User/@User.Identity.Name?pageNumber=1&listOption=0" id="tabPosts" class="nav-link">Posts</a>
-                </li>
-                <li class="nav-item">
-                    <a href="/User/@User.Identity.Name?pageNumber=1&listOption=1" id="tabReplies" class="nav-link">Replies</a>
-                </li>
-                <li class="nav-item">
-                    <a href="/User/@User.Identity.Name?pageNumber=1&listOption=2" id="tabLikes" class="nav-link">Likes</a>
-                </li>
-            </ul>
-        </div>
-
-        <div>
-            <div>
-                @if (TempData["Message"] != null)
+                @if (user.UserName == User.Identity.Name)
                 {
-                    <div id="flash-message" class="alert alert-success" role="alert">
-                        @TempData["Message"]
+                    <div class="position-absolute bottom-0 end-0 text-end fs-6">
+                        <a class="col btn btn-link rounded-pill border-tertiary-gray fw-bold text-dark p-2 px-4 me-3"
+                            asp-page="Settings/Profile">Edit profile</a>
                     </div>
                 }
-                    @foreach (var item in Model.Tweets) {
-                    
-                    @await Html.PartialAsync("_TweetCard", new {Tweet=item,BodyContainerId=""})
-                }
-            </div>
-            <!-- current page number and total pages -->
-            <div class="row mt-5 mx-1 fs-6">
-                <span>Page @Model.CurrentPage of @Model.TotalPages</span>
             </div>
 
-            <!-- pagenate -->
+            <div class="row mt-5 px-4 ms-1">
+                <div class="row fs-5 fw-bold mt-3">@user.NickName</div>
+                <div class="row fs-6 text-secondary">&#64;@user.UserName</div>
+                <div class="row fs-6 mt-3">@user.Description</div>
+            </div>
+
             <div class="row mt-5 mx-1 fs-6">
-                <ul class="pagination">
-                    <li class="page-item @((Model.CurrentPage == 1) ? "disabled" : "")">
-                        <a class="page-link" href="/User/@User.Identity.Name?pageNumber=1&listOption=@Model.CurrentListOption" aria-label="First">
-                            <span aria-hidden="true">&laquo;&laquo;</span>
-                        </a>
+                <ul class="nav nav-tabs justify-content-around text-dark">
+                    <li class="nav-item">
+                        <a href="/User/@User.Identity.Name?pageNumber=1&listOption=0" id="tabPosts"
+                            class="nav-link">Posts</a>
                     </li>
-                    <li class="page-item @((Model.CurrentPage == 1) ? "disabled" : "")">
-                        <a class="page-link" href="/User/@User.Identity.Name?pageNumber=@(Model.CurrentPage - 1)&listOption=@Model.CurrentListOption" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
+                    <li class="nav-item">
+                        <a href="/User/@User.Identity.Name?pageNumber=1&listOption=1" id="tabReplies"
+                            class="nav-link">Replies</a>
                     </li>
-                    <li class="page-item @((Model.CurrentPage == Model.TotalPages) ? "disabled" : "")">
-                        <a class="page-link" href="/User/@User.Identity.Name?pageNumber=@(Model.CurrentPage + 1)&listOption=@Model.CurrentListOption" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item @((Model.CurrentPage == Model.TotalPages) ? "disabled" : "")">
-                        <a class="page-link" href="/User/@User.Identity.Name?pageNumber=@Model.TotalPages&listOption=@Model.CurrentListOption" aria-label="Last">
-                            <span aria-hidden="true">&raquo;&raquo;</span>
-                        </a>
+                    <li class="nav-item">
+                        <a href="/User/@User.Identity.Name?pageNumber=1&listOption=2" id="tabLikes"
+                            class="nav-link">Likes</a>
                     </li>
                 </ul>
             </div>
 
-            <!-- flash-message -->
-            @section Scripts {
+            <div>
+                <div>
+                    @if (TempData["Message"] != null)
+                    {
+                        <div id="flash-message" class="alert alert-success" role="alert">
+                            @TempData["Message"]
+                        </div>
+                    }
+                    @foreach (var item in Model.Tweets)
+                    {
+
+                        @await Html.PartialAsync("_TweetCard", new { Tweet = item, BodyContainerId = "" })
+                    }
+                </div>
+                <!-- current page number and total pages -->
+                <div class="row mt-5 mx-1 fs-6">
+                    <span>Page @Model.CurrentPage of @Model.TotalPages</span>
+                </div>
+
+                <!-- pagenate -->
+                <div class="row mt-5 mx-1 fs-6">
+                    <ul class="pagination">
+                        <li class="page-item @((Model.CurrentPage == 1) ? "disabled" : "")">
+                            <a class="page-link"
+                                href="/User/@User.Identity.Name?pageNumber=1&listOption=@Model.CurrentListOption"
+                                aria-label="First">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item @((Model.CurrentPage == 1) ? "disabled" : "")">
+                            <a class="page-link"
+                                href="/User/@User.Identity.Name?pageNumber=@(Model.CurrentPage - 1)&listOption=@Model.CurrentListOption"
+                                aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item @((Model.CurrentPage == Model.TotalPages) ? "disabled" : "")">
+                            <a class="page-link"
+                                href="/User/@User.Identity.Name?pageNumber=@(Model.CurrentPage + 1)&listOption=@Model.CurrentListOption"
+                                aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item @((Model.CurrentPage == Model.TotalPages) ? "disabled" : "")">
+                            <a class="page-link"
+                                href="/User/@User.Identity.Name?pageNumber=@Model.TotalPages&listOption=@Model.CurrentListOption"
+                                aria-label="Last">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- flash-message -->
+                @section Scripts {
                 <script>
-                    var displayTime = 3000; 
+                    var displayTime = 3000;
                     document.addEventListener("DOMContentLoaded", function () {
                         var messageElement = document.getElementById("flash-message");
                         if (messageElement) {
@@ -105,13 +123,13 @@
                         }
                     });
                 </script>
-            }
+                }
+
+            </div>
+
+
 
         </div>
-
-        
-
     </div>
-</div>
 
 }
