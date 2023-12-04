@@ -16,56 +16,64 @@
             </div>
         }
         <div class="col-12 col-lg-11 col-xl-10 col-xxl-9">
-                <div class="row mt-5 ps-4 position-relative">
-                    <div class="row mb-5" id="bannerImg"></div>
-                    <div class="row m-3"></div>
-                    <div class="row position-absolute bottom-0">
-                        <div class="col-4">
-                            <img src="@user.Avatar" alt="@user.UserName avatar" height="150px" width="150px"
-                                class="rounded-circle border border-white border-5 avatar">
-                        </div>
+            <div class="row mt-5 ps-4 position-relative">
+                <div class="row mb-5" id="bannerImg"></div>
+                <div class="row m-3"></div>
+                <div class="row position-absolute bottom-0">
+                    <div class="col-4">
+                        <img src="@user.Avatar" alt="@user.UserName avatar" height="150px" width="150px"
+                            class="rounded-circle border border-white border-5 avatar">
                     </div>
-                    @if (user.UserName == User.Identity.Name)
-                    {
-                        <div class="position-absolute bottom-0 end-0 text-end fs-6">
-                            <a class="col btn btn-link rounded-pill border-tertiary-gray fw-bold text-dark p-2 px-4 me-3"
-                                asp-page="Settings/Profile">Edit profile</a>
-                        </div>
-                    }
+                </div>
+                @if (user.UserName == User.Identity.Name)
+                {
+                    <div class="position-absolute bottom-0 end-0 text-end fs-6">
+                        <a class="col btn btn-link rounded-pill border-tertiary-gray fw-bold text-dark p-2 px-4 me-3"
+                    asp-page="Settings/Profile">Edit profile</a>
+                    </div>
+                }
                 else
                 {
                     <div class="position-absolute bottom-0 end-0 text-end fs-6">
                         <small id="errMsgFollow"></small>
-                        <a class="col btn rounded-pill border-tertiary-gray bg-dark text-white p-2 px-4 me-3"
+                        <a class="btnFollow col btn rounded-pill border-tertiary-gray bg-dark text-white p-2 px-4 me-3"
                             id="btnToggleFollow" href="#" data-user-id="@user.Id"></a>
                     </div>
                 }
-                </div>
+            </div>
 
             <div class="row mt-5 px-4 ms-1">
                 <div class="row fs-5 fw-bold mt-3">@user.NickName</div>
                 <div class="row fs-6 text-secondary">&#64;@user.UserName</div>
                 <div class="row fs-6 mt-3">@user.Description</div>
                 <div class="row fs-6 mt-3">
-                    <div class="col-auto ps-0 text-secondary"><span class="text-dark fw-bold">@Model.Following</span> Following</div>
-                    <div class="col-auto text-secondary"><span class="text-dark fw-bold">@Model.Followers</span> Followers</div>
+                    <div class="col-auto ps-0 text-secondary">
+                        <a href="/User/@user.UserName?pageNumber=1&listOption=3" class="nav-link text-secondary">
+                            <span class="text-dark fw-bold">@Model.FollowingCount</span> Following
+                        </a>
+                    </div>
+                    <div class="col-auto text-secondary">
+                        <a href="/User/@user.UserName?pageNumber=1&listOption=4" class="nav-link text-secondary">
+                            <span class="text-dark fw-bold">@Model.FollowerCount</span> Followers
+                        </a>
+                    </div>
                     <div class="col-auto"></div>
                 </div>
             </div>
 
             <div class="row mt-5 mx-1 fs-6">
-                <ul class="nav nav-tabs justify-content-around text-dark">
+                <ul class="nav nav-tabs justify-content-around">
                     <li class="nav-item">
-                        <a href="/User/@User.Identity.Name?pageNumber=1&listOption=0" id="tabPosts"
-                            class="nav-link">Posts</a>
+                        <a href="/User/@user.UserName?pageNumber=1&listOption=0" id="tabPosts"
+                            class="nav-link text-dark">Posts</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/User/@User.Identity.Name?pageNumber=1&listOption=1" id="tabReplies"
-                            class="nav-link">Replies</a>
+                        <a href="/User/@user.UserName?pageNumber=1&listOption=1" id="tabReplies"
+                            class="nav-link text-dark">Replies</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/User/@User.Identity.Name?pageNumber=1&listOption=2" id="tabLikes"
-                            class="nav-link">Likes</a>
+                        <a href="/User/@user.UserName?pageNumber=1&listOption=2" id="tabLikes"
+                            class="nav-link text-dark">Likes</a>
                     </li>
                 </ul>
             </div>
@@ -78,11 +86,67 @@
                             @TempData["Message"]
                         </div>
                     }
-                    @foreach (var item in Model.Tweets)
+                    @if (Model.CurrentListOption < 3)
                     {
 
-                        @await Html.PartialAsync("_TweetCard", new { Tweet = item, BodyContainerId = "" })
+                        @foreach (var item in Model.Tweets)
+                        {
+
+                            @await Html.PartialAsync("_TweetCard", new { Tweet = item, BodyContainerId = "" })
+                        }
+
                     }
+                    @if (Model.CurrentListOption >= 3 && Model.FollowList != null && Model.FollowList.Any() == true)
+                    {
+
+                        @if (Model.CurrentListOption == 3) {
+                            <div class="row fw-bold m-5 fs-4">Following</div>
+                        }
+
+                         @if (Model.CurrentListOption == 4) {
+                            <div class="row fw-bold m-5 fs-4">Followers</div>
+                        }
+
+                        <ul class="nav flex-column">
+                            @foreach (var follow in Model.FollowList)
+                            {
+                                User u = null;
+                                if (follow.Author != null && follow.Author != user)
+                                {
+                                    u = follow.Author;
+                                }
+                                else
+                                {
+                                    u = follow.User;
+                                }
+                                <div class="row border-top border-bottom mx-1 ms-2">
+                                    <li class=" mb-2 d-flex align-items-center p-2">
+                                        <a class="no-underline font-white fs-6" asp-page="/User" asp-route-username="@u.UserName">
+                                            <img src="@u.Avatar" alt="avatar" width="32" height="32" class="rounded-circle">
+                                        </a>
+                                        <div class="names fs-6 ps-2">
+                                            <div class="fw-bold">@u.NickName</div>
+                                            <div>&#64;@u.UserName</div>
+                                            @if (u.Description != null)
+                                            {
+                                                <div>@u.Description</div>
+                                            }
+                                        </div>
+                                        @* <div class="ms-auto">
+                                            <button class="btnFollow btn btn-sm rounded rounded-pill fw-bold"
+                                                data-user-id="@u.Id">Follow</button>
+                                        </div> *@
+
+                                    </li>
+                                </div>
+
+                            }
+                        </ul>
+
+
+                    }
+
+
                 </div>
                 <!-- current page number and total pages -->
                 <div class="row mt-5 mx-1 fs-6">
@@ -94,28 +158,28 @@
                     <ul class="pagination">
                         <li class="page-item @((Model.CurrentPage == 1) ? "disabled" : "")">
                             <a class="page-link"
-                                href="/User/@User.Identity.Name?pageNumber=1&listOption=@Model.CurrentListOption"
+                                href="/User/@user.UserName?pageNumber=1&listOption=@Model.CurrentListOption"
                                 aria-label="First">
                                 <span aria-hidden="true">&laquo;&laquo;</span>
                             </a>
                         </li>
                         <li class="page-item @((Model.CurrentPage == 1) ? "disabled" : "")">
                             <a class="page-link"
-                                href="/User/@User.Identity.Name?pageNumber=@(Model.CurrentPage - 1)&listOption=@Model.CurrentListOption"
+                                href="/User/@user.UserName?pageNumber=@(Model.CurrentPage - 1)&listOption=@Model.CurrentListOption"
                                 aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
                         <li class="page-item @((Model.CurrentPage == Model.TotalPages) ? "disabled" : "")">
                             <a class="page-link"
-                                href="/User/@User.Identity.Name?pageNumber=@(Model.CurrentPage + 1)&listOption=@Model.CurrentListOption"
+                                href="/User/@user.UserName?pageNumber=@(Model.CurrentPage + 1)&listOption=@Model.CurrentListOption"
                                 aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
                         <li class="page-item @((Model.CurrentPage == Model.TotalPages) ? "disabled" : "")">
                             <a class="page-link"
-                                href="/User/@User.Identity.Name?pageNumber=@Model.TotalPages&listOption=@Model.CurrentListOption"
+                                href="/User/@user.UserName?pageNumber=@Model.TotalPages&listOption=@Model.CurrentListOption"
                                 aria-label="Last">
                                 <span aria-hidden="true">&raquo;&raquo;</span>
                             </a>
@@ -189,13 +253,13 @@
                         }
                     });
                 </script>
-                }
-
-                </div>
-
-        
+            }
 
             </div>
+
+
+
         </div>
+    </div>
 
 }
