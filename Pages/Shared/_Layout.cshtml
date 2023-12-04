@@ -64,7 +64,7 @@
                                                             <div class="d-none d-xl-inline">Notifications</div>
                                                         </a>
                                                     </li>
-                                                    <li class="nav-item mb-2">
+                                                    <li class="nav-item mb-2 position-relative">
                                                         <a asp-page="/Messages"
                                                             class="nav-link link-body-emphasis p-2 text-dark">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
@@ -75,6 +75,7 @@
                                                             </svg>
                                                             <div class="d-none d-xl-inline">Messages</div>
                                                         </a>
+                                                        <small id="msgCount" class="position-absolute top-0 bg-brand-color text-white" style="display: none;"></small>
                                                     </li>
                                                     <li class="nav-item mb-2">
                                                         <a asp-page="#" class="nav-link link-body-emphasis p-2 text-dark">
@@ -109,9 +110,10 @@
                                                     +
                                                 </div>
                                             </div>
-                                            <div class="d-none d-xl-block"> 
-                                               <a asp-page="/ShowTweet/AddEditTweet" class="w-100 btn btn-link rounded rounded-pill bg-brand-color py-2 mb-5 fw-bold text-white fs-5">
-                                               Post</a> 
+                                            <div class="d-none d-xl-block">
+                                                <a asp-page="/ShowTweet/AddEditTweet"
+                                                    class="w-100 btn btn-link rounded rounded-pill bg-brand-color py-2 mb-5 fw-bold text-white fs-5">
+                                                    Post</a>
                                             </div>
                                         </div>
 
@@ -149,6 +151,10 @@
 
     <script>
         $(document).ready(function () {
+
+            setInterval(checkMsgs, 3000);
+            
+
             $('#profile').click(function () {
                 window.location.href = '/User/@User.Identity.Name';
             });
@@ -166,6 +172,28 @@
                     position: false, left: false, top: false
                 }).detach());
             });
+
+            async function checkMsgs() {
+                $.ajax({
+                    url: '/api/Message/Check',
+                    type: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    error: function (jqxhr, status, errorThrown) {
+                        console.log(jqxhr.responseText);
+                    }
+                }).done(function (data) {
+                    if (data > 0) {
+                         $('#msgCount').html(data);
+                         $('#msgCount').show();
+                    } else {
+                        $('#msgCount').hide();
+                    }
+                    
+                });
+            }
+
         });
     </script>
 </body>
