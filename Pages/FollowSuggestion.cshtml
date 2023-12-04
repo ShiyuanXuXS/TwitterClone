@@ -3,7 +3,7 @@
 @{
     ViewData["ShowDescription"] = Model.ShowDescription;
     ViewData["IndexDropdown"] = Model.IndexDropDown;
-
+    ViewData["IndexShowTweet"] = Model.IndexShowTweet;
 }
 <div class="row">
     <div class="col-12 col-lg-8 ">
@@ -66,7 +66,8 @@
                                 <partial name="_PartialWhatsHappening"
                                     model="@Model.ShowTrend.OrderBy(x => Guid.NewGuid()).Take(5).ToList()" />
                                 <li class="mt-2">
-                                    <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
+                                    <button type="button"
+                                        class="btnShowMoreTrend btn btn-link fs-6 no-underline ps-0">Show
                                         more</button>
                                 </li>
                             </ul>
@@ -82,3 +83,12 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+
+            $('.btnShowMoreTrend').click(function () {
+                window.location.href = '/WhatsHappening';
+            });
+        });
+    </script>

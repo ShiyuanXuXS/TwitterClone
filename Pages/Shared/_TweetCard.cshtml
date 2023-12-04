@@ -15,15 +15,17 @@
         <div class="card-body p-2">
             @{
                 string bodyId = string.IsNullOrEmpty(bodyContainerId)
-                    ? $"tweetBody-{tweet.Id}"
-                    : $"{bodyContainerId}-{tweet.Id}";
+                ? $"tweetBody-{tweet.Id}"
+                : $"{bodyContainerId}-{tweet.Id}";
             }
             <!-- Author and follow button-->
             <div class="d-flex align-items-center mb-2">
                 <!-- Avatar -->
                 @if (!string.IsNullOrEmpty(tweet.Author.Avatar))
                 {
-                    <img src="@tweet.Author.Avatar" alt="Author Avatar" class="rounded-circle" width="32" height="32">
+                    <a class="no-underline font-white fs-6" asp-page="/User" asp-route-username="@tweet.Author.UserName">
+                        <img src="@tweet.Author.Avatar" alt="Author Avatar" class="rounded-circle" width="32" height="32">
+                    </a>
                 }
                 else
                 {
@@ -35,57 +37,61 @@
                     <p class="text-muted fs-6 mb-0">@tweet.Author.UserName</p>
                 </div>
                 <!-- Follow Button -->
-                <button id="followButton-@bodyId-Author-@tweet.Author.Id" type="button" class="followButton btn btn-light ms-auto" data-toggle="tooltip" title="">
-                    <svg id="followIcon-@bodyId-Author-@tweet.Author.Id" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
-                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                        <path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4"/>
+                <button id="followButton-@bodyId-Author-@tweet.Author.Id" type="button"
+                    class="followButton btn btn-light ms-auto" data-toggle="tooltip" title="">
+                    <svg id="followIcon-@bodyId-Author-@tweet.Author.Id" xmlns="http://www.w3.org/2000/svg" width="16"
+                        height="16" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+                        <path
+                            d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                        <path
+                            d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4" />
                     </svg>
                 </button>
                 <script>
                     var followButton = document.getElementById(`followButton-@bodyId-Author-@tweet.Author.Id`);
-                    var followIcon=document.getElementById(`followIcon-@bodyId-Author-@tweet.Author.Id`);
+                    var followIcon = document.getElementById(`followIcon-@bodyId-Author-@tweet.Author.Id`);
                     //set color of followIcon
                     fetch(`/api/Follow/getFollowStatus?userId=@tweet.Author.Id`)
-                    .then(response=>response.json())
-                    .then(data => {
-                        var followButton = document.getElementById(`followButton-@bodyId-Author-@tweet.Author.Id`);
-                        var followIcon=document.getElementById(`followIcon-@bodyId-Author-@tweet.Author.Id`);
-                        if (data.followed) {
-                            followButton.setAttribute('title','Unfollow')
-                            followIcon.setAttribute('fill', 'red');
-                        } else {
-                            followButton.setAttribute('title','Follow')
-                            followIcon.setAttribute('fill', 'gray');
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                        .then(response => response.json())
+                        .then(data => {
+                            var followButton = document.getElementById(`followButton-@bodyId-Author-@tweet.Author.Id`);
+                            var followIcon = document.getElementById(`followIcon-@bodyId-Author-@tweet.Author.Id`);
+                            if (data.followed) {
+                                followButton.setAttribute('title', 'Unfollow')
+                                followIcon.setAttribute('fill', 'red');
+                            } else {
+                                followButton.setAttribute('title', 'Follow')
+                                followIcon.setAttribute('fill', 'gray');
+                            }
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
                     //add click event handler on follow button
-                    followButton.addEventListener('click',()=>{
-                        fetch('/api/Follow/HandleFollow',{
-                            method:'post',
+                    followButton.addEventListener('click', () => {
+                        fetch('/api/Follow/HandleFollow', {
+                            method: 'post',
                             headers: {
-                                'Content-Type': 'application/json' 
+                                'Content-Type': 'application/json'
                             },
                             body: JSON.stringify("@tweet.Author.Id")
                         })
-                        .then(response=>response.json())
-                        .then(data=>{
-                            var followButton = document.getElementById(`followButton-@bodyId-Author-@tweet.Author.Id`);
-                            var followIcons=document.querySelectorAll(`[id^="followIcon-"][id$="-Author-@tweet.Author.Id"]`);
-                            followIcons.forEach(fIcon=>{
-                                if (data.success) {
-                                    if (fIcon.getAttribute('fill')!='red'){
-                                        followButton.setAttribute('title','Unfollow')
-                                        fIcon.setAttribute('fill', 'red');
-                                    }else{
-                                        followButton.setAttribute('title','Follow')
-                                        fIcon.setAttribute('fill', 'gray');
+                            .then(response => response.json())
+                            .then(data => {
+                                var followButton = document.getElementById(`followButton-@bodyId-Author-@tweet.Author.Id`);
+                                var followIcons = document.querySelectorAll(`[id^="followIcon-"][id$="-Author-@tweet.Author.Id"]`);
+                                followIcons.forEach(fIcon => {
+                                    if (data.success) {
+                                        if (fIcon.getAttribute('fill') != 'red') {
+                                            followButton.setAttribute('title', 'Unfollow')
+                                            fIcon.setAttribute('fill', 'red');
+                                        } else {
+                                            followButton.setAttribute('title', 'Follow')
+                                            fIcon.setAttribute('fill', 'gray');
+                                        }
                                     }
-                                }
+                                })
                             })
-                        })
                     })
 
                 </script>
@@ -110,10 +116,12 @@
                                 console.error(error);
                             });
                     </script>
-                }else{
+                }
+                else
+                {
                     <p class="text-danger fs-5">This tweet has been suspended!</p>
                 }
-                
+
                 <!-- ReTweet -->
 
                 <div class="fs-6">
@@ -127,29 +135,34 @@
             <!-- CreatedAt -->
             <p class="card-text"><small class="text-muted">@Html.DisplayFor(modelItem => tweet.CreatedAt)</small></p>
             <div class="btn-group" role="group" aria-label="">
-                    <!-- reply Button -->
-                    <button id="replyButton-@bodyId" type="button" class="btn btn-light mx-2 rounded" data-toggle="tooltip" title="Reply">
-                        <i class="bi bi-chat"></i>
-                    </button>
-                    <!-- Retweet Button -->
-                    <a href="/ShowTweet/AddEditTweet?reTweetId=@tweet.Id" class="btn btn-light mx-2 rounded" data-toggle="tooltip" title="Retweet">
-                        <i class="bi bi-arrow-repeat"></i>
-                    </a>
-                    <!-- Like Button -->
-                    <button id="likeButton-@bodyId" type="button" class="likeButton btn btn-light mx-2 rounded" tweetId="@tweet.Id" data-toggle="tooltip" title="Like">
-                        <svg id="likeIcon-@bodyId" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                        </svg>
-                    </button>
-                    <script>
-                        var likeButton = document.getElementById(`likeButton-@bodyId`);
-                        var likeIcon=document.getElementById(`likeIcon-@bodyId`);
-                        //set color of like icon 
-                        fetch(`/api/Like/getLikeStatus?tweetId=@tweet.Id`)
-                        .then(response=>response.json())
+                <!-- reply Button -->
+                <button id="replyButton-@bodyId" type="button" class="btn btn-light mx-2 rounded" data-toggle="tooltip"
+                    title="Reply">
+                    <i class="bi bi-chat"></i>
+                </button>
+                <!-- Retweet Button -->
+                <a href="/ShowTweet/AddEditTweet?reTweetId=@tweet.Id" class="btn btn-light mx-2 rounded"
+                    data-toggle="tooltip" title="Retweet">
+                    <i class="bi bi-arrow-repeat"></i>
+                </a>
+                <!-- Like Button -->
+                <button id="likeButton-@bodyId" type="button" class="likeButton btn btn-light mx-2 rounded"
+                    tweetId="@tweet.Id" data-toggle="tooltip" title="Like">
+                    <svg id="likeIcon-@bodyId" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray"
+                        class="bi bi-heart-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+                    </svg>
+                </button>
+                <script>
+                    var likeButton = document.getElementById(`likeButton-@bodyId`);
+                    var likeIcon = document.getElementById(`likeIcon-@bodyId`);
+                    //set color of like icon 
+                    fetch(`/api/Like/getLikeStatus?tweetId=@tweet.Id`)
+                        .then(response => response.json())
                         .then(data => {
-                            @* var likeIcon=document.getElementById(`likeIcon-@tweet.Id`); *@
-                            var likeIcon=document.getElementById(`likeIcon-@bodyId`);
+                    @* var likeIcon=document.getElementById(`likeIcon-@tweet.Id`); *@
+                            var likeIcon = document.getElementById(`likeIcon-@bodyId`);
                             if (data.liked) {
                                 likeIcon.setAttribute('fill', 'red');
                             } else {
@@ -159,49 +172,52 @@
                         .catch(error => {
                             console.error(error);
                         });
-                        //add click event handler on like button
-                        likeButton.addEventListener('click',()=>{
-                            fetch('/api/Like/setLike?tweetId=@tweet.Id',{
-                                method:'post'
-                            })
-                            .then(response=>response.json())
-                            .then(data=>{
-                                var likeIcons=document.querySelectorAll(`[id^="likeIcon-"][id$="-${@tweet.Id}"]`)
-                                @* console.log(likeIcons) *@
-                                likeIcons.forEach(likeIcon=>{
-                                    
-                                    if (data.liked) {
-                                        likeIcon.setAttribute('fill', 'red');
-                                    }else{
-                                        likeIcon.setAttribute('fill', 'gray');
-                                    }
-                                })
-                            })
+                    //add click event handler on like button
+                    likeButton.addEventListener('click', () => {
+                        fetch('/api/Like/setLike?tweetId=@tweet.Id', {
+                            method: 'post'
                         })
+                            .then(response => response.json())
+                            .then(data => {
+                                var likeIcons = document.querySelectorAll(`[id^="likeIcon-"][id$="-${@tweet.Id}"]`)
+                    @* console.log(likeIcons) *@
+                                    likeIcons.forEach(likeIcon => {
 
-                    </script>
+                                        if (data.liked) {
+                                            likeIcon.setAttribute('fill', 'red');
+                                        } else {
+                                            likeIcon.setAttribute('fill', 'gray');
+                                        }
+                                    })
+                            })
+                    })
+
+                </script>
 
                 @if (isCurrentUserAuthor)
                 {
                     <!-- Edit Button -->
-                    <a href="/ShowTweet/AddEditTweet?id=@tweet.Id" class="btn btn-light mx-2 rounded" data-toggle="tooltip" title="Edit">
+                    <a href="/ShowTweet/AddEditTweet?id=@tweet.Id" class="btn btn-light mx-2 rounded" data-toggle="tooltip"
+                        title="Edit">
                         <i class="bi bi-pencil"></i>
                     </a>
                     <!-- Delete Button -->
-                    <a href="/ShowTweet/DeleteTweet?id=@tweet.Id" class="btn btn-danger mx-2 rounded" data-toggle="tooltip" title="Delete">
+                    <a href="/ShowTweet/DeleteTweet?id=@tweet.Id" class="btn btn-danger mx-2 rounded" data-toggle="tooltip"
+                        title="Delete">
                         <i class="bi bi-trash"></i>
                     </a>
                 }
                 <!-- Suspend Button -->
                 @if (User.IsInRole("Admin"))
                 {
-                    
-                    string suspendBtnTitle=@tweet.Suspended?"UnSuspend":"Suspend";
-                    <a href="/ShowTweet/SuspendTweet?id=@tweet.Id" class="btn btn-danger mx-2 rounded" data-toggle="tooltip" title="@suspendBtnTitle">
+
+                    string suspendBtnTitle = @tweet.Suspended ? "UnSuspend" : "Suspend";
+                    <a href="/ShowTweet/SuspendTweet?id=@tweet.Id" class="btn btn-danger mx-2 rounded" data-toggle="tooltip"
+                        title="@suspendBtnTitle">
                         <i class="bi bi-ban-fill"></i>
                     </a>
                 }
-                    
+
             </div>
             <!-- Replies -->
             <div id="replySection-@bodyId" class="tweet-card-reply border fs-6" style="display: none;">
@@ -210,19 +226,19 @@
                 <ul id="replyList-@bodyId" class="my-2"></ul>
                 <script>
                     // reply confirm
-                        document.getElementById('replyConfirm-@bodyId').addEventListener('click', function () {
-                            var replyBody = document.getElementById('replyInput-@bodyId').value.trim();
-                            if (!replyBody) {return}
-                            fetch('/api/Reply/addReply', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    tweetId: @tweet.Id,  
-                                    replyBody: replyBody
-                                })
+                    document.getElementById('replyConfirm-@bodyId').addEventListener('click', function () {
+                        var replyBody = document.getElementById('replyInput-@bodyId').value.trim();
+                        if (!replyBody) { return }
+                        fetch('/api/Reply/addReply', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                tweetId: @tweet.Id,
+                                replyBody: replyBody
                             })
+                        })
                             .then(response => response.json())
                             .then(data => {
                                 // Access the reply data from the response
@@ -276,7 +292,7 @@
                                 createdAtInfo.className = 'card-text';
                                 var small = document.createElement('small');
                                 small.className = 'text-muted';
-                                small.textContent = replyData.CreatedAt; 
+                                small.textContent = replyData.CreatedAt;
                                 createdAtInfo.appendChild(small);
                                 replyItem.appendChild(createdAtInfo);
 
@@ -287,26 +303,26 @@
                             .catch(error => {
                                 console.error('Error adding reply:', error);
                             });
-                        });
+                    });
                 </script>
-                
+
             </div>
             <script>
                 // click reply button
                 document.getElementById(`replyButton-@bodyId`).addEventListener('click', function () {
                     var replySection = document.getElementById('replySection-@bodyId');
-                    if (replySection.style.display=='block'){
-                        replySection.style.display='none'
+                    if (replySection.style.display == 'block') {
+                        replySection.style.display = 'none'
                         return
                     }
                     fetch(`/api/Reply/getReplies?tweetId=@tweet.Id`)
-                        .then(response=>response.json())
-                        .then(replies=>{
-                            var replyList=document.getElementById(`replyList-@bodyId`)
-                            replyList.innerHTML=""
-                            replies.forEach(reply=>{
+                        .then(response => response.json())
+                        .then(replies => {
+                            var replyList = document.getElementById(`replyList-@bodyId`)
+                            replyList.innerHTML = ""
+                            replies.forEach(reply => {
                                 console.log(reply)
-                                var replyItem=document.createElement('li')// Create elements for author's information
+                                var replyItem = document.createElement('li')// Create elements for author's information
                                 var commenterInfo = document.createElement('div');
                                 commenterInfo.className = 'd-flex align-items-center mb-2';
 
@@ -350,18 +366,18 @@
                                 createdAtInfo.className = 'card-text';
                                 var small = document.createElement('small');
                                 small.className = 'text-muted';
-                                small.textContent = reply.CreatedAt; 
+                                small.textContent = reply.CreatedAt;
                                 createdAtInfo.appendChild(small);
                                 replyItem.appendChild(createdAtInfo);
 
                                 replyList.appendChild(replyItem)
                             })
                         })
-                        .then(()=>{
+                        .then(() => {
                             replySection.style.display = 'block'
                         })
-                        .catch(err=>{
-                            console.log("error fetching replies: ",err)
+                        .catch(err => {
+                            console.log("error fetching replies: ", err)
                         })
                 });
             </script>

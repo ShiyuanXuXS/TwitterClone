@@ -27,6 +27,8 @@ namespace TwitterClone.Pages
         public int ShowDescription { get; set; } = 1;  // 0: hide, 1: show
         public int IndexDropDown { get; set; } = 1;
 
+        public int IndexShowTweet { get; set; } = 0; // 0: hide, 1: show
+
         public FollowSuggestionModel(UserManager<User> userManager, ILogger<HomeModel> logger, TwitterCloneDbContext context)
         {
             this.userManager = userManager;
