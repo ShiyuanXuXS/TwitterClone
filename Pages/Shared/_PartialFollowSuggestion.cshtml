@@ -9,10 +9,11 @@
 {
     @foreach (var user in Model)
     {
-        <li class="mb-2 d-flex align-items-center p-2 ps-0">
-    <div class="fs-6">
+
+        <li class=" mb-2 d-flex align-items-center p-2 ps-0">
+    <a class="no-underline font-white fs-6" asp-page="/User" asp-route-username="@user.UserName">
         <img src="@user.Avatar" alt="avatar" width="32" height="32" class="rounded-circle">
-    </div>
+    </a>
     <div class="names fs-6 ps-2">
         <div class="fw-bold">@user.NickName</div>
         <div>&#64;@user.UserName</div>
@@ -24,7 +25,9 @@
             <div class="ms-auto">
                 <button class="btnFollow btn btn-sm rounded rounded-pill fw-bold" data-user-id="@user.Id">Follow</button>
             </div>
+
         </li>
+
     }
 }
 else

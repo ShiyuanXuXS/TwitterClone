@@ -37,11 +37,14 @@ namespace TwitterClone.Pages.UserPortal
             }
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
 
-            Tweet tweet = await context.Tweets
-                    .Include(t => t.ParentTweet)
-                        .ThenInclude(pt => pt.ParentTweet)
-                    .ThenInclude(pt => pt.Author)
-                    .FirstOrDefaultAsync(t => t.Id == id );
+            // Tweet tweet = await context.Tweets
+            //         .Include(t => t.Author)
+            //         .Include(t => t.ParentTweet)
+            //             .ThenInclude(pt => pt.Author)
+            //         .Include(t => t.ParentTweet)
+            //             .ThenInclude(pt => pt.ParentTweet)
+            //         .FirstOrDefaultAsync(t => t.Id == id );
+            Tweet tweet=GetFullTweet((int)id);
 
             if (tweet == null || tweet.Author.Id != currentUser.Id)
             {
@@ -71,6 +74,21 @@ namespace TwitterClone.Pages.UserPortal
 
             // return RedirectToPage("MyTweets");
             return RedirectToPage("/User", new { username = currentUser.UserName });
+        }
+        private Tweet? GetFullTweet(int reTweetId)
+        {
+            Tweet? reTweet = context.Tweets
+                .Include(pt => pt.Author)
+                .Include(t => t.ParentTweet)
+                
+                .FirstOrDefault(t => t.Id == reTweetId);
+
+            if (reTweet != null && reTweet.ParentTweet != null)
+            {
+                reTweet.ParentTweet = GetFullTweet(reTweet.ParentTweet.Id);
+            }
+
+            return reTweet;
         }
     }
 }

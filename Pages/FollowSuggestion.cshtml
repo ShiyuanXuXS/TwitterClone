@@ -3,40 +3,39 @@
 @{
     ViewData["ShowDescription"] = Model.ShowDescription;
     ViewData["IndexDropdown"] = Model.IndexDropDown;
-
+    ViewData["IndexShowTweet"] = Model.IndexShowTweet;
 }
 <div class="row">
     <div class="col-12 col-lg-8 ">
         <div class="p-2 px-3">
-                <div class="d-flex align-items-center p-2">
-                    <div class="">
-                        <a class="btnBackToMain" asp-page="Home">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black"
-                                class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-                                <path
-                                    d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
-                            </svg>
-                        </a>
-                    </div>
-                    <div class="names fs-5 ps-2 fw-bold">Back to Tweets</div>
-                    <div class="ms-auto">
-                        <a class="btnRefresh">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="dark"
-                                class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-
-                                d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z" />
-                                <path
-                                    d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
-                            </svg>
-                        </a>
-                    </div>
+            <div class="d-flex align-items-center p-2">
+                <div class="">
+                    <a class="btnBackToMain" asp-page="Home">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black"
+                            class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
+                        </svg>
+                    </a>
                 </div>
-                <hr />
-                <p class="fs-5 fw-bold ps-2">Suggested for you</p>
-                <ul class="nav flex-column">
-                    <div class="px-2">
-                <partial name="_PartialFollowSuggestion" model="Model.FollowSuggestion" />
+                <div class="names fs-5 ps-2 fw-bold">Back to Tweets</div>
+                <div class="ms-auto">
+                    <a class="btnRefresh">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="dark"
+                            class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z" />
+                            <path
+                                d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <hr />
+            <p class="fs-5 fw-bold ps-2">Suggested for you</p>
+            <ul class="nav flex-column">
+                <div class="px-2">
+                    <partial name="_PartialFollowSuggestion" model="Model.FollowSuggestion" />
                 </div>
             </ul>
         </div>
@@ -44,42 +43,52 @@
 
     <div class="d-none d-lg-flex col-4 sidebarRight sidebarContainerOuter">
         <div class=" sidebarContainerInner border-start ps-3">
-            <div class="d-flex flex-column flex-shrink-0 bg-body-teritiary vh-100 justify-content-between sidebar sidebarRight">
+            <div
+                class="d-flex flex-column flex-shrink-0 bg-body-teritiary vh-100 justify-content-between sidebar sidebarRight">
                 <ul class="nav nav-pills nav-flush flex-column mb-auto mt-4">
                     <li class="mb-3 searchBar">
                         <partial name="_PartialSearch" />
                     </li>
-                    <li class="mb-3">
-                        <div class="bg-light rounded p-2 px-3">
-                            <p class="fs-5 mb-2 fw-bold">Subscribe to Premium</p>
-                            <p class="fs-6 mb-2">Subscribe to unlock new features and, if eligible, receive a share of
-                                ads
-                                revenue.
-                            </p>
-                            <button class="btn btn-dark btn-sm rounded rounded-pill fw-bold">Subscribe</button>
-                        </div>
-                    </li>
+                    @* <li class="mb-3">
+                    <div class="bg-light rounded p-2 px-3">
+                    <p class="fs-5 mb-2 fw-bold">Subscribe to Premium</p>
+                    <p class="fs-6 mb-2">Subscribe to unlock new features and, if eligible, receive a share of
+                    ads
+                    revenue.
+                    </p>
+                    <button class="btn btn-dark btn-sm rounded rounded-pill fw-bold">Subscribe</button>
+                    </div>
+                    </li> *@
                     <li class="mb-3">
                         <div class="bg-light rounded p-2 px-3">
                             <p class="fs-5 mb-4 fw-bold">What's happening</p>
                             <ul class="nav flex-column">
                                 <partial name="_PartialWhatsHappening"
-                                model="@Model.ShowTrend.OrderBy(x => Guid.NewGuid()).Take(5).ToList()" />
+                                    model="@Model.ShowTrend.OrderBy(x => Guid.NewGuid()).Take(5).ToList()" />
                                 <li class="mt-2">
-                                    <button type="button" class="btn btn-link fs-6 no-underline ps-0">Show
+                                    <button type="button"
+                                        class="btnShowMoreTrend btn btn-link fs-6 no-underline ps-0">Show
                                         more</button>
                                 </li>
                             </ul>
                         </div>
                     </li>
-                @* </ul>
-                <ul class="nav nav-pills nav-flush flex-column mt-4"> *@
+                    @* </ul>
+                    <ul class="nav nav-pills nav-flush flex-column mt-4"> *@
                     <li class="mb-3 fs-6 p-2 text-center">
                         &copy; 2023 - Y - ShiYuan Xu, Meredith White, Xiaoxing Pan, All rights reserved.
                     </li>
-                @* </ul> *@
+                    @* </ul> *@
                 </ul>
             </div>
         </div>
     </div>
-    
+
+    <script>
+        $(document).ready(function () {
+
+            $('.btnShowMoreTrend').click(function () {
+                window.location.href = '/WhatsHappening';
+            });
+        });
+    </script>

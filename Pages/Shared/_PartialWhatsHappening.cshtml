@@ -1,4 +1,7 @@
 ﻿@* @model List<TwitterClone.Pages.HomeModel.ShowTrendModel> *@
+@{
+    int indexShowTweet = (int)ViewData["IndexShowTweet"];
+}
 
 
 
@@ -7,73 +10,89 @@
 {
     @foreach (var item in Model)
     {
-        <li class="d-flex align-items-center p-2 ps-0" id="trendList">
-    <div class="trendInfo">
-        <div class="d-flex">
-            @foreach (var hashtag in item.Hashtag)
-                    {
-                        <a class="hashtag-link fw-bold fs-6 mb-0 pb-0 no-underline" data-term="@hashtag">#@hashtag &nbsp;</a>
-                    }
-                </div>
-                <div class="d-flex">
-                    <div class="fs-6">@item.CountLikes
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-balloon-heart-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M8.49 10.92C19.412 3.382 11.28-2.387 8 .986 4.719-2.387-3.413 3.382 7.51 10.92l-.234.468a.25.25 0 1 0 .448.224l.04-.08c.009.17.024.315.051.45.068.344.208.622.448 1.102l.013.028c.212.422.182.85.05 1.246-.135.402-.366.751-.534 1.003a.25.25 0 0 0 .416.278l.004-.007c.166-.248.431-.646.588-1.115.16-.479.212-1.051-.076-1.629-.258-.515-.365-.732-.419-1.004a2.376 2.376 0 0 1-.037-.289l.008.017a.25.25 0 1 0 .448-.224l-.235-.468ZM6.726 1.269c-1.167-.61-2.8-.142-3.454 1.135-.237.463-.36 1.08-.202 1.85.055.27.467.197.527-.071.285-1.256 1.177-2.462 2.989-2.528.234-.008.348-.278.14-.386Z" />
-                        </svg>
+        <li class="align-items-center p-2 ps-0 mb-3" id="trendList">
+    <div class="d-flex felx-column">
+        <div class="trendInfo">
+            <div class="d-flex">
+                @foreach (var hashtag in item.Hashtag)
+                        {
+                            <a class="hashtag-link fw-bold fs-6 mb-0 pb-0 no-underline font-white" data-term="@hashtag">#@hashtag
+                                &nbsp;</a>
+                        }
                     </div>
-                    <div>&nbsp;&nbsp;&nbsp;</div>
-                    <div class="fs-6">@item.CountRetweets
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-reply-all-fill" viewBox="0 0 16 16">
-                            <path
-                                d="M8.021 11.9 3.453 8.62a.719.719 0 0 1 0-1.238L8.021 4.1a.716.716 0 0 1 1.079.619V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z" />
-                            <path
-                                d="M5.232 4.293a.5.5 0 0 1-.106.7L1.114 7.945a.5.5 0 0 1-.042.028.147.147 0 0 0 0 .252.503.503 0 0 1 .042.028l4.012 2.954a.5.5 0 1 1-.593.805L.539 9.073a1.147 1.147 0 0 1 0-1.946l3.994-2.94a.5.5 0 0 1 .699.106z" />
-                        </svg>
+                    <div class="d-flex">
+                        <div class="fs-6">@item.CountLikes
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-balloon-heart-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M8.49 10.92C19.412 3.382 11.28-2.387 8 .986 4.719-2.387-3.413 3.382 7.51 10.92l-.234.468a.25.25 0 1 0 .448.224l.04-.08c.009.17.024.315.051.45.068.344.208.622.448 1.102l.013.028c.212.422.182.85.05 1.246-.135.402-.366.751-.534 1.003a.25.25 0 0 0 .416.278l.004-.007c.166-.248.431-.646.588-1.115.16-.479.212-1.051-.076-1.629-.258-.515-.365-.732-.419-1.004a2.376 2.376 0 0 1-.037-.289l.008.017a.25.25 0 1 0 .448-.224l-.235-.468ZM6.726 1.269c-1.167-.61-2.8-.142-3.454 1.135-.237.463-.36 1.08-.202 1.85.055.27.467.197.527-.071.285-1.256 1.177-2.462 2.989-2.528.234-.008.348-.278.14-.386Z" />
+                            </svg>
+                        </div>
+                        <div>&nbsp;&nbsp;&nbsp;</div>
+                        <div class="fs-6">@item.CountRetweets
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-reply-all-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8.021 11.9 3.453 8.62a.719.719 0 0 1 0-1.238L8.021 4.1a.716.716 0 0 1 1.079.619V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z" />
+                                <path
+                                    d="M5.232 4.293a.5.5 0 0 1-.106.7L1.114 7.945a.5.5 0 0 1-.042.028.147.147 0 0 0 0 .252.503.503 0 0 1 .042.028l4.012 2.954a.5.5 0 1 1-.593.805L.539 9.073a1.147 1.147 0 0 1 0-1.946l3.994-2.94a.5.5 0 0 1 .699.106z" />
+                            </svg>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="dropdown ms-auto">
-                <div class="rounded rounded-pill align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="gray" class="bi bi-three-dots"
-                        viewBox="0 0 16 16">
-                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0
+                <div class="dropdown ms-auto">
+                    <div class="rounded rounded-pill align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="gray" class="bi bi-three-dots"
+                            viewBox="0 0 16 16">
+                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0
     3zm5
     0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-                    </svg>
+                        </svg>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a type="button" class="btnRemoveTrend dropdown-item" data-tweet-id="@item.Id">
+                                <div class="d-flex align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray"
+                                        class="bi bi-emoji-frown me-2" viewBox="0 0 16 16" stroke-width="2">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                        <path
+                                            d="M4.285 12.433a.5.5 0 0 0 .683-.183A3.498 3.498 0 0 1 8 10.5c1.295 0 2.426.703 3.032 1.75a.5.5 0 0 0 .866-.5A4.498 4.498 0 0 0 8 9.5a4.5 4.5 0 0 0-3.898 2.25.5.5 0 0 0 .183.683M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5m4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5" />
+                                    </svg>
+                                    <p class="fs-6 mb-0 fw-bold">I'm not interested in this</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a type="button" class="dropdown-item btnReport" data-tweet-id="@item.Id">
+                                <div class="d-flex align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray"
+                                        class="bi bi-emoji-frown me-2" stroke-width="2" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                        <path
+                                            d="M4.285 12.433a.5.5 0 0 0 .683-.183A3.498 3.498 0 0 1 8 10.5c1.295 0 2.426.703 3.032 1.75a.5.5 0 0 0 .866-.5A4.498 4.498 0 0 0 8 9.5a4.5 4.5 0 0 0-3.898 2.25.5.5 0 0 0 .183.683M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5m4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5" />
+                                    </svg>
+                                    <p class="fs-6 mb-0 fw-bold">This trend is harmful or spam</p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a type="button" class="btnRemoveTrend dropdown-item" data-tweet-id="@item.Id">
-                            <div class="d-flex align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray"
-                                    class="bi bi-emoji-frown me-2" viewBox="0 0 16 16" stroke-width="2">
-                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                                    <path
-                                        d="M4.285 12.433a.5.5 0 0 0 .683-.183A3.498 3.498 0 0 1 8 10.5c1.295 0 2.426.703 3.032 1.75a.5.5 0 0 0 .866-.5A4.498 4.498 0 0 0 8 9.5a4.5 4.5 0 0 0-3.898 2.25.5.5 0 0 0 .183.683M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5m4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5" />
-                                </svg>
-                                <p class="fs-6 mb-0 fw-bold">I'm not interested in this</p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a type="button" class="dropdown-item btnReport" data-tweet-id="@item.Id">
-                            <div class="d-flex align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray"
-                                    class="bi bi-emoji-frown me-2" stroke-width="2" viewBox="0 0 16 16">
-                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                                    <path
-                                        d="M4.285 12.433a.5.5 0 0 0 .683-.183A3.498 3.498 0 0 1 8 10.5c1.295 0 2.426.703 3.032 1.75a.5.5 0 0 0 .866-.5A4.498 4.498 0 0 0 8 9.5a4.5 4.5 0 0 0-3.898 2.25.5.5 0 0 0 .183.683M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5m4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5" />
-                                </svg>
-                                <p class="fs-6 mb-0 fw-bold">This trend is harmful or spam</p>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
             </div>
+
+            @if (indexShowTweet == 1)
+            {
+                <div class="border border-4 p-2 ps-0">
+                    <div class="d-flex flex-column align-items-center p-3">
+                        @await Html.PartialAsync("_TweetCard", new { Tweet = @item.Tweet, BodyContainerId = "" })
+                    </div>
+                </div>
+            }
+
+
+
         </li>
+
     }
 }
 else

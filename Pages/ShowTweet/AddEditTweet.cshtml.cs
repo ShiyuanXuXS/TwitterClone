@@ -47,13 +47,14 @@ namespace TwitterClone.Pages.UserPortal
             if (IsEditMode)
             {
                 // Tweet tweet=await context.Tweets.FirstOrDefaultAsync(t=>t.Id==id);
-                Tweet tweet = await context.Tweets
-                    .Include(t => t.ParentTweet)
-                        .ThenInclude(pt => pt.ParentTweet)
-                    .ThenInclude(pt => pt.Author)
-                    .FirstOrDefaultAsync(t => t.Id == id && t.Author.Id == currentUser.Id);
+                // Tweet tweet = await context.Tweets
+                //     .Include(t=>t.Author)
+                //     .Include(t => t.ParentTweet)
+                //         .ThenInclude(pt => pt.ParentTweet)
+                //     .FirstOrDefaultAsync(t => t.Id == id && t.Author.Id == currentUser.Id);
                 //  _logger.LogInformation("---------------------"+tweet.ParentTweet.Author);
                 // return Page();
+                Tweet tweet=GetFullTweet((int)id);
                 if (tweet == null)
                 {
                     return NotFound();
@@ -76,7 +77,15 @@ namespace TwitterClone.Pages.UserPortal
                 {
                     // ReTweet=await context.Tweets.Include(t => t.ParentTweet).FirstOrDefaultAsync(t=>t.Id==reTweetId);
                     // _logger.LogInformation("---------------------"+ReTweet.ParentTweet.Id);
-                    ReTweet = GetFullReTweet((int)reTweetId);
+                    ReTweet = GetFullTweet((int)reTweetId);
+                    // ReTweet=context.Tweets
+                    //     .Include(t => t.Author)
+                    //     .Include(t => t.ParentTweet)
+                    //         .ThenInclude(pt => pt.Author)
+                    //     .Include(t => t.ParentTweet)
+                    //         .ThenInclude(pt => pt.ParentTweet)                        
+                    //     .FirstOrDefault(t => t.Id == reTweetId);
+
                 }
             }
 
@@ -112,14 +121,21 @@ namespace TwitterClone.Pages.UserPortal
                 logger.LogInformation("------------------" + ReTweetId);
                 if (ReTweetId > 0)
                 {
-                    ReTweet = await context.Tweets.FirstOrDefaultAsync(t => t.Id == ReTweetId);
+                    // ReTweet = await context.Tweets.FirstOrDefaultAsync(t => t.Id == ReTweetId);
+                    // ReTweet=context.Tweets
+                    //     .Include(t => t.Author)
+                    //     .Include(t => t.ParentTweet)
+                    //         .ThenInclude(pt => pt.Author)
+                    //     .Include(t => t.ParentTweet)
+                    //         .ThenInclude(pt => pt.ParentTweet)          
+                    //     .FirstOrDefault(t => t.Id == ReTweetId);
+                    ReTweet=GetFullTweet(ReTweetId);
                 }
                 Tweet tweet = new Tweet
                 {
                     Body = ReplaceTag(Body),
                     ParentTweet = ReTweet,
                     CreatedAt = DateTime.Now,
-                    //Todo set Author to logged user
                     Author = currentUser
                 };
                 context.Tweets.Add(tweet);
@@ -141,16 +157,17 @@ namespace TwitterClone.Pages.UserPortal
 
         }
 
-        private Tweet? GetFullReTweet(int reTweetId)
+        private Tweet? GetFullTweet(int reTweetId)
         {
             Tweet? reTweet = context.Tweets
+                .Include(pt => pt.Author)
                 .Include(t => t.ParentTweet)
-                // .ThenInclude(pt => pt.Author)
+                
                 .FirstOrDefault(t => t.Id == reTweetId);
 
             if (reTweet != null && reTweet.ParentTweet != null)
             {
-                reTweet.ParentTweet = GetFullReTweet(reTweet.ParentTweet.Id);
+                reTweet.ParentTweet = GetFullTweet(reTweet.ParentTweet.Id);
             }
 
             return reTweet;

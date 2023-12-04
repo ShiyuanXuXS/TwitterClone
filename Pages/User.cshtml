@@ -9,23 +9,29 @@
 @if (user != null)
 {
     <div class="row">
-    <div class="col-12 col-lg-11 col-xl-10 col-xxl-9">
-        <div class="row mt-5 ps-4 position-relative">
-            <div class="row mb-5" id="bannerImg"></div>
-            <div class="row m-3"></div>
-            <div class="row position-absolute bottom-0">
-                <div class="col-4">
-                    <img src="@user.Avatar" alt="@user.UserName avatar" height="150px" width="150px"
-                        class="rounded-circle border border-white border-5 avatar">
-                </div>
+    @if (TempData["FlashMessage"] != null)
+        {
+            <div class="mt-4 mx-4 alert alert-success col-7">
+                @TempData["FlashMessage"]
             </div>
-            @if (user.UserName == User.Identity.Name)
-                {
-                    <div class="position-absolute bottom-0 end-0 text-end fs-6">
-                        <a class="col btn btn-link rounded-pill border-tertiary-gray fw-bold text-dark p-2 px-4 me-3"
-                    asp-page="Settings/Profile">Edit profile</a>
+        }
+        <div class="col-12 col-lg-11 col-xl-10 col-xxl-9">
+                <div class="row mt-5 ps-4 position-relative">
+                    <div class="row mb-5" id="bannerImg"></div>
+                    <div class="row m-3"></div>
+                    <div class="row position-absolute bottom-0">
+                        <div class="col-4">
+                            <img src="@user.Avatar" alt="@user.UserName avatar" height="150px" width="150px"
+                                class="rounded-circle border border-white border-5 avatar">
+                        </div>
                     </div>
-                }
+                    @if (user.UserName == User.Identity.Name)
+                    {
+                        <div class="position-absolute bottom-0 end-0 text-end fs-6">
+                            <a class="col btn btn-link rounded-pill border-tertiary-gray fw-bold text-dark p-2 px-4 me-3"
+                                asp-page="Settings/Profile">Edit profile</a>
+                        </div>
+                    }
                 else
                 {
                     <div class="position-absolute bottom-0 end-0 text-end fs-6">
@@ -34,7 +40,7 @@
                             id="btnToggleFollow" href="#" data-user-id="@user.Id"></a>
                     </div>
                 }
-            </div>
+                </div>
 
             <div class="row mt-5 px-4 ms-1">
                 <div class="row fs-5 fw-bold mt-3">@user.NickName</div>
@@ -70,7 +76,7 @@
                     @foreach (var item in Model.Tweets)
                     {
 
-                        @await Html.PartialAsync("_TweetCard", new {Tweet=item,BodyContainerId=""})
+                        @await Html.PartialAsync("_TweetCard", new { Tweet = item, BodyContainerId = "" })
                     }
                 </div>
                 <!-- current page number and total pages -->
@@ -178,13 +184,13 @@
                         }
                     });
                 </script>
-            }
+                }
+
+                </div>
+
+        
 
             </div>
-
-
-
         </div>
-    </div>
 
 }

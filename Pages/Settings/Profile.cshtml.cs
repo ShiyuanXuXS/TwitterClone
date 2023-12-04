@@ -52,7 +52,7 @@ namespace TwitterClone.Pages.Settings
 
             [BindProperty]
             public IFormFile? Avatar { get; set; }
-            
+
 
         }
 
@@ -63,8 +63,6 @@ namespace TwitterClone.Pages.Settings
             {
                 DateTime dob = ModelUser.DateOfBirth.Value;
                 UserDOB = DateOnly.FromDateTime(dob);
-
-
             }
             else
             {
@@ -95,8 +93,9 @@ namespace TwitterClone.Pages.Settings
                         await containerClient.UploadBlobAsync(
                            blob, Input.Avatar.OpenReadStream()
                        );
-                        ModelUser.Avatar = $"{containerClient.Uri.AbsoluteUri}/{blob}"; 
+                        ModelUser.Avatar = $"{containerClient.Uri.AbsoluteUri}/{blob}";
                         //FIXME handle fail
+                        TempData["FlashMessage"] = "Your avatar has been updated.";
                     }
 
                 }
@@ -114,7 +113,8 @@ namespace TwitterClone.Pages.Settings
 
                 if (result.Succeeded)
                 {
-                    return RedirectToPage("../User", new { username = ModelUser.UserName}); //TODO flash msg
+                    TempData["FlashMessage"] = "Your profile has been updated.";
+                    return RedirectToPage("../User", new { username = ModelUser.UserName }); //
                 }
                 else
                 {

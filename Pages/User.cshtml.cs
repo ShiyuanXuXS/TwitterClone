@@ -23,7 +23,7 @@ namespace TwitterClone.Pages
         public IList<Tweet> Tweets { get; set; } = default!;
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
-        public int CurrentListOption{get;set;}
+        public int CurrentListOption { get; set; }
 
         public UserModel(UserManager<User> userManager, ILogger<UserModel> logger, TwitterCloneDbContext db)
         {
@@ -33,23 +33,28 @@ namespace TwitterClone.Pages
         }
 
 
-        public async Task<IActionResult> OnGetAsync(int? pageNumber,int? listOption)
+        public async Task<IActionResult> OnGetAsync(int? pageNumber, int? listOption)
         {
-            var user=db.Users.Where(u => u.UserName == Username).FirstOrDefault();
+            var user = db.Users.Where(u => u.UserName == Username).FirstOrDefault();
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
             // if (user.Id!=currentUser.Id){
             //     Profile = user;
             //     Tweets=[];
             //     return Page();
             // }
-            var numberPerPage=4;
-            CurrentPage= (int)(pageNumber.HasValue?pageNumber:1);
-            CurrentListOption=(int)(listOption.HasValue?listOption:0);
+            var numberPerPage = 4;
+            CurrentPage = (int)(pageNumber.HasValue ? pageNumber : 1);
+            CurrentListOption = (int)(listOption.HasValue ? listOption : 0);
             IQueryable<Tweet> query = db.Tweets
                     .Where(t => t.Author.Id == user.Id)
+                    .OrderByDescending(t => t.CreatedAt)
+                    .Include(t => t.Author)
+                    .Include(t => t.ParentTweet)
+                        .ThenInclude(pt => pt.Author)
                     .Include(t => t.ParentTweet)
                         .ThenInclude(pt => pt.ParentTweet);
-            if (listOption.HasValue && pageNumber.HasValue){
+            if (listOption.HasValue && pageNumber.HasValue)
+            {
                 switch (listOption)
                 {
                     case 0:
@@ -57,20 +62,26 @@ namespace TwitterClone.Pages
                     case 1:
                         query = db.Tweets
                             .Where(t => db.Comments.Any(c => c.Tweet.Id == t.Id && c.Commenter.Id == user.Id))
-                            .Include(t=>t.Author)
+                            .OrderByDescending(t => t.CreatedAt)
+                            .Include(t => t.Author)
+                            .Include(t => t.ParentTweet)
+                                .ThenInclude(pt => pt.Author)
                             .Include(t => t.ParentTweet)
                                 .ThenInclude(pt => pt.ParentTweet);
                         break;
                     case 2:
                         query = db.Tweets.Where(t => db.Likes.Any(l => l.Tweet.Id == t.Id && l.User.Id == user.Id))
-                            .Include(t=>t.Author)
+                            .OrderByDescending(t => t.CreatedAt)
+                            .Include(t => t.Author)
+                            .Include(t => t.ParentTweet)
+                                .ThenInclude(pt => pt.Author)
                             .Include(t => t.ParentTweet)
                                 .ThenInclude(pt => pt.ParentTweet);
                         break;
                     default:
                         break;
                 }
-                    
+
             }
             TotalPages = (int)Math.Ceiling(query.Count() / (double)numberPerPage);
 
@@ -93,7 +104,7 @@ namespace TwitterClone.Pages
             {
                 return RedirectToPage("NotFound");
             }
-            
+
         }
     }
 }

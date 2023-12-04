@@ -4,6 +4,7 @@ using TwitterClone.Data;
 using TwitterClone.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -43,6 +44,7 @@ namespace TwitterClone.Pages
         public int indexView { get; set; } = 1;  // 1: top, 2: people, 3: tweet
 
         public int IndexDropDown { get; set; } = 1;  // 1: search/home page, 2: what'shapppening page
+        public int IndexShowTweet { get; set; } = 0; // 0: hide, 1: show
 
         public SearchResultModel(ILogger<SearchResultModel> logger, TwitterCloneDbContext context, UserManager<User> userManager)
         {
@@ -56,7 +58,9 @@ namespace TwitterClone.Pages
         private List<ShowTrendModel> getTrend(User currentUser)
         {
             var randomTweets = context.Tweets
-        .AsEnumerable() // Switch to client-side evaluation
+        .Include(t => t.Author)
+        .Include(t => t.ParentTweet)
+        .AsEnumerable()
         .Where(t => t.Author.Id != currentUser.Id)
         .ToList();
 
@@ -131,6 +135,8 @@ namespace TwitterClone.Pages
             //query tweets that followed user username/nickname or body contain search term
             var res =
            context.Tweets
+        .Include(t => t.ParentTweet)
+            .Include(t => t.Author)
                .AsEnumerable() // Switch to client-side evaluation
                .Where(t =>
                     t.Author != null &&
@@ -149,6 +155,8 @@ namespace TwitterClone.Pages
             //query tweets that author username/nickname or body contain search term
             var res =
            context.Tweets
+           .Include(t => t.ParentTweet)
+           .Include(t => t.Author)
                .AsEnumerable() // Switch to client-side evaluation
                .Where(t =>
                     t.Author != null && t.Author.Id != currentUser.Id && // Exclude the current user
@@ -292,6 +300,8 @@ namespace TwitterClone.Pages
         public List<string>? Hashtag { get; set; }
         public int CountLikes { get; set; }
         public int CountRetweets { get; set; }
+
+        public Tweet Tweet { get; set; } = null!;
     }
 
 }
