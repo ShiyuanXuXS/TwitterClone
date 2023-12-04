@@ -55,7 +55,8 @@ namespace TwitterClone.Controllers
             .OrderBy(m => m.SentAt)
             .ToListAsync();
 
-            foreach (Message m in msgList) {
+            foreach (Message m in msgList)
+            {
                 m.SentAt = m.SentAt.ToUniversalTime();
                 Console.WriteLine("-------------------------------- ");
                 Console.WriteLine(m.SentAt);
@@ -89,18 +90,22 @@ namespace TwitterClone.Controllers
         [HttpGet("Check")]
         public async Task<ActionResult<string>> checkMsgs()
         {
-            var currentUser = await userManager.GetUserAsync(HttpContext.User);
-            if (currentUser == null)
+            try
             {
-                return StatusCode(401, "You must be logged in to check messages.");
+                var currentUser = await userManager.GetUserAsync(HttpContext.User);
+                if (currentUser == null)
+                {
+                    return StatusCode(401, "You must be logged in to check messages.");
+                }
+                var id = currentUser.Id;
+                int unread = db.Messages
+                .Where(m => m.Receiver.Id == id && m.IsRead == false).Count();
+                return Json(unread);
             }
-            var id = currentUser.Id;
-
-            int unread = db.Messages
-            .Where(m => m.Receiver.Id == id && m.IsRead == false)
-            .Count();
-
-            return Json(unread);
+            catch
+            {
+                return StatusCode(500, new { err = "Something went wrong." });
+            }
         }
 
         [HttpGet("Inbox")]
@@ -170,7 +175,8 @@ namespace TwitterClone.Controllers
 
             conversations = conversations.OrderByDescending(c => c.Msg.SentAt).ToList();
 
-            foreach (Conversation c in conversations) {
+            foreach (Conversation c in conversations)
+            {
                 c.Msg.SentAt = c.Msg.SentAt.ToUniversalTime();
 
                 Console.WriteLine("-------------------------------- ");
@@ -178,7 +184,7 @@ namespace TwitterClone.Controllers
                 Console.WriteLine("-------------------------------- ");
             }
             //FIXME exclude private user data
-            return Json(new {conversations});
+            return Json(new { conversations });
         }
 
 
@@ -229,7 +235,8 @@ namespace TwitterClone.Controllers
             List<Message> read = await db.Messages
                 .Where(m => m.Receiver == currentUser && m.Sender == contact)
                 .ToListAsync();
-            foreach (Message message in read) {
+            foreach (Message message in read)
+            {
                 message.IsRead = true;
             }
 
