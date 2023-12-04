@@ -67,8 +67,8 @@ namespace TwitterClone.Pages
                         smtp.EnableSsl = enableSsl;
                         var message = new MailMessage();
                         message.To.Add(Email);
-                        message.Subject = "Fourth Coffee - New Order";
-                        message.Body = $"Click <a href=\"{resetLink}\">here</a> to reset your password.";
+                        message.Subject = "Y - Reset Password";
+                        message.Body = $"Dear {user.UserName} Click <a href=\"{resetLink}\">here</a> to reset your password.";
                         message.IsBodyHtml = true;
                         message.From = new MailAddress("jac2340575@gmail.com");
                         await smtp.SendMailAsync(message);
