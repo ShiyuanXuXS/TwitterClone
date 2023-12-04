@@ -16,15 +16,14 @@ namespace TwitterClone.Pages
         private readonly TwitterCloneDbContext context;
 
         public List<User> FollowedUser { get; set; } = null!;
-
         public List<User> FollowSuggestion { get; set; } = null!;
 
         [BindProperty]
         public User? CurrentUser { get; set; }
 
         public int ShowDescription { get; set; } = 0;  // 0: hide, 1: show
-
         public int IndexDropDown { get; set; } = 2;
+        public int IndexShowTweet { get; set; } = 1; // 0: hide, 1: show
 
         public WhatsHappeningModel(UserManager<User> userManager, ILogger<HomeModel> logger, TwitterCloneDbContext context)
         {
@@ -32,14 +31,26 @@ namespace TwitterClone.Pages
             this.logger = logger;
             this.context = context;
         }
+        public class ShowTrendModel
+        {
+            public int Id { get; set; }
+            public List<string>? Hashtag { get; set; }
+            public int CountLikes { get; set; }
+            public int CountRetweets { get; set; }
+            public Tweet Tweet { get; set; } = null!;
+        }
 
         public List<ShowTrendModel>? ShowTrend { get; set; }
+
         private List<ShowTrendModel> getTrend(User currentUser)
         {
             var randomTweets = context.Tweets
-        .AsEnumerable() // Switch to client-side evaluation
-        .Where(t => t.Author.Id != currentUser.Id)
-        .ToList();
+            .Include(t => t.Author)
+            // .Include(t => t.ParentTweet)
+            .AsEnumerable() // Switch to client-side evaluation
+            .Where(t => t.Author.Id != currentUser.Id
+            && t.Suspended == false)
+            .ToList();
 
             var trendList = new List<ShowTrendModel>();
             foreach (var tweet in randomTweets)
@@ -52,13 +63,17 @@ namespace TwitterClone.Pages
             .Cast<Match>()
             .Select(match => match.Groups[1].Value)
             .ToList();
+                var currTweet = context.Tweets
+                .Include(t => t.Author)
+                // .Include(t => t.ParentTweet)
+                .Where(t => t.Id == tweet.Id).FirstOrDefault();
                 if (hashtag.Count > 0)
                 {
-                    trendList.Add(new ShowTrendModel { Hashtag = hashtag, CountLikes = countLikes, CountRetweets = countRetweets, Id = tweet.Id });
+                    trendList.Add(new ShowTrendModel { Hashtag = hashtag, CountLikes = countLikes, CountRetweets = countRetweets, Id = tweet.Id, Tweet = currTweet });
                 }
                 else
                 {
-                    trendList.Add(new ShowTrendModel { Hashtag = new List<string> { "new", "trend" }, CountLikes = countLikes, CountRetweets = countRetweets, Id = tweet.Id });
+                    trendList.Add(new ShowTrendModel { Hashtag = new List<string> { "example", "tag" }, CountLikes = countLikes, CountRetweets = countRetweets, Id = tweet.Id, Tweet = currTweet });
                 }
             }
             return trendList;
@@ -90,13 +105,14 @@ namespace TwitterClone.Pages
 
         public async Task OnGetAsync()
         {
-
             // get current user
             var currentUser = await userManager.GetUserAsync(HttpContext.User);
-            getUnFollowedUserList(currentUser);
-            // get trend
-            ShowTrend = getTrend(currentUser);
-
+            if (currentUser != null)
+            {
+                getUnFollowedUserList(currentUser);
+                // get trend
+                ShowTrend = getTrend(currentUser);
+            }
         }
         public async Task<IActionResult> OnPostSearchTrend(string searchTerm)
         {

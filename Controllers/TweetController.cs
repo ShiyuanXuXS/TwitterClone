@@ -23,6 +23,7 @@ namespace TwitterClone.Controllers
             public List<string>? Hashtag { get; set; }
             public int CountLikes { get; set; }
             public int CountRetweets { get; set; }
+            public Tweet Tweet { get; set; } = null!;
         }
         public TweetController(UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, TwitterCloneDbContext context)
         {

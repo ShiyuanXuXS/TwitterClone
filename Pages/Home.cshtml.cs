@@ -29,6 +29,7 @@ namespace TwitterClone.Pages
         [BindProperty]
         public User? CurrentUser { get; set; }
         public int IndexDropDown { get; set; } = 1;
+        public int IndexShowTweet { get; set; } = 0; // 0: hide, 1: show
 
         public HomeModel(ILogger<HomeModel> logger, TwitterCloneDbContext context, UserManager<User> userManager)
         {
@@ -64,6 +65,7 @@ namespace TwitterClone.Pages
             public List<string>? Hashtag { get; set; }
             public int CountLikes { get; set; }
             public int CountRetweets { get; set; }
+            public Tweet Tweet { get; set; } = null!;
         }
 
         public List<ShowTrendModel>? ShowTrend { get; set; }
@@ -72,10 +74,11 @@ namespace TwitterClone.Pages
         {
             var randomTweets = context.Tweets
             .Include(t => t.Author)
-        .AsEnumerable() // Switch to client-side evaluation
-        .Where(t => t.Author.Id != currentUser.Id
-        && t.Suspended == false)
-        .ToList();
+            .Include(t => t.ParentTweet)
+            .AsEnumerable() // Switch to client-side evaluation
+            .Where(t => t.Author.Id != currentUser.Id
+            && t.Suspended == false)
+            .ToList();
 
             var trendList = new List<ShowTrendModel>();
             foreach (var tweet in randomTweets)
@@ -88,15 +91,18 @@ namespace TwitterClone.Pages
             .Cast<Match>()
             .Select(match => match.Groups[1].Value)
             .ToList();
+                var currTweet = context.Tweets
+                .Include(t => t.Author)
+                .Include(t => t.ParentTweet)
+                .Where(t => t.Id == tweet.Id).FirstOrDefault();
                 if (hashtag.Count > 0)
                 {
-                    trendList.Add(new ShowTrendModel { Hashtag = hashtag, CountLikes = countLikes, CountRetweets = countRetweets, Id = tweet.Id });
+                    trendList.Add(new ShowTrendModel { Hashtag = hashtag, CountLikes = countLikes, CountRetweets = countRetweets, Id = tweet.Id, Tweet = currTweet });
                 }
                 else
                 {
-                    trendList.Add(new ShowTrendModel { Hashtag = new List<string> { "new", "trend" }, CountLikes = countLikes, CountRetweets = countRetweets, Id = tweet.Id });
+                    trendList.Add(new ShowTrendModel { Hashtag = new List<string> { "example", "tag" }, CountLikes = countLikes, CountRetweets = countRetweets, Id = tweet.Id, Tweet = currTweet });
                 }
-
             }
             return trendList;
         }
