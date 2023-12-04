@@ -79,15 +79,17 @@
                     </ul>
                 </div>
             </div>
-            <div class="align-items-center p-2 ps-0">
-                <div class="border border-4">
-@if (indexShowTweet == 1)
-    {
-    @await Html.PartialAsync("_TweetCard", new { Tweet = @item.Tweet, BodyContainerId = "" })
-    }
+
+            @if (indexShowTweet == 1)
+            {
+                <div class="border border-4 p-2 ps-0">
+                    <div class="d-flex flex-column align-items-center p-3">
+                        @await Html.PartialAsync("_TweetCard", new { Tweet = @item.Tweet, BodyContainerId = "" })
+                    </div>
                 </div>
-            </div>
-           
+            }
+
+
 
         </li>
 
