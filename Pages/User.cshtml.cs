@@ -25,6 +25,8 @@ namespace TwitterClone.Pages
         public int TotalPages { get; set; }
         public int CurrentListOption { get; set; }
 
+        public int Following { get; set; }
+        public int Followers { get; set; }
         public UserModel(UserManager<User> userManager, ILogger<UserModel> logger, TwitterCloneDbContext db)
         {
             this.userManager = userManager;
@@ -42,6 +44,16 @@ namespace TwitterClone.Pages
             //     Tweets=[];
             //     return Page();
             // }
+            
+            Followers = db.Follows
+            .Where(f => f.Author.Id == currentUser.Id)
+            .Count();
+
+            Following = db.Follows
+            .Where(f => f.User.Id == currentUser.Id)
+            .Count();
+            
+            
             var numberPerPage = 4;
             CurrentPage = (int)(pageNumber.HasValue ? pageNumber : 1);
             CurrentListOption = (int)(listOption.HasValue ? listOption : 0);
