@@ -66,7 +66,6 @@ namespace TwitterClone.Pages.UserPortal
             {
 
                 await context.Database.ExecuteSqlInterpolatedAsync($"UPDATE Tweets SET ParentTweetId = NULL WHERE ParentTweetId = {tweet.Id}");
-                // Tweet = tweet;
                 context.Tweets.Remove(tweet);
                 await context.SaveChangesAsync();
                 TempData["Message"] = "Tweet deleted successfully!";

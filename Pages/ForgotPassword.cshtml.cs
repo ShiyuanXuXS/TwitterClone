@@ -43,7 +43,6 @@ namespace TwitterClone.Pages
                 {
                     // var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                     var resetToken = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "ResetPassword");
-                    var tokenResult = await _userManager.SetAuthenticationTokenAsync(user, "Default", "ResetPassword", resetToken);
 
                     var resetLink = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}/ResetPassword?token={WebUtility.UrlEncode(resetToken)}";
 
