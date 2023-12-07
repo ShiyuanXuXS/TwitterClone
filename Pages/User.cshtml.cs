@@ -25,6 +25,11 @@ namespace TwitterClone.Pages
         public int TotalPages { get; set; }
         public int CurrentListOption { get; set; }
 
+        public int FollowingCount { get; set; }
+        public int FollowerCount { get; set; }
+
+        public List<Follow> FollowList { get; set; }
+
         public UserModel(UserManager<User> userManager, ILogger<UserModel> logger, TwitterCloneDbContext db)
         {
             this.userManager = userManager;
@@ -42,9 +47,21 @@ namespace TwitterClone.Pages
             //     Tweets=[];
             //     return Page();
             // }
+
+            FollowerCount = db.Follows
+            .Where(f => f.Author.Id == currentUser.Id)
+            .Count();
+
+            FollowingCount = db.Follows
+            .Where(f => f.User.Id == currentUser.Id)
+            .Count();
+
+
             var numberPerPage = 4;
             CurrentPage = (int)(pageNumber.HasValue ? pageNumber : 1);
             CurrentListOption = (int)(listOption.HasValue ? listOption : 0);
+
+
             IQueryable<Tweet> query = db.Tweets
                     .Where(t => t.Author.Id == user.Id)
                     .OrderByDescending(t => t.CreatedAt)
@@ -53,6 +70,8 @@ namespace TwitterClone.Pages
                         .ThenInclude(pt => pt.Author)
                     .Include(t => t.ParentTweet)
                         .ThenInclude(pt => pt.ParentTweet);
+
+
             if (listOption.HasValue && pageNumber.HasValue)
             {
                 switch (listOption)
@@ -78,6 +97,20 @@ namespace TwitterClone.Pages
                             .Include(t => t.ParentTweet)
                                 .ThenInclude(pt => pt.ParentTweet);
                         break;
+                    case 3:
+                        FollowList = await db.Follows
+                            .Where(f => f.User.Id == currentUser.Id)
+                            .OrderByDescending(t => t.CreatedAt)
+                            .Include(f => f.Author)
+                            .ToListAsync();
+                        break;
+                    case 4:
+                        FollowList = await db.Follows
+                            .Where(f => f.Author.Id == currentUser.Id)
+                            .OrderByDescending(t => t.CreatedAt)
+                            .Include(f => f.User)
+                            .ToListAsync();
+                        break;
                     default:
                         break;
                 }
@@ -85,6 +118,7 @@ namespace TwitterClone.Pages
             }
             TotalPages = (int)Math.Ceiling(query.Count() / (double)numberPerPage);
 
+            //if (listOption.HasValue && pageNumber.HasValue && listOption < 3) {
             Tweets = await query
                 .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync();
@@ -93,6 +127,22 @@ namespace TwitterClone.Pages
                 .Skip((pageNumber - 1) * numberPerPage ?? 0)
                 .Take(numberPerPage)
                 .ToList();
+            //}
+
+            //if (listOption.HasValue && pageNumber.HasValue && listOption > 2) {
+            if (FollowList != null && FollowList.Any() == true) {
+
+                FollowList = FollowList
+                .Skip((pageNumber - 1) * numberPerPage ?? 0)
+                .Take(numberPerPage)
+                .ToList();
+            }
+
+            //}
+
+
+
+
             if (user != null)
             {
                 // Profile = currentUser;

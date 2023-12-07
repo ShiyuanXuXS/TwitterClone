@@ -22,17 +22,13 @@
         </div>
     </div>
     <ul class="dropdown-menu fs-5" id="dropdownAcct">
-        <li><a class="dropdown-item" asp-page="#">Add an existing account</a></li>
-        <li id="logout"><a class="dropdown-item" asp-page="Logout">Log out &#64;@Model.UserName</a></li>
+        @* <li><a class="dropdown-item" asp-page="#">Add an existing account</a></li> *@
+        <li id="logout"><a class="dropdown-item" asp-page="/Logout">Log out &#64;@Model.UserName</a></li>
     </ul>
 </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-    $(document).ready(function () {
-        $('#logout').click(function () {
-            window.location.href = '/Logout';
-        });
-    });
+
 </script>
 }

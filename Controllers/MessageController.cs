@@ -55,6 +55,17 @@ namespace TwitterClone.Controllers
             .OrderBy(m => m.SentAt)
             .ToListAsync();
 
+            // foreach (Message m in msgList)
+            // {
+
+            //     m.SentAt = m.SentAt.ToUniversalTime();
+            //     Console.WriteLine("-------------------------------- ");
+            //     Console.WriteLine(m.SentAt);
+            //     Console.WriteLine("toUniveralTime: " + m.SentAt.ToUniversalTime());
+
+            //     Console.WriteLine("-------------------------------- ");
+
+            // }
             //FIXME exclude private user data
             return Json(new { msgList });
         }
@@ -79,6 +90,27 @@ namespace TwitterClone.Controllers
             return Json(new { contact });
         }
 
+        [HttpGet("Check")]
+        public async Task<ActionResult<string>> checkMsgs()
+        {
+            try
+            {
+                var currentUser = await userManager.GetUserAsync(HttpContext.User);
+                if (currentUser == null)
+                {
+                    return StatusCode(401, "You must be logged in to check messages.");
+                }
+                var id = currentUser.Id;
+                int unread = db.Messages
+                .Where(m => m.Receiver.Id == id && m.IsRead == false).Count();
+                return Json(unread);
+            }
+            catch
+            {
+                return StatusCode(500, new { err = "Something went wrong." });
+            }
+        }
+
         [HttpGet("Inbox")]
         public async Task<ActionResult<string>> getInbox()
         {
@@ -88,18 +120,6 @@ namespace TwitterClone.Controllers
                 return StatusCode(401, "You must be logged in to send messages.");
             }
             var id = currentUser.Id;
-
-            // var sent = await db.Messages
-            // .Where(m => m.Sender.Id == id)
-            // .Include(m => m.Receiver)
-            // .OrderByDescending(m => m.SentAt)
-            // .ToListAsync();
-
-            // var received = await db.Messages
-            // .Where(m => m.Receiver.Id == id)
-            // .OrderByDescending(m => m.SentAt)
-            // .Include(m => m.Sender)
-            // .ToListAsync();
 
             var sent = await db.Messages
             .Where(m => m.Sender.Id == id)
@@ -157,8 +177,17 @@ namespace TwitterClone.Controllers
             }
 
             conversations = conversations.OrderByDescending(c => c.Msg.SentAt).ToList();
+
+            // foreach (Conversation c in conversations)
+            // {
+            //     c.Msg.SentAt = c.Msg.SentAt.ToUniversalTime();
+
+            //     Console.WriteLine("-------------------------------- ");
+            //     Console.WriteLine(c.Msg.SentAt);
+            //     Console.WriteLine("-------------------------------- ");
+            // }
             //FIXME exclude private user data
-            return Json(new {conversations});
+            return Json(new { conversations });
         }
 
 
@@ -186,7 +215,7 @@ namespace TwitterClone.Controllers
                 Sender = currentUser,
                 Receiver = receiver,
                 Content = msg.Content,
-                SentAt = DateTime.Now
+                SentAt = DateTime.Now.ToUniversalTime()
             };
             db.Messages.Add(newMsg);
             await db.SaveChangesAsync();
@@ -209,7 +238,8 @@ namespace TwitterClone.Controllers
             List<Message> read = await db.Messages
                 .Where(m => m.Receiver == currentUser && m.Sender == contact)
                 .ToListAsync();
-            foreach (Message message in read) {
+            foreach (Message message in read)
+            {
                 message.IsRead = true;
             }
 
